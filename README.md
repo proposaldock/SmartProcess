@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SmartProcess
 
-## Getting Started
+SmartProcess är en svensk landningssida för AI-automation av manuella arbetsflöden. Projektet är byggt i Next.js och innehåller ett kontaktformulär som skickar förfrågningar via SMTP.
 
-First, run the development server:
+## Kom igång
+
+1. Installera beroenden:
+
+```bash
+npm install
+```
+
+2. Skapa en lokal miljöfil:
+
+```bash
+copy .env.example .env.local
+```
+
+3. Fyll i SMTP- och kontaktuppgifterna i `.env.local`. Kontaktadressen är förifylld till `marcus@smartprocess.se`, SMTP-värdena är förinställda för STRATO och `NEXT_PUBLIC_GA_MEASUREMENT_ID` kan fyllas i när ett GA4-ID finns.
+
+4. Starta utvecklingsservern:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Sidan körs sedan på [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Kontaktformulär
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Formuläret postar till `POST /api/contact` och skickar vidare innehållet som mejl.
 
-## Learn More
+### Obligatoriska miljövariabler
 
-To learn more about Next.js, take a look at the following resources:
+- `SMTP_HOST`
+- `SMTP_PORT`
+- `SMTP_SECURE`
+- `SMTP_USER`
+- `SMTP_PASSWORD`
+- `CONTACT_TO_EMAIL`
+- `CONTACT_FROM_EMAIL`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Valfria miljövariabler
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `CONTACT_FROM_NAME`
+- `NEXT_PUBLIC_CONTACT_EMAIL`
+- `NEXT_PUBLIC_GA_MEASUREMENT_ID`
 
-## Deploy on Vercel
+`NEXT_PUBLIC_CONTACT_EMAIL` används för länken "Eller mejla direkt" i formuläret. Om den inte anges används `CONTACT_TO_EMAIL`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`NEXT_PUBLIC_GA_MEASUREMENT_ID` används för Google Analytics 4. När den är tom laddas ingen analytics alls.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## SMTP-noteringar
+
+- Port `587` används normalt med `SMTP_SECURE=false`
+- Port `465` används normalt med `SMTP_SECURE=true`
+- `CONTACT_FROM_EMAIL` bör vara en adress som är godkänd av din mejlleverantör
+
+## Analytics
+
+GA4 läggs globalt i layouten och skickar:
+
+- sidvisningar
+- CTA-klick
+- lyckade formulärskick
+
+Lägg in ditt GA4-ID i `.env.local`, till exempel `G-ABC1234567`.
+
+## Rate Limiting
+
+Kontaktformuläret har ett enkelt skydd mot spam och begränsar antal försök per IP under en kort tidsperiod.
+
+## Kvalitetskontroll
+
+```bash
+npm run lint
+npm run build
+```
