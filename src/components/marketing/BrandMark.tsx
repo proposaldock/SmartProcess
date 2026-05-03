@@ -1,24 +1,18 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function BrandMark() {
   return (
     <Link href="/" className="flex items-center gap-3">
-      <div className="relative grid size-11 place-items-center overflow-hidden rounded-2xl border border-[color:var(--border)] bg-white shadow-[0_18px_38px_-24px_rgba(23,19,18,0.45)]">
-        <span
+      <div className="relative size-11 overflow-hidden rounded-2xl border border-[rgba(104,74,65,0.12)] bg-white shadow-[0_18px_38px_-24px_rgba(23,19,18,0.45)]">
+        <Image
+          src="/icon.png"
+          alt=""
           aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(190,47,36,0.22),transparent_62%)]"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute left-2 top-2 size-3 rounded-full bg-[var(--accent)]"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute bottom-2 right-2 size-4 rounded-full border border-[color:var(--border)] bg-[rgba(190,47,36,0.1)]"
-        />
-        <span
-          aria-hidden="true"
-          className="relative block h-5 w-5 rounded-full border-2 border-[var(--foreground)]"
+          fill
+          sizes="44px"
+          className="object-cover"
+          priority
         />
       </div>
       <div>
