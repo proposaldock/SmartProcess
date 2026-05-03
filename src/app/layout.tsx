@@ -19,6 +19,13 @@ export const metadata: Metadata = {
   title: "SmartProcess | AI-automation för manuella arbetsflöden",
   description:
     "SmartProcess hjälper företag identifiera manuella processer och bygga skräddarsydda AI-lösningar, interna verktyg och SaaS-flöden som sparar tid och förbättrar kvaliteten.",
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+      { url: "/icon.png", rel: "shortcut icon" },
+    ],
+    apple: [{ url: "/apple-icon.png", type: "image/png", sizes: "512x512" }],
+  },
   openGraph: {
     title: "SmartProcess | AI-automation för manuella arbetsflöden",
     description:
