@@ -124,7 +124,7 @@ export function HeroWorkflowPanel() {
           </div>
         </div>
 
-        <div className="relative mt-8 hidden lg:block xl:hidden">
+        <div className="relative mt-8 hidden lg:block 2xl:hidden">
           <div
             aria-hidden="true"
             className="absolute left-6 top-9 bottom-9 w-px bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.22),rgba(255,255,255,0.08))]"
@@ -200,7 +200,7 @@ export function HeroWorkflowPanel() {
           </div>
         </div>
 
-        <div className="relative mt-8 hidden overflow-x-auto pb-2 xl:block">
+        <div className="relative mt-8 hidden overflow-x-auto pb-2 2xl:block">
           <div className="relative min-w-[74rem]">
             <div
               aria-hidden="true"
