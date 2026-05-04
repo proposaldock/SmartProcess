@@ -124,7 +124,7 @@ export function HeroWorkflowPanel() {
           </div>
         </div>
 
-        <div className="relative mt-8 hidden lg:block 2xl:hidden">
+        <div className="relative mt-8 hidden lg:block min-[1800px]:hidden">
           <div
             aria-hidden="true"
             className="absolute left-6 top-9 bottom-9 w-px bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.22),rgba(255,255,255,0.08))]"
@@ -200,7 +200,7 @@ export function HeroWorkflowPanel() {
           </div>
         </div>
 
-        <div className="relative mt-8 hidden 2xl:block">
+        <div className="relative mt-8 hidden min-[1800px]:block">
           <div className="relative">
             <div
               aria-hidden="true"
@@ -239,8 +239,8 @@ export function HeroWorkflowPanel() {
                   Här läggs majoriteten av tiden idag
                 </p>
 
-                <div className="mt-3 flex items-center justify-between gap-3">
-                  <div>
+                <div className="mt-3 flex flex-col items-start gap-3">
+                  <div className="min-w-0">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/54">
                       02
                     </div>
@@ -248,12 +248,12 @@ export function HeroWorkflowPanel() {
                       Arbetsmoment som tar tid
                     </h3>
                   </div>
-                  <span className="rounded-full border border-[rgba(190,47,36,0.28)] bg-[rgba(190,47,36,0.18)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
+                  <span className="self-start rounded-full border border-[rgba(190,47,36,0.28)] bg-[rgba(190,47,36,0.18)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
                     Automatiseras med AI
                   </span>
                 </div>
 
-                <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                <div className="mt-5 grid gap-3">
                   {processingSteps.map((item, index) => (
                     <div
                       key={item.title}
