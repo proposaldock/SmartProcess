@@ -70,26 +70,26 @@ const caseProofPoints = [
 
 const useCaseSections = [
   {
-    eyebrow: "RFP och offertprocesser",
-    title: "När team inte ska börja med att läsa hela underlaget manuellt",
-    body: "RFP-underlag, kravlistor och bilagor kan analyseras automatiskt så att fokus flyttas från genomläsning till bedömning, prioritering och kvalitetssäkring.",
+    eyebrow: "E-postautomation",
+    title: "När team inte ska börja med att sortera och besvara mejl manuellt",
+    body: "Inkommande mejl kan klassificeras, prioriteras och förberedas automatiskt så att rätt ärenden hamnar rätt och svar kan gå ut snabbare.",
     examples: [
-      "Extrahera krav och svarspunkter direkt ur underlaget",
-      "Visa risker och luckor innan offertarbete går vidare",
-      "Ge teamet en tydlig startpunkt i stället för manuell genomläsning",
+      "Sortera inkommande mejl efter ämne, prioritet och ansvarigt team",
+      "Föreslå svar utifrån tidigare dialog och rätt kontext",
+      "Lyfta bara de mejl som kräver mänsklig bedömning",
     ],
-    visualLabel: "RFP Workflow",
-    visualTitle: "RFP-underlag analyserat",
+    visualLabel: "E-post workflow",
+    visualTitle: "Inkommande mejl hanterade",
     visualMeta:
-      "Krav, risker och svarspunkter sorterade för snabbare bedömning.",
-    visualPill: "Analys live",
+      "Meddelanden sorteras, prioriteras och förbereds innan teamet tar över.",
+    visualPill: "Automation aktiv",
     visualRows: [
-      { label: "Krav extraherade", value: "12 punkter" },
-      { label: "Risker markerade", value: "2 avvikelser" },
-      { label: "Status", value: "Klar för offertteam" },
+      { label: "Sortering", value: "Prioritet satt" },
+      { label: "Svarsförslag", value: "2 utkast klara" },
+      { label: "Routing", value: "Rätt team valt" },
     ],
     visualFooter:
-      "Teamet börjar med prioritering i stället för genomläsning.",
+      "Mindre tid går till inbox-sortering och manuella svar.",
     dark: true,
   },
   {
