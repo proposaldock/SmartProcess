@@ -78,3 +78,20 @@ textarea {
   background: var(--accent);
   color: white;
 }
+
+.hero-workflow-tablet,
+.hero-workflow-wide {
+  display: none;
+}
+
+@media (min-width: 1024px) and (max-width: 1799px) {
+  .hero-workflow-tablet {
+    display: block;
+  }
+}
+
+@media (min-width: 1800px) {
+  .hero-workflow-wide {
+    display: block;
+  }
+}
