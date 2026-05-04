@@ -7,19 +7,19 @@ const proposalMetrics = [
 const workflowSteps = [
   {
     title: "Upload brief",
-    body: "RFP, brief eller underlag läggs in som startpunkt.",
+    body: "Ladda upp brief eller RFP.",
   },
   {
     title: "Review",
-    body: "Struktur, scope och viktiga krav blir tydliga tidigt i flödet.",
+    body: "Granska struktur och krav.",
   },
   {
     title: "Draft",
-    body: "Första utkast och beslutsunderlag byggs upp snabbare.",
+    body: "Bygg första utkast.",
   },
   {
     title: "Export",
-    body: "Underlaget tas vidare till offertarbete, intern review eller leverans.",
+    body: "Ta vidare till offert eller leverans.",
   },
 ];
 
@@ -79,7 +79,7 @@ export function ProposalDockPanel() {
       </div>
 
       <div className="mt-6 rounded-[28px] bg-[var(--foreground)] p-5 text-white sm:rounded-[32px] sm:p-7">
-        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 pb-5">
+        <div className="border-b border-white/10 pb-5">
           <div>
             <div className="text-sm font-semibold uppercase tracking-[0.16em] text-white/54">
               ProposalDock workflow
@@ -88,9 +88,6 @@ export function ProposalDockPanel() {
               Från brief till review, draft och export
             </div>
           </div>
-          <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold">
-            AI i review & draft
-          </span>
         </div>
 
         <div className="mt-6 rounded-[24px] border border-white/10 bg-white/4 p-4 sm:p-5">
@@ -104,13 +101,20 @@ export function ProposalDockPanel() {
                       : "border-white/10 bg-white/6"
                   }`}
                 >
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/54">
-                    0{index + 1}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/54">
+                      0{index + 1}
+                    </div>
+                    {index === 1 || index === 2 ? (
+                      <span className="rounded-full border border-[rgba(190,47,36,0.28)] bg-[rgba(190,47,36,0.18)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white">
+                        AI
+                      </span>
+                    ) : null}
                   </div>
                   <h4 className="mt-3 text-base font-semibold tracking-tight text-white">
                     {step.title}
                   </h4>
-                  <p className="mt-3 text-sm leading-6 text-white/72">
+                  <p className="mt-2 text-sm leading-6 text-white/72">
                     {step.body}
                   </p>
                 </article>
@@ -145,23 +149,11 @@ export function ProposalDockPanel() {
                     </span>
                   ) : null}
                 </div>
-                <p className="mt-3 text-sm leading-6 text-white/72">
+                <p className="mt-2 text-sm leading-6 text-white/72">
                   {step.body}
                 </p>
               </article>
             ))}
-          </div>
-
-          <div className="mt-4 rounded-[20px] border border-[rgba(190,47,36,0.22)] bg-[rgba(190,47,36,0.1)] px-4 py-3">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/56">
-              Där AI kommer in
-            </div>
-            <p className="mt-2 text-sm leading-6 text-white/78">
-              Mellan <span className="font-semibold text-white">Review</span> och{" "}
-              <span className="font-semibold text-white">Draft</span> analyserar
-              ProposalDock underlaget, lyfter krav och bygger ett tydligare
-              beslutsunderlag.
-            </p>
           </div>
         </div>
       </div>
