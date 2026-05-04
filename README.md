@@ -64,6 +64,8 @@ GA4 läggs globalt i layouten och skickar:
 - CTA-klick
 - lyckade formulärskick
 
+Sajten har även en definierad Open Graph-bild för delningar i till exempel LinkedIn.
+
 Lägg in ditt GA4-ID i `.env.local`, till exempel `G-ABC1234567`.
 
 ## Rate Limiting
