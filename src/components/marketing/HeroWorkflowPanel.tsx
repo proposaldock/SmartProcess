@@ -124,7 +124,83 @@ export function HeroWorkflowPanel() {
           </div>
         </div>
 
-        <div className="relative mt-8 hidden overflow-x-auto pb-2 lg:block">
+        <div className="relative mt-8 hidden lg:block xl:hidden">
+          <div
+            aria-hidden="true"
+            className="absolute left-6 top-9 bottom-9 w-px bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.22),rgba(255,255,255,0.08))]"
+          />
+
+          <div className="relative space-y-4">
+            <article className="ml-10 rounded-[26px] border border-white/10 bg-[rgba(255,255,255,0.08)] p-5 shadow-[0_24px_60px_-46px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+              <div className="flex items-start gap-4">
+                <span className="mt-0.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/48">
+                  01
+                </span>
+                <div className="min-w-0">
+                  <h3 className="text-base font-semibold tracking-tight text-white">
+                    Inkommande arbete
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-white/70">
+                    Dokument, mejl, ärenden och data från flera källor
+                  </p>
+                </div>
+              </div>
+            </article>
+
+            <article className="ml-10 rounded-[28px] border border-[rgba(190,47,36,0.26)] bg-[linear-gradient(180deg,rgba(190,47,36,0.16),rgba(255,255,255,0.08))] p-5 shadow-[0_30px_90px_-50px_rgba(190,47,36,0.42)] backdrop-blur-sm">
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/52">
+                    Här läggs majoriteten av tiden idag
+                  </p>
+                  <div className="mt-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/50">
+                    02
+                  </div>
+                  <h3 className="mt-2 text-base font-semibold tracking-tight text-white">
+                    Arbetsmoment som tar tid
+                  </h3>
+                </div>
+                <span className="shrink-0 rounded-full border border-[rgba(190,47,36,0.28)] bg-[rgba(190,47,36,0.18)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white">
+                  Automatiseras med AI
+                </span>
+              </div>
+
+              <div className="mt-5 grid gap-3 md:grid-cols-3">
+                {processingSteps.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="rounded-[22px] border border-white/10 bg-[rgba(255,255,255,0.08)] p-4"
+                  >
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/50">
+                      02.{index + 1}
+                    </div>
+                    <h4 className="mt-3 text-sm font-semibold tracking-tight text-white">
+                      {item.title}
+                    </h4>
+                  </div>
+                ))}
+              </div>
+            </article>
+
+            <article className="ml-10 rounded-[26px] border border-white/10 bg-[rgba(255,255,255,0.08)] p-5 shadow-[0_24px_60px_-46px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+              <div className="flex items-start gap-4">
+                <span className="mt-0.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/48">
+                  03
+                </span>
+                <div className="min-w-0">
+                  <h3 className="text-base font-semibold tracking-tight text-white">
+                    Färdigt underlag för beslut
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-white/70">
+                    Teamet kan agera direkt utan manuell förberedelse
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div className="relative mt-8 hidden overflow-x-auto pb-2 xl:block">
           <div className="relative min-w-[74rem]">
             <div
               aria-hidden="true"
