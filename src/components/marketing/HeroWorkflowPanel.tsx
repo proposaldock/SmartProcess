@@ -200,15 +200,15 @@ export function HeroWorkflowPanel() {
           </div>
         </div>
 
-        <div className="relative mt-8 hidden overflow-x-auto pb-2 2xl:block">
-          <div className="relative min-w-[74rem]">
+        <div className="relative mt-8 hidden 2xl:block">
+          <div className="relative">
             <div
               aria-hidden="true"
               className="absolute left-10 right-10 top-[7.2rem] h-px bg-[linear-gradient(90deg,rgba(255,255,255,0.08),rgba(255,255,255,0.22),rgba(255,255,255,0.08))]"
             />
 
-            <div className="relative flex items-center gap-4">
-              <article className="w-[17rem] shrink-0 rounded-[30px] border border-white/10 bg-[rgba(255,255,255,0.08)] p-5 shadow-[0_24px_60px_-46px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+            <div className="relative grid grid-cols-[minmax(0,0.92fr)_auto_minmax(0,1.7fr)_auto_minmax(0,0.98fr)] items-center gap-4">
+              <article className="min-w-0 rounded-[30px] border border-white/10 bg-[rgba(255,255,255,0.08)] p-5 shadow-[0_24px_60px_-46px_rgba(0,0,0,0.35)] backdrop-blur-sm">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/52">
                   01
                 </div>
@@ -234,7 +234,7 @@ export function HeroWorkflowPanel() {
                 </svg>
               </div>
 
-              <article className="relative min-h-[15rem] min-w-0 flex-1 rounded-[32px] border border-[rgba(190,47,36,0.26)] bg-[linear-gradient(180deg,rgba(190,47,36,0.16),rgba(255,255,255,0.08))] p-5 shadow-[0_30px_90px_-50px_rgba(190,47,36,0.42)] backdrop-blur-sm">
+              <article className="relative min-h-[15rem] min-w-0 rounded-[32px] border border-[rgba(190,47,36,0.26)] bg-[linear-gradient(180deg,rgba(190,47,36,0.16),rgba(255,255,255,0.08))] p-5 shadow-[0_30px_90px_-50px_rgba(190,47,36,0.42)] backdrop-blur-sm">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/52">
                   Här läggs majoriteten av tiden idag
                 </p>
@@ -284,7 +284,7 @@ export function HeroWorkflowPanel() {
                 </svg>
               </div>
 
-              <article className="w-[17rem] shrink-0 rounded-[30px] border border-white/10 bg-[rgba(255,255,255,0.08)] p-5 shadow-[0_24px_60px_-46px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+              <article className="min-w-0 rounded-[30px] border border-white/10 bg-[rgba(255,255,255,0.08)] p-5 shadow-[0_24px_60px_-46px_rgba(0,0,0,0.35)] backdrop-blur-sm">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/52">
                   03
                 </div>
