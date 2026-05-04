@@ -202,11 +202,6 @@ export function HeroWorkflowPanel() {
 
         <div className="hero-workflow-wide relative mt-8">
           <div className="relative">
-            <div
-              aria-hidden="true"
-              className="absolute left-10 right-10 top-[7.2rem] h-px bg-[linear-gradient(90deg,rgba(255,255,255,0.08),rgba(255,255,255,0.22),rgba(255,255,255,0.08))]"
-            />
-
             <div className="relative grid grid-cols-[minmax(0,0.92fr)_auto_minmax(0,1.7fr)_auto_minmax(0,0.98fr)] items-center gap-4">
               <article className="min-w-0 rounded-[30px] border border-white/10 bg-[rgba(255,255,255,0.08)] p-5 shadow-[0_24px_60px_-46px_rgba(0,0,0,0.35)] backdrop-blur-sm">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/52">
