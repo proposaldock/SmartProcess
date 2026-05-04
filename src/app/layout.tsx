@@ -15,10 +15,15 @@ const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
 });
 
+const siteTitle = "SmartProcess | AI-automation för manuella arbetsflöden";
+const siteDescription =
+  "SmartProcess hjälper företag identifiera manuella processer och bygga skräddarsydda AI-lösningar, interna verktyg och SaaS-flöden som sparar tid och förbättrar kvaliteten.";
+const socialImage = "/opengraph-image.png";
+
 export const metadata: Metadata = {
-  title: "SmartProcess | AI-automation för manuella arbetsflöden",
-  description:
-    "SmartProcess hjälper företag identifiera manuella processer och bygga skräddarsydda AI-lösningar, interna verktyg och SaaS-flöden som sparar tid och förbättrar kvaliteten.",
+  metadataBase: new URL("https://www.smartprocess.se"),
+  title: siteTitle,
+  description: siteDescription,
   icons: {
     icon: [
       { url: "/icon.png", type: "image/png", sizes: "512x512" },
@@ -27,11 +32,26 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-icon.png", type: "image/png", sizes: "512x512" }],
   },
   openGraph: {
-    title: "SmartProcess | AI-automation för manuella arbetsflöden",
-    description:
-      "SmartProcess hjälper företag identifiera manuella processer och bygga skräddarsydda AI-lösningar, interna verktyg och SaaS-flöden som sparar tid och förbättrar kvaliteten.",
+    title: siteTitle,
+    description: siteDescription,
+    url: "https://www.smartprocess.se",
+    siteName: "SmartProcess",
     locale: "sv_SE",
     type: "website",
+    images: [
+      {
+        url: socialImage,
+        width: 1200,
+        height: 627,
+        alt: "SmartProcess workflow automation",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: [socialImage],
   },
 };
 
