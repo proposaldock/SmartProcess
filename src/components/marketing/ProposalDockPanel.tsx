@@ -1,9 +1,3 @@
-const proposalMetrics = [
-  { label: "Identifierade krav", value: "42" },
-  { label: "Riskpunkter", value: "7" },
-  { label: "Täckningsgrad", value: "84%" },
-];
-
 const workflowSteps = [
   {
     title: "Upload brief",
@@ -60,22 +54,6 @@ export function ProposalDockPanel() {
         <span className="rounded-full border border-[rgba(190,47,36,0.18)] bg-[rgba(190,47,36,0.08)] px-3 py-1 text-xs font-semibold text-[var(--accent)]">
           Utvecklad av SmartProcess
         </span>
-      </div>
-
-      <div className="mt-6 grid gap-0 border-b border-[color:var(--border)] pb-6 sm:grid-cols-3">
-        {proposalMetrics.map((metric, index) => (
-          <div
-            key={metric.label}
-            className={`${index > 0 ? "sm:border-l sm:border-[color:var(--border)] sm:pl-6" : ""} ${index < proposalMetrics.length - 1 ? "pb-5 sm:pb-0" : ""}`}
-          >
-            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-              {metric.label}
-            </div>
-            <div className="mt-3 text-3xl font-semibold tracking-tight text-[var(--foreground)]">
-              {metric.value}
-            </div>
-          </div>
-        ))}
       </div>
 
       <div className="mt-6 rounded-[28px] bg-[var(--foreground)] p-5 text-white sm:rounded-[32px] sm:p-7">
