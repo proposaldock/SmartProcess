@@ -165,7 +165,7 @@ export function HeroWorkflowPanel() {
                 </span>
               </div>
 
-              <div className="mt-5 grid gap-3 md:grid-cols-3">
+              <div className="mt-5 grid gap-3 md:grid-cols-2 min-[1450px]:grid-cols-3">
                 {processingSteps.map((item, index) => (
                   <div
                     key={item.title}
