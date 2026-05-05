@@ -1,5 +1,6 @@
 import { BrandMark } from "@/components/marketing/BrandMark";
 import { ContactForm } from "@/components/marketing/ContactForm";
+import { FaqAccordion } from "@/components/marketing/FaqAccordion";
 import { HeroWorkflowPanel } from "@/components/marketing/HeroWorkflowPanel";
 import { AnchorButton } from "@/components/marketing/MarketingPrimitives";
 import { ProposalDockPanel } from "@/components/marketing/ProposalDockPanel";
@@ -285,9 +286,9 @@ export default function HomePage() {
             <span className="inline-flex rounded-full border border-[rgba(190,47,36,0.14)] bg-[rgba(190,47,36,0.08)] px-4 py-2 text-sm font-semibold text-[var(--accent)]">
               Skräddarsydd AI-automation för företag
             </span>
-            <h1 className="mt-8 max-w-5xl text-[2.85rem] font-semibold leading-[0.98] tracking-tight text-[var(--foreground)] sm:text-6xl sm:leading-[0.96] lg:text-7xl xl:text-[6rem] xl:leading-[0.92]">
+            <h1 className="mt-8 max-w-5xl text-balance text-[2.85rem] font-semibold leading-[0.98] tracking-tight text-[var(--foreground)] sm:text-6xl sm:leading-[0.96] lg:text-7xl xl:text-[6rem] xl:leading-[0.92]">
               Automatisera manuella arbetsflöden med{" "}
-              <span className="text-[var(--accent)]">skräddarsydd AI</span>
+              <span className="whitespace-nowrap text-[var(--accent)]">skräddarsydd AI</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--muted)] sm:mt-8 sm:text-xl sm:leading-9">
               Identifierar arbetsmoment som tar tid och bygger AI-lösningar som
@@ -383,9 +384,9 @@ export default function HomePage() {
             {problemPoints.map((item) => (
               <div
                 key={item.title}
-                className="grid gap-2 border-b border-[color:var(--border)] py-5 sm:grid-cols-[0.88fr_1.12fr]"
+                className="group grid gap-2 border-b border-[color:var(--border)] py-5 transition-colors duration-150 hover:border-[rgba(190,47,36,0.22)] sm:grid-cols-[0.88fr_1.12fr]"
               >
-                <h3 className="text-lg font-semibold tracking-tight text-[var(--foreground)]">
+                <h3 className="text-lg font-semibold tracking-tight text-[var(--foreground)] transition-colors duration-150 group-hover:text-[var(--accent)]">
                   {item.title}
                 </h3>
                 <p className="text-sm leading-7 text-[var(--muted)]">
@@ -718,21 +719,7 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className="border-t border-[color:var(--border)]">
-            {faqItems.map((item) => (
-              <div
-                key={item.question}
-                className="border-b border-[color:var(--border)] py-5"
-              >
-                <h3 className="text-lg font-semibold tracking-tight text-[var(--foreground)]">
-                  {item.question}
-                </h3>
-                <p className="mt-3 max-w-3xl text-sm leading-7 text-[var(--muted)]">
-                  {item.answer}
-                </p>
-              </div>
-            ))}
-          </div>
+          <FaqAccordion items={faqItems} />
         </div>
       </section>
 
