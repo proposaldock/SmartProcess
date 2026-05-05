@@ -1,18 +1,18 @@
 const workflowSteps = [
   {
-    title: "Upload brief",
+    title: "Ladda upp underlag",
     body: "Ladda upp brief eller RFP.",
   },
   {
-    title: "Review",
+    title: "Granska",
     body: "Granska struktur och krav.",
   },
   {
-    title: "Draft",
+    title: "Ta fram utkast",
     body: "Bygg första utkast.",
   },
   {
-    title: "Export",
+    title: "Exportera",
     body: "Ta vidare till offert eller leverans.",
   },
 ];

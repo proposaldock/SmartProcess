@@ -195,6 +195,26 @@ const faqItems = [
     answer:
       "Det räcker ofta att samma typ av moment tar några timmar i veckan för flera personer för att potentialen ska bli tydlig.",
   },
+  {
+    question: "Hur lång tid tar det att bygga en lösning?",
+    answer:
+      "Enklare automatiseringar kan vara på plats inom ett par veckor. Mer komplexa lösningar med flera integrationer tar längre tid. Första samtalet ger en realistisk bild av vad som gäller för just er process.",
+  },
+  {
+    question: "Vad kostar det?",
+    answer:
+      "Kostnaden beror på processens komplexitet och vilka system som ska kopplas ihop. Vi gör alltid en bedömning av potential och genomförbarhet innan vi sätter ett pris.",
+  },
+  {
+    question: "Vem äger lösningen?",
+    answer:
+      "Ni äger lösningen. Kod, konfigurationer och integrationer levereras till er och kan förvaltas internt eller med löpande stöd från SmartProcess.",
+  },
+  {
+    question: "Hur hanteras vår data?",
+    answer:
+      "Data behandlas enligt GDPR och stannar hos er. Vi arbetar aldrig med känslig data utan tydlig överenskommelse om hantering och lagring.",
+  },
 ];
 
 const assessmentPoints = [
@@ -237,7 +257,7 @@ export default function HomePage() {
             analyticsEvent="cta_click"
             analyticsLabel="header_booking"
           >
-            Boka ett första samtal
+            Kom i kontakt
           </AnchorButton>
         </nav>
         <div className="border-t border-[color:var(--border)] md:hidden">
@@ -286,7 +306,7 @@ export default function HomePage() {
                 analyticsEvent="cta_click"
                 analyticsLabel="hero_booking"
               >
-                Boka ett första samtal
+                Kom i kontakt
               </AnchorButton>
               <AnchorButton
                 href="#anvandningsomraden"
@@ -318,7 +338,7 @@ export default function HomePage() {
       <section className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
         <div className="border-t border-[color:var(--border)] pt-12 sm:pt-16">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
-            Positionering
+            Vad vi gör
           </p>
           <h2 className="mt-5 max-w-4xl text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[4.25rem] lg:leading-[0.98]">
             AI-lösningar för arbetsflöden som kostar tid
@@ -386,9 +406,6 @@ export default function HomePage() {
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
                 Process
-              </p>
-              <p className="mt-4 text-sm leading-7 text-[var(--muted)]">
-                Från manuellt arbete till fungerande lösning
               </p>
               <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[4rem] lg:leading-[0.98]">
                 Så går det till
@@ -788,6 +805,9 @@ export default function HomePage() {
                 {item.label}
               </a>
             ))}
+            <a href="/privacy" className="hover:text-[var(--foreground)]">
+              Integritetspolicy
+            </a>
           </div>
         </div>
       </footer>
@@ -800,7 +820,7 @@ export default function HomePage() {
             analyticsEvent="cta_click"
             analyticsLabel="mobile_sticky_booking"
           >
-            Boka ett första samtal
+            Kom i kontakt
           </AnchorButton>
         </div>
       </div>

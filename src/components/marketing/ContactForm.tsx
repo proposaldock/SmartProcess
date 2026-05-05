@@ -145,6 +145,16 @@ export function ContactForm({ directEmail }: ContactFormProps) {
               Eller mejla direkt
             </a>
           ) : null}
+          <p className="text-xs text-[var(--muted)]">
+            Dina uppgifter används enbart för att besvara din förfrågan och
+            delas inte med tredje part.{" "}
+            <a
+              href="/privacy"
+              className="underline decoration-[rgba(100,87,82,0.4)] underline-offset-2 hover:text-[var(--foreground)]"
+            >
+              Integritetspolicy
+            </a>
+          </p>
         </div>
         <p
           aria-live="polite"
