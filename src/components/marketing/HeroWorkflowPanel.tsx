@@ -1,9 +1,9 @@
 const processingSteps = [
   {
-    title: "Sortera och kategorisera manuellt",
+    title: "Sortera och kategorisera",
   },
   {
-    title: "Läsa igenom och tolka innehåll",
+    title: "Läsa igenom och tolka",
   },
   {
     title: "Sammanställa underlag",
@@ -34,8 +34,8 @@ export function HeroWorkflowPanel() {
               Så minskar manuellt arbete
             </p>
             <p className="mt-2 max-w-sm text-sm leading-6 text-white/70">
-              Visar hur manuellt förarbete kan automatiseras innan teamet tar
-              beslut.
+              Steg 02 — där majoriteten av manuell tid läggs — automatiseras
+              med AI.
             </p>
           </div>
           <span className="rounded-full border border-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/56">
@@ -106,11 +106,16 @@ export function HeroWorkflowPanel() {
               </div>
             </article>
 
-            <article className="ml-7 rounded-[22px] border border-white/10 bg-[rgba(255,255,255,0.08)] p-3.5 shadow-[0_24px_60px_-46px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+            <article className="ml-7 rounded-[22px] border border-[rgba(190,47,36,0.24)] bg-[rgba(255,255,255,0.08)] p-3.5 shadow-[0_24px_60px_-46px_rgba(0,0,0,0.35)] backdrop-blur-sm">
               <div className="flex items-start gap-3">
-                <span className="mt-0.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/48">
-                  03
-                </span>
+                <div className="mt-0.5 flex shrink-0 items-center gap-1">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/48">
+                    03
+                  </span>
+                  <svg viewBox="0 0 14 14" aria-hidden="true" className="size-2.5 text-[var(--accent)]" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="m2 7 3 3 7-6" />
+                  </svg>
+                </div>
                 <div className="min-w-0">
                   <h3 className="text-sm font-semibold tracking-tight text-white">
                     Färdigt underlag för beslut
@@ -165,7 +170,7 @@ export function HeroWorkflowPanel() {
                 </span>
               </div>
 
-              <div className="mt-5 grid gap-3 md:grid-cols-2 min-[1450px]:grid-cols-3">
+              <div className="mt-5 grid grid-cols-2 gap-3 min-[1360px]:grid-cols-3">
                 {processingSteps.map((item, index) => (
                   <div
                     key={item.title}
@@ -182,11 +187,16 @@ export function HeroWorkflowPanel() {
               </div>
             </article>
 
-            <article className="ml-10 rounded-[26px] border border-white/10 bg-[rgba(255,255,255,0.08)] p-5 shadow-[0_24px_60px_-46px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+            <article className="ml-10 rounded-[26px] border border-[rgba(190,47,36,0.24)] bg-[rgba(255,255,255,0.08)] p-5 shadow-[0_24px_60px_-46px_rgba(0,0,0,0.35)] backdrop-blur-sm">
               <div className="flex items-start gap-4">
-                <span className="mt-0.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/48">
-                  03
-                </span>
+                <div className="mt-0.5 flex shrink-0 items-center gap-1.5">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/48">
+                    03
+                  </span>
+                  <svg viewBox="0 0 14 14" aria-hidden="true" className="size-3 text-[var(--accent)]" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="m2 7 3 3 7-6" />
+                  </svg>
+                </div>
                 <div className="min-w-0">
                   <h3 className="text-base font-semibold tracking-tight text-white">
                     Färdigt underlag för beslut
@@ -279,9 +289,14 @@ export function HeroWorkflowPanel() {
                 </svg>
               </div>
 
-              <article className="min-w-0 rounded-[30px] border border-white/10 bg-[rgba(255,255,255,0.08)] p-5 shadow-[0_24px_60px_-46px_rgba(0,0,0,0.35)] backdrop-blur-sm">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/52">
-                  03
+              <article className="min-w-0 rounded-[30px] border border-[rgba(190,47,36,0.24)] bg-[rgba(255,255,255,0.08)] p-5 shadow-[0_24px_60px_-46px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+                <div className="flex items-center gap-1.5">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/52">
+                    03
+                  </div>
+                  <svg viewBox="0 0 14 14" aria-hidden="true" className="size-3 text-[var(--accent)]" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="m2 7 3 3 7-6" />
+                  </svg>
                 </div>
                 <h3 className="mt-5 text-lg font-semibold tracking-tight text-white">
                   Färdigt underlag för beslut
