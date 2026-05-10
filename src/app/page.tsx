@@ -362,7 +362,7 @@ export default function HomePage() {
             {[
               { value: "80%", label: "av manuellt arbete kan ofta automatiseras bort" },
               { value: "Veckor", label: "inte månader — till en fungerande lösning" },
-              { value: "Timmar", label: "sparade per person och vecka i praktiken" },
+              { value: "3–6 mån", label: "typisk återbetalningstid på en AI-lösning" },
             ].map((stat) => (
               <div
                 key={stat.value}
@@ -376,6 +376,21 @@ export default function HomePage() {
                 </p>
               </div>
             ))}
+          </div>
+          <div className="mt-4 rounded-2xl bg-[var(--foreground)] p-6 sm:mt-5 sm:px-8 sm:py-7">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/50">
+              Konkret besparing
+            </p>
+            <p className="mt-3 max-w-3xl text-lg font-semibold leading-7 text-white sm:text-xl sm:leading-8">
+              En tjänsteman som lägger 2 timmar om dagen på manuella
+              rutinuppgifter kostar verksamheten 100 000–200 000 kr per år i
+              tid som kan frigöras.
+            </p>
+            <p className="mt-3 text-sm leading-7 text-white/65">
+              Med fem sådana medarbetare: 500 000–1 000 000 kr om året. En
+              skräddarsydd AI-lösning kostar en bråkdel av det — och betalar
+              sig ofta på 3–6 månader.
+            </p>
           </div>
         </div>
       </section>
