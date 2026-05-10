@@ -320,11 +320,13 @@ export default function HomePage() {
               </AnchorButton>
             </div>
 
-            <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3 border-t border-[color:var(--border)] pt-5 text-sm font-medium text-[var(--foreground)] sm:mt-12 sm:gap-x-8 sm:pt-6">
+            <ul className="mt-10 flex flex-wrap gap-2 border-t border-[color:var(--border)] pt-5 sm:mt-12 sm:pt-6">
               {heroBenefits.map((item) => (
-                <li key={item} className="inline-flex items-center gap-3">
-                  <span className="block size-2 rounded-full bg-[var(--accent)]" />
-                  {item}
+                <li key={item}>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-white/70 px-3.5 py-1.5 text-xs font-semibold text-[var(--foreground)] shadow-[0_1px_4px_rgba(23,19,18,0.06)] backdrop-blur-sm">
+                    <span className="block size-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
+                    {item}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -356,6 +358,25 @@ export default function HomePage() {
               arbete i praktiken.
             </p>
           </div>
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-4 lg:grid-cols-3">
+            {[
+              { value: "80%", label: "av manuellt arbete kan ofta automatiseras bort" },
+              { value: "Veckor", label: "inte månader — till en fungerande lösning" },
+              { value: "Timmar", label: "sparade per person och vecka i praktiken" },
+            ].map((stat) => (
+              <div
+                key={stat.value}
+                className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-5 shadow-[0_2px_12px_-6px_rgba(23,19,18,0.08)]"
+              >
+                <div className="text-2xl font-semibold tracking-tight text-[var(--foreground)] sm:text-3xl">
+                  {stat.value}
+                </div>
+                <p className="mt-1.5 text-sm leading-6 text-[var(--muted)]">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -380,16 +401,19 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="border-t border-[color:var(--border)]">
-            {problemPoints.map((item) => (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {problemPoints.map((item, index) => (
               <div
                 key={item.title}
-                className="group grid gap-2 border-b border-[color:var(--border)] py-5 transition-colors duration-150 hover:border-[rgba(190,47,36,0.22)] sm:grid-cols-[0.88fr_1.12fr]"
+                className="group rounded-2xl border border-[color:var(--border)] bg-white/60 p-5 shadow-[0_2px_12px_-6px_rgba(23,19,18,0.06)] transition-all duration-200 hover:border-[rgba(190,47,36,0.24)] hover:shadow-[0_4px_20px_-8px_rgba(190,47,36,0.10)]"
               >
-                <h3 className="text-lg font-semibold tracking-tight text-[var(--foreground)] transition-colors duration-150 group-hover:text-[var(--accent)]">
+                <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
+                  {String(index + 1).padStart(2, "0")}
+                </div>
+                <h3 className="mt-3 text-base font-semibold tracking-tight text-[var(--foreground)]">
                   {item.title}
                 </h3>
-                <p className="text-sm leading-7 text-[var(--muted)]">
+                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
                   {item.body}
                 </p>
               </div>
