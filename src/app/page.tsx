@@ -382,14 +382,15 @@ export default function HomePage() {
               Konkret besparing
             </p>
             <p className="mt-3 max-w-3xl text-lg font-semibold leading-7 text-white sm:text-xl sm:leading-8">
-              En tjänsteman som lägger 2 timmar om dagen på manuella
-              rutinuppgifter kostar verksamheten 100 000–200 000 kr per år i
-              tid som kan frigöras.
+              En anställd som lägger 2 timmar om dagen på manuella
+              rutinuppgifter arbetar bort ca 400 betalda timmar per år på
+              uppgifter som kan automatiseras.
             </p>
             <p className="mt-3 text-sm leading-7 text-white/65">
-              Med fem sådana medarbetare: 500 000–1 000 000 kr om året. En
-              skräddarsydd AI-lösning kostar en bråkdel av det — och betalar
-              sig ofta på 3–6 månader.
+              Med fem anställda i samma situation är det 2 000 betalda timmar
+              om året — tid ni betalar för men som inte skapar värde. Det
+              motsvarar 500 000–1 000 000 kr i lönekostnader. En AI-lösning
+              kostar en bråkdel och betalar sig ofta på 3–6 månader.
             </p>
           </div>
         </div>
