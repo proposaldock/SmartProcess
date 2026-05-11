@@ -207,11 +207,6 @@ const faqItems = [
       "Kostnaden beror på processens komplexitet och vilka system som ska kopplas ihop. Vi gör alltid en bedömning av potential och genomförbarhet innan vi sätter ett pris.",
   },
   {
-    question: "Vem äger lösningen?",
-    answer:
-      "Ni äger lösningen. Kod, konfigurationer och integrationer levereras till er och kan förvaltas internt eller med löpande stöd från SmartProcess.",
-  },
-  {
     question: "Hur hanteras vår data?",
     answer:
       "Data behandlas enligt GDPR och stannar hos er. Vi arbetar aldrig med känslig data utan tydlig överenskommelse om hantering och lagring.",
