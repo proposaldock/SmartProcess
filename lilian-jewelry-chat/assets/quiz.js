@@ -906,7 +906,6 @@
 
   // ── Results ────────────────────────────────────────────────────────────────
   function renderResults() {
-    console.log('[LJC] renderResults v2.7.8 running');
     var result = computeResult();
     var prof   = getProf(result.style.primary);
     var prof2  = result.style.hybrid ? getProf(result.style.secondary) : null;
@@ -945,32 +944,28 @@
       ringsHtml = '<div class=”ljc-ring-section”><h3>Ringar för din profil</h3><div class=”ljc-ring-grid”>' + cards + '</div></div>';
     }
 
-    var S_CENTER = 'text-align:center !important;';
-    var S_BTN    = 'display:inline-block !important;background:#111518 !important;color:#FBFBFC !important;' +
-                   'text-decoration:none !important;border:none !important;border-radius:40px !important;' +
-                   'padding:17px 52px !important;font-size:15px !important;font-family:Poppins,sans-serif !important;' +
-                   'font-weight:500 !important;letter-spacing:0.04em !important;cursor:pointer !important;' +
-                   'box-shadow:0 4px 18px rgba(17,21,24,0.22) !important;';
+    var quizEl = document.getElementById('ljc-quiz');
+    if (!quizEl) { return; }
 
-    el('ljc-quiz').innerHTML =
+    quizEl.innerHTML =
       '<div class=”ljc-results”>' +
 
         '<div class=”ljc-progress-bar”><div class=”ljc-progress-fill” style=”width:100%”></div></div>' +
-        '<div class=”ljc-nav”><button class=”ljc-back-btn” id=”ljc-back-res” type=”button”>← Tillbaka</button><span></span></div>' +
+        '<div class=”ljc-nav”><button class=”ljc-back-btn” id=”ljc-back-res” type=”button”>&#8592; Tillbaka</button><span></span></div>' +
 
-        '<div class=”ljc-res-hero” style=”text-align:center;max-width:680px;margin:0 auto 40px;”>' +
-          '<p class=”ljc-eyebrow” style=”' + S_CENTER + '”>Din ringprofil</p>' +
-          '<h2 class=”ljc-q-title” style=”' + S_CENTER + '”>' + esc(prof.name) + '</h2>' +
+        '<div class=”ljc-res-hero”>' +
+          '<p class=”ljc-eyebrow”>Din ringprofil</p>' +
+          '<h2 class=”ljc-q-title”>' + esc(prof.name) + '</h2>' +
           hybridHtml +
-          '<blockquote class=”ljc-profile-quote” style=”' + S_CENTER + 'border:none !important;padding:0 !important;”>”' + esc(prof.quote) + '”</blockquote>' +
+          '<blockquote class=”ljc-profile-quote”>”' + esc(prof.quote) + '”</blockquote>' +
           confHtml +
         '</div>' +
 
-        '<div class=”ljc-profile-card” style=”max-width:680px;margin:0 auto 32px;”><table class=”ljc-profile-table”>' + tableHtml + '</table></div>' +
+        '<div class=”ljc-profile-card”><table class=”ljc-profile-table”>' + tableHtml + '</table></div>' +
 
-        '<div class=”ljc-profile-spec” style=”max-width:680px;margin:0 auto 40px;”>' +
-          '<h3 style=”font-size:11px !important;font-weight:600 !important;letter-spacing:0.12em !important;text-transform:uppercase !important;color:#0f4528 !important;margin:0 0 16px !important;font-family:Poppins,sans-serif !important;”>Vad detta innebär för din ring</h3>' +
-          '<ul class=”ljc-spec-list” style=”list-style:none !important;padding:0 !important;margin:0 !important;”>' +
+        '<div class=”ljc-profile-spec”>' +
+          '<h3 class=”ljc-spec-heading”>Vad detta inneb&#228;r f&#246;r din ring</h3>' +
+          '<ul class=”ljc-spec-list”>' +
             '<li><strong>Sten:</strong> '                + esc(prof.stone)    + '</li>' +
             '<li><strong>Infattning:</strong> '          + esc(prof.mounting) + '</li>' +
             '<li><strong>Kramlor:</strong> '             + esc(prof.prongs)   + '</li>' +
@@ -982,15 +977,69 @@
 
         ringsHtml +
 
-        '<div class=”ljc-booking-section” style=”text-align:center !important;padding:56px 0 40px;border-top:1px solid #E7EBEE;”>' +
-          '<h3 style=”' + S_CENTER + 'font-family:\'Dancing Script\',cursive !important;font-size:40px !important;color:#111518 !important;margin:0 0 14px !important;”>Redo att hitta din ring?</h3>' +
-          '<p style=”' + S_CENTER + 'color:#777 !important;font-size:15px !important;margin:0 auto 32px !important;max-width:420px !important;line-height:1.6 !important;”>Boka en kostnadsfri konsultation med Lilian och ta med dig din ringprofil.</p>' +
-          '<a href=”' + esc(AMELIA) + '” class=”ljc-btn-primary” style=”' + S_BTN + '”>Boka konsultation &rarr;</a>' +
+        '<div class=”ljc-booking-section”>' +
+          '<h3 class=”ljc-cta-heading”>Redo att hitta din ring?</h3>' +
+          '<p class=”ljc-cta-text”>Boka en kostnadsfri konsultation med Lilian och ta med dig din ringprofil.</p>' +
+          '<a href=”' + esc(AMELIA) + '” class=”ljc-btn-primary ljc-cta-btn”>Boka konsultation &#8594;</a>' +
         '</div>' +
 
       '</div>';
 
-    el('ljc-back-res').addEventListener('click', function () { currentStep = questions.length - 1; renderQuestion(currentStep); });
+    // Apply styles via DOM after innerHTML to guarantee they survive any theme interference
+    function forceStyle(el, styles) {
+      if (!el) { return; }
+      Object.keys(styles).forEach(function (prop) {
+        el.style.setProperty(prop, styles[prop], 'important');
+      });
+    }
+
+    forceStyle(quizEl.querySelector('.ljc-res-hero'), {
+      'text-align': 'center', 'max-width': '680px', 'margin': '0 auto 40px'
+    });
+    forceStyle(quizEl.querySelector('.ljc-res-hero .ljc-eyebrow'),    { 'text-align': 'center' });
+    forceStyle(quizEl.querySelector('.ljc-res-hero .ljc-q-title'),    { 'text-align': 'center' });
+    forceStyle(quizEl.querySelector('.ljc-res-hero .ljc-hybrid-note'),{ 'text-align': 'center' });
+    forceStyle(quizEl.querySelector('.ljc-profile-quote'), {
+      'text-align': 'center', 'border': 'none', 'padding': '0'
+    });
+    forceStyle(quizEl.querySelector('.ljc-profile-card'), {
+      'max-width': '680px', 'margin': '0 auto 32px'
+    });
+    forceStyle(quizEl.querySelector('.ljc-profile-spec'), {
+      'max-width': '680px', 'margin': '0 auto 40px'
+    });
+    forceStyle(quizEl.querySelector('.ljc-spec-heading'), {
+      'font-size': '11px', 'font-weight': '600', 'letter-spacing': '0.12em',
+      'text-transform': 'uppercase', 'color': '#0f4528', 'margin': '0 0 16px',
+      'font-family': 'Poppins, sans-serif'
+    });
+    forceStyle(quizEl.querySelector('.ljc-spec-list'), {
+      'list-style': 'none', 'padding': '0', 'margin': '0'
+    });
+    forceStyle(quizEl.querySelector('.ljc-booking-section'), {
+      'text-align': 'center', 'padding': '56px 0 40px',
+      'border-top': '1px solid #E7EBEE'
+    });
+    forceStyle(quizEl.querySelector('.ljc-cta-heading'), {
+      'text-align': 'center', 'font-family': “'Dancing Script', cursive”,
+      'font-size': '40px', 'color': '#111518', 'margin': '0 0 14px'
+    });
+    forceStyle(quizEl.querySelector('.ljc-cta-text'), {
+      'text-align': 'center', 'color': '#777', 'font-size': '15px',
+      'margin': '0 auto 32px', 'max-width': '420px', 'line-height': '1.6'
+    });
+    forceStyle(quizEl.querySelector('.ljc-cta-btn'), {
+      'display': 'inline-block', 'background': '#111518', 'color': '#FBFBFC',
+      'text-decoration': 'none', 'border': 'none', 'border-radius': '40px',
+      'padding': '17px 52px', 'font-size': '15px', 'font-family': 'Poppins, sans-serif',
+      'font-weight': '500', 'letter-spacing': '0.04em', 'cursor': 'pointer',
+      'box-shadow': '0 4px 18px rgba(17,21,24,0.22)'
+    });
+
+    var backBtn = quizEl.querySelector('#ljc-back-res');
+    if (backBtn) {
+      backBtn.addEventListener('click', function () { currentStep = questions.length - 1; renderQuestion(currentStep); });
+    }
   }
 
   // ── Boot ───────────────────────────────────────────────────────────────────
