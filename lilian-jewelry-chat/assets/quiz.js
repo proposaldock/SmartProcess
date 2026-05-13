@@ -42,6 +42,10 @@
   // ── Helpers ────────────────────────────────────────────────────────────────
   function el(id) { return document.getElementById(id); }
   function esc(s) { var d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML; }
+  function forceStyle(node, styles) {
+    if (!node) { return; }
+    Object.keys(styles).forEach(function (p) { node.style.setProperty(p, styles[p], 'important'); });
+  }
 
   // Returns a media-library URL if uploaded in admin, otherwise falls back to plugin images/ folder
   function imgSrc(filename) {
@@ -986,13 +990,6 @@
       '</div>';
 
     // Apply styles via DOM after innerHTML to guarantee they survive any theme interference
-    function forceStyle(el, styles) {
-      if (!el) { return; }
-      Object.keys(styles).forEach(function (prop) {
-        el.style.setProperty(prop, styles[prop], 'important');
-      });
-    }
-
     forceStyle(quizEl.querySelector('.ljc-res-hero'), {
       'text-align': 'center', 'max-width': '680px', 'margin': '0 auto 40px'
     });
