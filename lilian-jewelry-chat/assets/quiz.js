@@ -54,6 +54,38 @@
     Object.keys(styles).forEach(function (p) { node.style.setProperty(p, styles[p], 'important'); });
   }
 
+  // ── Snapshot helpers ──────────────────────────────────────────────────────
+  function restoreSnapshot(n) {
+    var snap = snapshots[n];
+    if (!snap) { return; }
+    questions   = snap.questions.slice();
+    answers     = JSON.parse(JSON.stringify(snap.answers));
+    snapshots   = snapshots.slice(0, n + 1);
+    currentStep = n;
+    renderQuestion(n);
+  }
+
+  function dotsHtml(activeIndex) {
+    var total = snapshots.length;
+    if (total <= 1) { return ''; }
+    var out = '<div class="ljc-step-dots">';
+    for (var i = 0; i < total; i++) {
+      if (i === activeIndex) {
+        out += '<span class="ljc-step-dot ljc-step-dot--active">' + (i + 1) + '</span>';
+      } else if (i < activeIndex) {
+        out += '<span class="ljc-step-dot ljc-step-dot--done" data-snap="' + i + '">' + (i + 1) + '</span>';
+      }
+    }
+    out += '</div>';
+    return out;
+  }
+
+  function startQuiz() {
+    snapshots   = [{ step: 0, questions: questions.slice(), answers: JSON.parse(JSON.stringify(answers)) }];
+    currentStep = 0;
+    renderQuestion(0);
+  }
+
   // Returns a media-library URL if uploaded in admin, otherwise falls back to plugin images/ folder
   function imgSrc(filename) {
     if (!filename) { return ''; }
@@ -537,6 +569,8 @@
   var answers     = {};
   var unsureCount = 0;
   var preState    = { backTo: 'path_select', checkedItems: [], cq1Dest: null };
+  var snapshots   = [];        // [{step, questions[], answers{}}] — one per question step entered
+  var currentLeadId = null;   // lead row ID from ljc_lead AJAX, used by image upload
 
   // ── Score computation ──────────────────────────────────────────────────────
   function computeScores() {
@@ -686,9 +720,9 @@
     attachFallbacks();
     document.querySelectorAll('.ljc-card[data-path]').forEach(function (card) {
       card.addEventListener('click', function () {
-        path = this.dataset.path; answers = {}; unsureCount = 0;
+        path = this.dataset.path; answers = {}; unsureCount = 0; snapshots = [];
         if (path === 'A') { renderAQ1(); }
-        else if (path === 'B') { questions = buildPathB(); preState.backTo = 'path_select'; currentStep = 0; renderQuestion(0); }
+        else if (path === 'B') { questions = buildPathB(); preState.backTo = 'path_select'; startQuiz(); }
         else { renderCQ1(); }
       });
     });
@@ -714,7 +748,7 @@
         var dest = AQ1_OPTIONS.filter(function(o){ return o.id === this.dataset.oid; }.bind(this))[0];
         if (!dest) { return; }
         if (dest.dest === 'checklist') { renderAChecklist(); }
-        else { questions = buildPathA([], true); preState.backTo = 'a_q1'; currentStep = 0; renderQuestion(0); }
+        else { questions = buildPathA([], true); preState.backTo = 'a_q1'; startQuiz(); }
       });
     });
   }
@@ -761,7 +795,7 @@
         preState.checkedItems = checked;
         questions = buildPathA(checked, false);
         preState.backTo = 'a_checklist';
-        currentStep = 0; renderQuestion(0);
+        startQuiz();
       },
       clTitle,
       clSub,
@@ -793,7 +827,7 @@
         else if (opt.dest === 'reference') { renderCReference(); }
         else {
           questions = buildPathC(opt.dest, []);
-          preState.backTo = 'c_q1'; currentStep = 0; renderQuestion(0);
+          preState.backTo = 'c_q1'; startQuiz();
         }
       });
     });
@@ -809,7 +843,7 @@
         preState.checkedItems = checked;
         questions = buildPathC('checklist', checked);
         preState.backTo = 'c_checklist';
-        currentStep = 0; renderQuestion(0);
+        startQuiz();
       },
       clTitle,
       clSub,
@@ -831,7 +865,7 @@
     el('ljc-ref-next').addEventListener('click', function () {
       answers['c_reference'] = (el('ljc-ref-desc').value || '').trim();
       questions = buildPathC('visual', []);
-      preState.backTo = 'c_q1'; currentStep = 0; renderQuestion(0);
+      preState.backTo = 'c_q1'; startQuiz();
     });
   }
 
@@ -853,7 +887,7 @@
     el('ljc-quiz').innerHTML =
       '<div class="ljc-question-wrap">' +
         '<div class="ljc-progress-bar"><div class="ljc-progress-fill" style="width:' + pct + '%"></div></div>' +
-        '<div class="ljc-nav"><button class="ljc-back-btn" id="ljc-back" type="button">← Tillbaka</button><p class="ljc-step-label">Steg ' + (index + 3) + ' av ' + (questions.length + 2) + '</p></div>' +
+        '<div class="ljc-nav"><button class="ljc-back-btn" id="ljc-back" type="button">&#8592; Tillbaka</button>' + dotsHtml(index) + '<p class="ljc-step-label">Steg ' + (index + 3) + ' av ' + (questions.length + 2) + '</p></div>' +
         multiHint +
         '<h2 class="ljc-q-title">' + esc(qStr(q.id, 'title') || q.title) + '</h2>' +
         '<p class="ljc-q-sub">' + esc(qStr(q.id, 'sub') || q.subtitle || '') + '</p>' +
@@ -864,16 +898,25 @@
     attachFallbacks();
 
     el('ljc-back').addEventListener('click', function () {
-      if (index > 0) { currentStep--; renderQuestion(currentStep); }
+      if (index > 0) { restoreSnapshot(index - 1); }
       else {
         var bt = preState.backTo;
-        if      (bt === 'a_q1')       { renderAQ1(); }
+        if      (bt === 'a_q1')        { renderAQ1(); }
         else if (bt === 'a_checklist') { renderAChecklist(); }
-        else if (bt === 'c_q1')       { renderCQ1(); }
+        else if (bt === 'c_q1')        { renderCQ1(); }
         else if (bt === 'c_checklist') { renderCChecklist(); }
         else                           { renderPathSelect(); }
       }
     });
+
+    var dotsContainer = el('ljc-quiz').querySelector('.ljc-step-dots');
+    if (dotsContainer) {
+      dotsContainer.querySelectorAll('.ljc-step-dot--done').forEach(function (dot) {
+        dot.addEventListener('click', function () {
+          restoreSnapshot(parseInt(this.dataset.snap, 10));
+        });
+      });
+    }
 
     if (isMulti) {
       var pending = selIds.slice();
@@ -912,7 +955,12 @@
       Array.prototype.splice.apply(questions, args);
     }
     currentStep++;
-    if (currentStep < questions.length) { renderQuestion(currentStep); } else { renderResults(); }
+    if (currentStep < questions.length) {
+      snapshots[currentStep] = { step: currentStep, questions: questions.slice(), answers: JSON.parse(JSON.stringify(answers)) };
+      renderQuestion(currentStep);
+    } else {
+      renderResults();
+    }
   }
 
   // ── Results ────────────────────────────────────────────────────────────────
@@ -973,7 +1021,11 @@
       fd.append('band',            result.band);
       fd.append('feel',            result.feel);
       fd.append('budget',          result.budget);
-      fetch(AJAX_URL, { method: 'POST', body: fd }).catch(function () {});
+      currentLeadId = null;
+      fetch(AJAX_URL, { method: 'POST', body: fd })
+        .then(function (r) { return r.json(); })
+        .then(function (data) { if (data && data.success && data.data) { currentLeadId = data.data.lead_id || null; } })
+        .catch(function () {});
     }
 
     quizEl.innerHTML =
@@ -1005,6 +1057,20 @@
         '</div>' +
 
         ringsHtml +
+
+        '<div class="ljc-upload-section">' +
+          '<h3 class="ljc-upload-heading">Har du en inspirationsbild?</h3>' +
+          '<p class="ljc-upload-text">Ladda upp en bild på en ring du gillar — vi tar med den i din konsultation.</p>' +
+          '<label class="ljc-upload-label" for="ljc-img-file">' +
+            '<div class="ljc-upload-area" id="ljc-upload-area">' +
+              '<span class="ljc-upload-icon">&#128247;</span>' +
+              '<span class="ljc-upload-prompt">Klicka för att välja bild</span>' +
+            '</div>' +
+            '<input type="file" id="ljc-img-file" accept="image/*" style="display:none">' +
+          '</label>' +
+          '<div id="ljc-upload-preview"></div>' +
+          '<div class="ljc-upload-status" id="ljc-upload-status"></div>' +
+        '</div>' +
 
         '<div class="ljc-booking-section">' +
           '<h3 class="ljc-cta-heading">Redo att hitta din ring?</h3>' +
@@ -1057,6 +1123,84 @@
       'font-weight': '500', 'letter-spacing': '0.04em', 'cursor': 'pointer',
       'box-shadow': '0 4px 18px rgba(17,21,24,0.22)'
     });
+
+    forceStyle(quizEl.querySelector('.ljc-upload-section'), {
+      'max-width': '680px', 'margin': '0 auto 40px', 'padding': '32px 28px',
+      'background': '#F9FAF8', 'border-radius': '16px', 'text-align': 'center',
+      'border': '1px solid #E7EBEE'
+    });
+    forceStyle(quizEl.querySelector('.ljc-upload-heading'), {
+      'font-family': 'Poppins, sans-serif', 'font-size': '18px',
+      'font-weight': '600', 'color': '#111518', 'margin': '0 0 8px'
+    });
+    forceStyle(quizEl.querySelector('.ljc-upload-text'), {
+      'color': '#777', 'font-size': '14px', 'margin': '0 0 20px',
+      'line-height': '1.5'
+    });
+    forceStyle(quizEl.querySelector('.ljc-upload-area'), {
+      'border': '2px dashed #D0D5DA', 'border-radius': '12px',
+      'padding': '32px 24px', 'display': 'flex', 'flex-direction': 'column',
+      'align-items': 'center', 'gap': '8px', 'cursor': 'pointer',
+      'transition': 'border-color 0.2s, background 0.2s'
+    });
+    forceStyle(quizEl.querySelector('.ljc-upload-icon'), { 'font-size': '32px', 'line-height': '1' });
+    forceStyle(quizEl.querySelector('.ljc-upload-prompt'), {
+      'font-size': '14px', 'color': '#555', 'font-family': 'Poppins, sans-serif'
+    });
+
+    // ── Image upload logic ────────────────────────────────────────────────────
+    var uploadInput  = quizEl.querySelector('#ljc-img-file');
+    var uploadArea   = quizEl.querySelector('#ljc-upload-area');
+    var uploadStatus = quizEl.querySelector('#ljc-upload-status');
+    var uploadPrev   = quizEl.querySelector('#ljc-upload-preview');
+
+    var doUpload = function (file) {
+      if (!AJAX_URL || !NONCE) { return; }
+      if (uploadStatus) { uploadStatus.textContent = 'Laddar upp...'; uploadStatus.style.color = '#777'; uploadStatus.style.fontSize = '13px'; uploadStatus.style.fontFamily = 'Poppins, sans-serif'; uploadStatus.style.marginTop = '12px'; }
+      var ufd = new FormData();
+      ufd.append('action',  'ljc_upload_reference');
+      ufd.append('nonce',   NONCE);
+      ufd.append('lead_id', currentLeadId || 0);
+      ufd.append('file',    file);
+      fetch(AJAX_URL, { method: 'POST', body: ufd })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.success) {
+            if (uploadStatus) { uploadStatus.textContent = 'Bilden är uppladdad! ✓'; uploadStatus.style.color = '#0f4528'; }
+          } else {
+            if (uploadStatus) { uploadStatus.textContent = 'Något gick fel. Försök igen.'; uploadStatus.style.color = '#c00'; }
+          }
+        })
+        .catch(function () {
+          if (uploadStatus) { uploadStatus.textContent = 'Uppladdningen misslyckades. Försök igen.'; uploadStatus.style.color = '#c00'; }
+        });
+    };
+
+    if (uploadInput) {
+      uploadInput.addEventListener('change', function () {
+        var file = this.files[0];
+        if (!file) { return; }
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+          if (uploadPrev) {
+            uploadPrev.innerHTML = '<img src="' + ev.target.result + '" alt="Inspirationsbild" style="max-width:200px;max-height:200px;object-fit:cover;border-radius:12px;margin:12px auto 0;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.12);">';
+          }
+          if (uploadArea) { uploadArea.style.display = 'none'; }
+        };
+        reader.readAsDataURL(file);
+        if (currentLeadId) {
+          doUpload(file);
+        } else {
+          if (uploadStatus) { uploadStatus.textContent = 'Väntar...'; uploadStatus.style.color = '#aaa'; }
+          var waitAttempts = 0;
+          var waitTimer = setInterval(function () {
+            waitAttempts++;
+            if (currentLeadId) { clearInterval(waitTimer); doUpload(file); }
+            else if (waitAttempts >= 20) { clearInterval(waitTimer); doUpload(file); }
+          }, 250);
+        }
+      });
+    }
 
     var backBtn = quizEl.querySelector('#ljc-back-res');
     if (backBtn) {

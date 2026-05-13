@@ -75,6 +75,47 @@
   text-transform: uppercase;
   color: #aaa;
   margin: 0;
+  white-space: nowrap;
+}
+
+/* ── Step dots (back navigation) ─────────────────────────────────────────── */
+.ljc-step-dots {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: center;
+  padding: 0 10px;
+}
+.ljc-step-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.ljc-step-dot--done {
+  background: #E7EBEE;
+  color: #111518;
+  cursor: pointer;
+}
+.ljc-step-dot--done:hover {
+  background: #0f4528;
+  color: #fff;
+  transform: scale(1.1);
+}
+.ljc-step-dot--active {
+  background: #111518;
+  color: #fff;
+  cursor: default;
 }
 
 /* ── Welcome screen ───────────────────────────────────────────────────────── */
@@ -804,4 +845,65 @@
   #ljc-float-wrap { bottom: 20px; right: 20px; }
   #ljc-float-btn  { width: 52px; height: 52px; font-size: 22px; }
   #ljc-float-bubble { font-size: 12px; max-width: 188px; }
+}
+
+/* ── Reference image upload ───────────────────────────────────────────────── */
+.ljc-upload-section {
+  max-width: 680px;
+  margin: 0 auto 40px;
+  padding: 32px 28px;
+  background: #F9FAF8;
+  border: 1px solid #E7EBEE;
+  border-radius: 16px;
+  text-align: center;
+}
+.ljc-upload-heading {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111518;
+  margin: 0 0 8px;
+}
+.ljc-upload-text {
+  color: #777;
+  font-size: 14px;
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+.ljc-upload-label {
+  display: block;
+  cursor: pointer;
+}
+.ljc-upload-area {
+  border: 2px dashed #D0D5DA;
+  border-radius: 12px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.ljc-upload-area:hover {
+  border-color: #0f4528;
+  background: #F0F5F2;
+}
+.ljc-upload-icon { font-size: 32px; line-height: 1; }
+.ljc-upload-prompt {
+  font-size: 14px;
+  color: #555;
+  font-family: 'Poppins', sans-serif;
+}
+.ljc-upload-status {
+  margin-top: 12px;
+  font-size: 13px;
+  font-family: 'Poppins', sans-serif;
+  min-height: 18px;
+}
+
+@media (max-width: 600px) {
+  .ljc-upload-section { padding: 24px 16px; }
+  .ljc-step-dots { gap: 4px; padding: 0 6px; }
+  .ljc-step-dot  { width: 20px; height: 20px; font-size: 9px; }
 }
