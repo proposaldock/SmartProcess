@@ -207,16 +207,16 @@
   };
 
   var Q_BUDGET = {
-    id: 'budget', cols: 3, type: 'single',
+    id: 'budget', cols: 3, type: 'single', textOnly: true,
     title: 'Vad är din ungefärliga budget?',
     subtitle: 'Hjälper oss prioritera rätt sten och material',
     options: [
-      { id: 'tier1', label: 'Under 10 000 kr',          sub: 'Labbdiamanter, moissanit',        img: 'budget-low.jpg',     fallback: '💰', scores: { 'BU:tier1': 5 } },
-      { id: 'tier2', label: '10 000–25 000 kr', sub: 'Labbdiamant, bra kvalitet',      img: 'budget-mid.jpg',     fallback: '💰', scores: { 'BU:tier2': 5 } },
-      { id: 'tier3', label: '25 000–50 000 kr', sub: 'Naturlig diamant, certifikat',   img: 'budget-high.jpg',    fallback: '💎', scores: { 'BU:tier3': 5 } },
-      { id: 'tier4', label: '50 000–100 000 kr', sub: 'Premium diamant, platina',     img: 'budget-premium.jpg', fallback: '👑', scores: { 'BU:tier4': 5 } },
-      { id: 'tier5', label: '100 000+ kr',               sub: 'Exceptionellt, full custom',     img: 'budget-luxury.jpg',  fallback: '✦',       scores: { 'BU:tier5': 5 } },
-      { id: 'flex',  label: 'Inte bestämt ännu',         sub: 'Visa mig vad pengarna gör', img: 'budget-open.jpg',    fallback: '🤔', scores: { 'BU:tier2': 1, 'BU:tier3': 2 } }
+      { id: 'tier1', label: 'Under 10 000 kr',          sub: 'Labbdiamanter, moissanit',        img: '', fallback: '', scores: { 'BU:tier1': 5 } },
+      { id: 'tier2', label: '10 000–25 000 kr', sub: 'Labbdiamant, bra kvalitet',      img: '', fallback: '', scores: { 'BU:tier2': 5 } },
+      { id: 'tier3', label: '25 000–50 000 kr', sub: 'Naturlig diamant, certifikat',   img: '', fallback: '', scores: { 'BU:tier3': 5 } },
+      { id: 'tier4', label: '50 000–100 000 kr', sub: 'Premium diamant, platina',     img: '', fallback: '', scores: { 'BU:tier4': 5 } },
+      { id: 'tier5', label: '100 000+ kr',               sub: 'Exceptionellt, full custom',     img: '', fallback: '', scores: { 'BU:tier5': 5 } },
+      { id: 'flex',  label: 'Inte bestämt ännu',         sub: 'Visa mig vad pengarna gör', img: '', fallback: '', scores: { 'BU:tier2': 1, 'BU:tier3': 2 } }
     ]
   };
 
