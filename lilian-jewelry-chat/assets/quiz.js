@@ -36,14 +36,22 @@
     };
   }
 
-  // String override helpers — returns admin value if set, null otherwise
+  // String override helpers — returns admin value if set, null otherwise.
+  // Shared questions are cloned with a path prefix (a_/b_/c_) so we fall back
+  // to the un-prefixed base qid when no override exists for the clone id.
   function qStr(qid, field) {
     var v = STRINGS[qid + '_' + field];
-    return (v !== undefined && v !== '') ? v : null;
+    if (v !== undefined && v !== '') { return v; }
+    var base = qid.replace(/^[a-c]_/, '');
+    if (base !== qid) { v = STRINGS[base + '_' + field]; if (v !== undefined && v !== '') { return v; } }
+    return null;
   }
   function oStr(qid, oid, field) {
     var v = STRINGS[qid + '_' + oid + '_' + field];
-    return (v !== undefined && v !== '') ? v : null;
+    if (v !== undefined && v !== '') { return v; }
+    var base = qid.replace(/^[a-c]_/, '');
+    if (base !== qid) { v = STRINGS[base + '_' + oid + '_' + field]; if (v !== undefined && v !== '') { return v; } }
+    return null;
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
