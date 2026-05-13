@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 define( 'LJC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LJC_URL', plugin_dir_url( __FILE__ ) );
-define( 'LJC_VER', '2.8.3' );
+define( 'LJC_VER', '2.8.4' );
 
 // ── Register custom image size ─────────────────────────────────────────────
 // 600×600 square crop — crisp on retina for quiz cards (~240 px display size)
@@ -569,6 +569,7 @@ function ljc_create_leads_table() {
         feel varchar(20) DEFAULT '',
         budget varchar(20) DEFAULT '',
         booked tinyint(1) DEFAULT 0,
+        reference_image_url varchar(500) DEFAULT '',
         PRIMARY KEY (id)
     ) {$charset};";
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -578,16 +579,17 @@ function ljc_create_leads_table() {
 // Run upgrades on every load — dbDelta + ALTER TABLE are idempotent
 add_action( 'plugins_loaded', 'ljc_maybe_upgrade' );
 function ljc_maybe_upgrade() {
-    if ( get_option( 'ljc_db_version', '0' ) !== '2.6.0' ) {
+    if ( get_option( 'ljc_db_version', '0' ) !== '2.8.4' ) {
         ljc_create_leads_table();
         // Add new columns to existing tables (dbDelta may not add columns reliably)
         global $wpdb;
         $table = $wpdb->prefix . 'ljc_leads';
         $cols  = $wpdb->get_col( "SHOW COLUMNS FROM {$table}" );
-        if ( $cols && ! in_array( 'name',   $cols, true ) ) { $wpdb->query( "ALTER TABLE {$table} ADD COLUMN `name`   varchar(100) DEFAULT '' AFTER `created_at`" ); }
-        if ( $cols && ! in_array( 'email',  $cols, true ) ) { $wpdb->query( "ALTER TABLE {$table} ADD COLUMN `email`  varchar(100) DEFAULT '' AFTER `name`" ); }
-        if ( $cols && ! in_array( 'booked', $cols, true ) ) { $wpdb->query( "ALTER TABLE {$table} ADD COLUMN `booked` tinyint(1) DEFAULT 0 AFTER `budget`" ); }
-        update_option( 'ljc_db_version', '2.6.0' );
+        if ( $cols && ! in_array( 'name',                $cols, true ) ) { $wpdb->query( "ALTER TABLE {$table} ADD COLUMN `name`                varchar(100) DEFAULT '' AFTER `created_at`" ); }
+        if ( $cols && ! in_array( 'email',               $cols, true ) ) { $wpdb->query( "ALTER TABLE {$table} ADD COLUMN `email`               varchar(100) DEFAULT '' AFTER `name`" ); }
+        if ( $cols && ! in_array( 'booked',              $cols, true ) ) { $wpdb->query( "ALTER TABLE {$table} ADD COLUMN `booked`              tinyint(1)   DEFAULT 0  AFTER `budget`" ); }
+        if ( $cols && ! in_array( 'reference_image_url', $cols, true ) ) { $wpdb->query( "ALTER TABLE {$table} ADD COLUMN `reference_image_url` varchar(500) DEFAULT '' AFTER `booked`" ); }
+        update_option( 'ljc_db_version', '2.8.4' );
     }
 }
 
@@ -607,7 +609,7 @@ function ljc_activate() {
         ] );
     }
     ljc_create_leads_table();
-    update_option( 'ljc_db_version', '2.6.0' );
+    update_option( 'ljc_db_version', '2.8.4' );
 }
 
 // ── Shortcode ──────────────────────────────────────────────────────────────
@@ -786,6 +788,56 @@ function ljc_save_lead() {
     ] );
     // Return the new row ID so JS can reference it when the customer books
     wp_send_json_success( [ 'lead_id' => (int) $wpdb->insert_id ] );
+}
+
+// ── AJAX: upload reference image and attach to lead ───────────────────────
+
+add_action( 'wp_ajax_nopriv_ljc_upload_reference', 'ljc_upload_reference' );
+add_action( 'wp_ajax_ljc_upload_reference',        'ljc_upload_reference' );
+
+function ljc_upload_reference() {
+    if ( ! check_ajax_referer( 'ljc_nonce', 'nonce', false ) ) {
+        wp_send_json_error( 'nonce' );
+    }
+
+    if ( empty( $_FILES['file'] ) || (int) $_FILES['file']['error'] !== UPLOAD_ERR_OK ) {
+        wp_send_json_error( 'no_file' );
+    }
+
+    // Validate MIME type against the actual file content
+    $allowed = [ 'image/jpeg', 'image/png', 'image/gif', 'image/webp' ];
+    $ftype   = function_exists( 'mime_content_type' ) ? mime_content_type( $_FILES['file']['tmp_name'] ) : '';
+    if ( $ftype && ! in_array( $ftype, $allowed, true ) ) {
+        wp_send_json_error( 'invalid_type' );
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+
+    $overrides = [
+        'test_form' => false,
+        'mimes'     => [
+            'jpg|jpeg|jpe' => 'image/jpeg',
+            'png'          => 'image/png',
+            'gif'          => 'image/gif',
+            'webp'         => 'image/webp',
+        ],
+    ];
+    $moved = wp_handle_upload( $_FILES['file'], $overrides );
+
+    if ( ! $moved || isset( $moved['error'] ) ) {
+        wp_send_json_error( $moved['error'] ?? 'upload_failed' );
+    }
+
+    $url     = esc_url_raw( $moved['url'] );
+    $lead_id = (int) ( $_POST['lead_id'] ?? 0 );
+
+    if ( $lead_id ) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'ljc_leads';
+        $wpdb->update( $table, [ 'reference_image_url' => $url ], [ 'id' => $lead_id ] );
+    }
+
+    wp_send_json_success( [ 'url' => $url ] );
 }
 
 // ── AJAX: customer books — attach name/email and send admin notification ──
@@ -1434,6 +1486,7 @@ function ljc_settings_page() {
                 <th>Metall</th>
                 <th>Stenform</th>
                 <th>Budget</th>
+                <th>Bild</th>
               </tr></thead>
               <tbody>
               <?php foreach ( $leads as $row ) :
@@ -1449,6 +1502,16 @@ function ljc_settings_page() {
                 <td><?php echo esc_html( $row['metal'] ); ?></td>
                 <td><?php echo esc_html( $row['shape'] ); ?></td>
                 <td><?php echo esc_html( $row['budget'] ); ?></td>
+                <td>
+                  <?php if ( ! empty( $row['reference_image_url'] ) ) : ?>
+                    <a href="<?php echo esc_url( $row['reference_image_url'] ); ?>" target="_blank" title="Visa bild">
+                      <img src="<?php echo esc_url( $row['reference_image_url'] ); ?>" alt="Inspirationsbild"
+                           style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #ddd;display:block;">
+                    </a>
+                  <?php else : ?>
+                    <span style="color:#c3c4c7">—</span>
+                  <?php endif; ?>
+                </td>
               </tr>
               <?php endforeach; ?>
               </tbody>
