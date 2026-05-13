@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Lilians Jewelry Consultant
  * Description: Interaktiv ringguide med poängbaserade rekommendationer, bildhantering och Amelia-integrering.
- * Version:     2.7.6
+ * Version:     2.7.7
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 define( 'LJC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LJC_URL', plugin_dir_url( __FILE__ ) );
-define( 'LJC_VER', '2.7.6' );
+define( 'LJC_VER', '2.7.7' );
 
 // ── Register custom image size ─────────────────────────────────────────────
 // 600×600 square crop — crisp on retina for quiz cards (~240 px display size)
@@ -626,8 +626,8 @@ function ljc_enqueue() {
         'https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Poppins:wght@400;500;600&display=swap',
         [], null );
 
-    wp_enqueue_style( 'ljc-quiz', LJC_URL . 'assets/quiz.css', [ 'ljc-google-fonts' ], LJC_VER );
-    wp_enqueue_script( 'ljc-quiz', LJC_URL . 'assets/quiz.js', [], LJC_VER, true );
+    wp_enqueue_style( 'ljc-quiz', LJC_URL . 'assets/quiz.css', [ 'ljc-google-fonts' ], filemtime( LJC_DIR . 'assets/quiz.css' ) );
+    wp_enqueue_script( 'ljc-quiz', LJC_URL . 'assets/quiz.js', [], filemtime( LJC_DIR . 'assets/quiz.js' ), true );
 
     // Build images map — uses ljc-card (600×600) → large → full fallback chain
     $images = [];
