@@ -958,6 +958,24 @@
     var quizEl = document.getElementById('ljc-quiz');
     if (!quizEl) { return; }
 
+    // ── Save anonymous lead (fire-and-forget, no UI impact) ─────────────────
+    if (AJAX_URL && NONCE) {
+      var fd = new FormData();
+      fd.append('action',          'ljc_lead');
+      fd.append('nonce',           NONCE);
+      fd.append('path',            path || '');
+      fd.append('style_primary',   result.style.primary);
+      fd.append('style_secondary', result.style.secondary || '');
+      fd.append('metal',           result.metal);
+      fd.append('shape',           result.shape);
+      fd.append('mounting',        result.mounting);
+      fd.append('prong',           result.prong);
+      fd.append('band',            result.band);
+      fd.append('feel',            result.feel);
+      fd.append('budget',          result.budget);
+      fetch(AJAX_URL, { method: 'POST', body: fd }).catch(function () {});
+    }
+
     quizEl.innerHTML =
       '<div class="ljc-results">' +
 

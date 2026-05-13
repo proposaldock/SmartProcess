@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Lilians Jewelry Consultant
  * Description: Interaktiv ringguide med poängbaserade rekommendationer, bildhantering och Amelia-integrering.
- * Version:     2.8.2
+ * Version:     2.8.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 define( 'LJC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LJC_URL', plugin_dir_url( __FILE__ ) );
-define( 'LJC_VER', '2.8.2' );
+define( 'LJC_VER', '2.8.3' );
 
 // ── Register custom image size ─────────────────────────────────────────────
 // 600×600 square crop — crisp on retina for quiz cards (~240 px display size)
