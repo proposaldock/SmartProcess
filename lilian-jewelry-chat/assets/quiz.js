@@ -906,6 +906,7 @@
 
   // ── Results ────────────────────────────────────────────────────────────────
   function renderResults() {
+    console.log('[LJC] renderResults v2.7.8 running');
     var result = computeResult();
     var prof   = getProf(result.style.primary);
     var prof2  = result.style.hybrid ? getProf(result.style.secondary) : null;
