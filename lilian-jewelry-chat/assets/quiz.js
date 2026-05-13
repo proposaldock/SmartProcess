@@ -5,8 +5,15 @@
   var AJAX_URL = (window.LJC && window.LJC.ajaxUrl)   ? window.LJC.ajaxUrl   : '';
   var NONCE    = (window.LJC && window.LJC.nonce)     ? window.LJC.nonce     : '';
   var AMELIA   = (window.LJC && window.LJC.ameliaUrl) ? window.LJC.ameliaUrl : '/boka/';
-  // Strip stray typographic quotes WordPress editors may inject around the URL
-  AMELIA = AMELIA.replace(/^[“”‘’«»"'\s]+|[“”‘’«»"'\s]+$/g, '');
+  // Strip stray typographic quotes (raw Unicode or %-encoded) that WP editor injects
+  AMELIA = AMELIA.replace(/^(%[0-9A-Fa-f]{2})*[^a-zA-Z\/]*/g, function (m) {
+    // Keep only if the match starts with a letter or slash (valid URL start)
+    return '';
+  });
+  // Re-extract from first http(s):// or leading slash
+  var _am = AMELIA.match(/(https?:\/\/.+|\/.*)/);
+  if (_am) { AMELIA = _am[1]; }
+  AMELIA = AMELIA.trim();
   var IMAGES   = (window.LJC && window.LJC.images)    ? window.LJC.images    : {};
   var WELCOME  = (window.LJC && window.LJC.welcome)   ? window.LJC.welcome   : {};
   var STRINGS       = (window.LJC && window.LJC.strings)   ? window.LJC.strings   : {};
@@ -272,11 +279,11 @@
     title: 'Vi hjälper dig hitta formen genom personligheten',
     subtitle: 'Vilken mening stämmer bäst med din partner?',
     options: [
-      { id: 'sp_timeless', label: '”De väljer aldrig något för att det är trendig.”',       img: '', fallback: '●', scores: { 'SH:round': 3 } },
-      { id: 'sp_soft',     label: '”De älskar mjuka, flödande saker — inget skarpt.”',           img: '', fallback: '⬭', scores: { 'SH:oval': 3, 'SH:cushion': 2, 'SH:pear': 1 } },
-      { id: 'sp_geo',      label: '”De dras till geometrisk precision och rena linjer.”',                         img: '', fallback: '▬', scores: { 'SH:emeraldCut': 3, 'SH:princess': 2, 'SH:asscher': 2 } },
-      { id: 'sp_stand',    label: '”De gillar att sticka ut — det oväntade valet.”',                  img: '', fallback: '◇', scores: { 'SH:marquise': 3, 'SH:pear': 2 } },
-      { id: 'sp_romantic', label: '”De är romantiska — allt har en betydelse för dem.”',         img: '', fallback: '❤', scores: { 'SH:oval': 2, 'SH:pear': 2, 'SH:heart': 2 } }
+      { id: 'sp_timeless', label: '"De väljer aldrig något för att det är trendig."',       img: '', fallback: '●', scores: { 'SH:round': 3 } },
+      { id: 'sp_soft',     label: '"De älskar mjuka, flödande saker — inget skarpt."',           img: '', fallback: '⬭', scores: { 'SH:oval': 3, 'SH:cushion': 2, 'SH:pear': 1 } },
+      { id: 'sp_geo',      label: '"De dras till geometrisk precision och rena linjer."',                         img: '', fallback: '▬', scores: { 'SH:emeraldCut': 3, 'SH:princess': 2, 'SH:asscher': 2 } },
+      { id: 'sp_stand',    label: '"De gillar att sticka ut — det oväntade valet."',                  img: '', fallback: '◇', scores: { 'SH:marquise': 3, 'SH:pear': 2 } },
+      { id: 'sp_romantic', label: '"De är romantiska — allt har en betydelse för dem."',         img: '', fallback: '❤', scores: { 'SH:oval': 2, 'SH:pear': 2, 'SH:heart': 2 } }
     ]
   };
 
@@ -435,13 +442,13 @@
     title: 'Vilken mening känns som du?',
     subtitle: 'Välj utan att tänka för länge',
     options: [
-      { id: 'st_classic',  label: '“Min ring ska se likadan ut om 50 år som idag.”',                      img: '', fallback: '∞',           scores: { 'ST:classic': 4, 'MN:solitaire': 2, 'MT:platinum': 2 } },
-      { id: 'st_romantic', label: '“Jag vill se på den och känna något varje gång.”',    img: '', fallback: '❤',           scores: { 'ST:romantic': 4, 'MN:halo': 1, 'MT:roseGold': 1 } },
-      { id: 'st_minimal',  label: '“Mindre är mer. Åtehållsamheten är poängen.”',   img: '', fallback: '—',           scores: { 'ST:minimalist': 4, 'MN:bezel': 2, 'SZ:delicate': 2 } },
-      { id: 'st_vintage',  label: '“Jag vill ha något som berättar en historia.”',                   img: '', fallback: '📖',   scores: { 'ST:vintage': 4, 'MN:cluster': 1, 'MT:yellowGold': 1 } },
-      { id: 'st_bold',     label: '“Jag vill att folk lägger märke till den.”',                      img: '', fallback: '💎',   scores: { 'ST:bold': 4, 'SZ:statement': 2 } },
-      { id: 'st_nature',   label: '“Den ska kännas som den kom från naturen.”',                      img: '', fallback: '🌿',   scores: { 'ST:nature': 4, 'MN:floral': 2, 'BD:floral': 1 } },
-      { id: 'st_modern',   label: '“Jag vill ha det vackraste, mest precisa jag äger.”',                 img: '', fallback: '✦',           scores: { 'ST:modern': 3, 'ST:minimalist': 1, 'SH:emeraldCut': 1 } }
+      { id: 'st_classic',  label: '"Min ring ska se likadan ut om 50 år som idag."',                      img: '', fallback: '∞',           scores: { 'ST:classic': 4, 'MN:solitaire': 2, 'MT:platinum': 2 } },
+      { id: 'st_romantic', label: '"Jag vill se på den och känna något varje gång."',    img: '', fallback: '❤',           scores: { 'ST:romantic': 4, 'MN:halo': 1, 'MT:roseGold': 1 } },
+      { id: 'st_minimal',  label: '"Mindre är mer. Åtehållsamheten är poängen."',   img: '', fallback: '—',           scores: { 'ST:minimalist': 4, 'MN:bezel': 2, 'SZ:delicate': 2 } },
+      { id: 'st_vintage',  label: '"Jag vill ha något som berättar en historia."',                   img: '', fallback: '📖',   scores: { 'ST:vintage': 4, 'MN:cluster': 1, 'MT:yellowGold': 1 } },
+      { id: 'st_bold',     label: '"Jag vill att folk lägger märke till den."',                      img: '', fallback: '💎',   scores: { 'ST:bold': 4, 'SZ:statement': 2 } },
+      { id: 'st_nature',   label: '"Den ska kännas som den kom från naturen."',                      img: '', fallback: '🌿',   scores: { 'ST:nature': 4, 'MN:floral': 2, 'BD:floral': 1 } },
+      { id: 'st_modern',   label: '"Jag vill ha det vackraste, mest precisa jag äger."',                 img: '', fallback: '✦',           scores: { 'ST:modern': 3, 'ST:minimalist': 1, 'SH:emeraldCut': 1 } }
     ]
   };
 
@@ -817,7 +824,7 @@
         '<div class="ljc-nav"><button class="ljc-back-btn" id="ljc-ref-back" type="button">← Tillbaka</button><p class="ljc-step-label">Steg 3</p></div>' +
         '<h2 class="ljc-q-title">Beskriv ringen du fastnat för</h2>' +
         '<p class="ljc-q-sub">Berätta om ringen du gillar — vad lockar dig till den?</p>' +
-        '<textarea class="ljc-textarea" id="ljc-ref-desc" placeholder="T.ex. ‘En oval sten med tunna band i roséguld, ganska diskret...’" rows="4"></textarea>' +
+        '<textarea class="ljc-textarea" id="ljc-ref-desc" placeholder="T.ex. &#39;En oval sten med tunna band i ros&eacute;guld, ganska diskret...&#39;" rows="4"></textarea>' +
         '<div class="ljc-multi-next-wrap"><button class="ljc-btn-primary" id="ljc-ref-next" type="button">Fortsätt →</button></div>' +
       '</div>';
     el('ljc-ref-back').addEventListener('click', renderCQ1);
@@ -914,11 +921,11 @@
     var prof   = getProf(result.style.primary);
     var prof2  = result.style.hybrid ? getProf(result.style.secondary) : null;
 
-    var hybridHtml = prof2 ? '<p class=”ljc-hybrid-note”>Din smak rör sig mellan <strong>' + esc(prof.name) + '</strong> och <strong>' + esc(prof2.name) + '</strong>.</p>' : '';
+    var hybridHtml = prof2 ? '<p class="ljc-hybrid-note">Din smak rör sig mellan <strong>' + esc(prof.name) + '</strong> och <strong>' + esc(prof2.name) + '</strong>.</p>' : '';
     var confHtml = unsureCount >= 4
-      ? '<div class=”ljc-confidence ljc-confidence--low”><p>Du är nära — ett snabbt samtal med vår ringspecialist tar dig hela vägen dit.</p></div>'
+      ? '<div class="ljc-confidence ljc-confidence--low"><p>Du är nära — ett snabbt samtal med vår ringspecialist tar dig hela vägen dit.</p></div>'
       : unsureCount >= 2
-        ? '<div class=”ljc-confidence ljc-confidence--mid”><p>Några detaljer kan fortfarande förfinas — vår specialist hjälper dig på 15 minuter.</p></div>'
+        ? '<div class="ljc-confidence ljc-confidence--mid"><p>Några detaljer kan fortfarande förfinas — vår specialist hjälper dig på 15 minuter.</p></div>'
         : '';
 
     var rows = [
@@ -939,37 +946,37 @@
     var validRings = profRings.filter(function (r) { return r.name && r.url; });
     if (validRings.length > 0) {
       var cards = validRings.map(function (r) {
-        return '<a class=”ljc-ring-card” href=”' + esc(r.url) + '” target=”_blank” rel=”noopener noreferrer”>' +
-          (r.img ? '<div class=”ljc-ring-img”><img src=”' + esc(r.img) + '” alt=”' + esc(r.name) + '” loading=”lazy”></div>' : '<div class=”ljc-ring-img ljc-ring-img--empty”>💍</div>') +
-          '<span class=”ljc-ring-name”>' + esc(r.name) + '</span>' +
-          '<span class=”ljc-ring-cta”>Se ringen &rarr;</span>' +
+        return '<a class="ljc-ring-card" href="' + esc(r.url) + '" target="_blank" rel="noopener noreferrer">' +
+          (r.img ? '<div class="ljc-ring-img"><img src="' + esc(r.img) + '" alt="' + esc(r.name) + '" loading="lazy"></div>' : '<div class="ljc-ring-img ljc-ring-img--empty">💍</div>') +
+          '<span class="ljc-ring-name">' + esc(r.name) + '</span>' +
+          '<span class="ljc-ring-cta">Se ringen &rarr;</span>' +
           '</a>';
       }).join('');
-      ringsHtml = '<div class=”ljc-ring-section”><h3>Ringar för din profil</h3><div class=”ljc-ring-grid”>' + cards + '</div></div>';
+      ringsHtml = '<div class="ljc-ring-section"><h3>Ringar för din profil</h3><div class="ljc-ring-grid">' + cards + '</div></div>';
     }
 
     var quizEl = document.getElementById('ljc-quiz');
     if (!quizEl) { return; }
 
     quizEl.innerHTML =
-      '<div class=”ljc-results”>' +
+      '<div class="ljc-results">' +
 
-        '<div class=”ljc-progress-bar”><div class=”ljc-progress-fill” style=”width:100%”></div></div>' +
-        '<div class=”ljc-nav”><button class=”ljc-back-btn” id=”ljc-back-res” type=”button”>&#8592; Tillbaka</button><span></span></div>' +
+        '<div class="ljc-progress-bar"><div class="ljc-progress-fill" style="width:100%"></div></div>' +
+        '<div class="ljc-nav"><button class="ljc-back-btn" id="ljc-back-res" type="button">&#8592; Tillbaka</button><span></span></div>' +
 
-        '<div class=”ljc-res-hero”>' +
-          '<p class=”ljc-eyebrow”>Din ringprofil</p>' +
-          '<h2 class=”ljc-q-title”>' + esc(prof.name) + '</h2>' +
+        '<div class="ljc-res-hero">' +
+          '<p class="ljc-eyebrow">Din ringprofil</p>' +
+          '<h2 class="ljc-q-title">' + esc(prof.name) + '</h2>' +
           hybridHtml +
-          '<blockquote class=”ljc-profile-quote”>”' + esc(prof.quote) + '”</blockquote>' +
+          '<blockquote class="ljc-profile-quote">"' + esc(prof.quote) + '"</blockquote>' +
           confHtml +
         '</div>' +
 
-        '<div class=”ljc-profile-card”><table class=”ljc-profile-table”>' + tableHtml + '</table></div>' +
+        '<div class="ljc-profile-card"><table class="ljc-profile-table">' + tableHtml + '</table></div>' +
 
-        '<div class=”ljc-profile-spec”>' +
-          '<h3 class=”ljc-spec-heading”>Vad detta inneb&#228;r f&#246;r din ring</h3>' +
-          '<ul class=”ljc-spec-list”>' +
+        '<div class="ljc-profile-spec">' +
+          '<h3 class="ljc-spec-heading">Vad detta inneb&#228;r f&#246;r din ring</h3>' +
+          '<ul class="ljc-spec-list">' +
             '<li><strong>Sten:</strong> '                + esc(prof.stone)    + '</li>' +
             '<li><strong>Infattning:</strong> '          + esc(prof.mounting) + '</li>' +
             '<li><strong>Kramlor:</strong> '             + esc(prof.prongs)   + '</li>' +
@@ -981,10 +988,10 @@
 
         ringsHtml +
 
-        '<div class=”ljc-booking-section”>' +
-          '<h3 class=”ljc-cta-heading”>Redo att hitta din ring?</h3>' +
-          '<p class=”ljc-cta-text”>Boka en kostnadsfri konsultation med Lilian och ta med dig din ringprofil.</p>' +
-          '<a href=”' + esc(AMELIA) + '” class=”ljc-btn-primary ljc-cta-btn”>Boka konsultation &#8594;</a>' +
+        '<div class="ljc-booking-section">' +
+          '<h3 class="ljc-cta-heading">Redo att hitta din ring?</h3>' +
+          '<p class="ljc-cta-text">Boka en kostnadsfri konsultation med Lilian och ta med dig din ringprofil.</p>' +
+          '<a href="' + esc(AMELIA) + '" class="ljc-btn-primary ljc-cta-btn">Boka konsultation &#8594;</a>' +
         '</div>' +
 
       '</div>';
