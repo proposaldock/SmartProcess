@@ -1018,7 +1018,7 @@
       'border-top': '1px solid #E7EBEE'
     });
     forceStyle(quizEl.querySelector('.ljc-cta-heading'), {
-      'text-align': 'center', 'font-family': “'Dancing Script', cursive”,
+      'text-align': 'center', 'font-family': 'Dancing Script, cursive',
       'font-size': '40px', 'color': '#111518', 'margin': '0 0 14px'
     });
     forceStyle(quizEl.querySelector('.ljc-cta-text'), {
