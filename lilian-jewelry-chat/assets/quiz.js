@@ -986,13 +986,13 @@
 
     var rows = [
       ['Stil',       prof.name + (prof2 ? ' / ' + prof2.name : '')],
-      ['Metall',     METAL_LABELS[result.metal]    || result.metal],
-      ['Stenform',   SHAPE_LABELS[result.shape]    || result.shape],
-      ['Infattning', MOUNT_LABELS[result.mounting] || result.mounting],
-      ['Kramlor',    PRONG_LABELS[result.prong]    || result.prong],
-      ['Band',       BAND_LABELS[result.band]      || result.band],
-      ['Känsla',     FEEL_LABELS[result.feel]      || result.feel],
-      ['Budget',     BUDGET_LABELS[result.budget]  || result.budget]
+      ['Metall',     oStr('metal',    result.metal,    'label') || METAL_LABELS[result.metal]    || result.metal],
+      ['Stenform',   oStr('shape',    result.shape,    'label') || SHAPE_LABELS[result.shape]    || result.shape],
+      ['Infattning', oStr('mounting', result.mounting, 'label') || MOUNT_LABELS[result.mounting] || result.mounting],
+      ['Kramlor',    oStr('prong',    result.prong,    'label') || PRONG_LABELS[result.prong]    || result.prong],
+      ['Band',       oStr('band',     result.band,     'label') || BAND_LABELS[result.band]      || result.band],
+      ['Känsla',     oStr('feel',     result.feel,     'label') || FEEL_LABELS[result.feel]      || result.feel],
+      ['Budget',     oStr('budget',   result.budget,   'label') || BUDGET_LABELS[result.budget]  || result.budget]
     ];
     var tableHtml = rows.map(function (r) { return '<tr><th>' + esc(r[0]) + '</th><td>' + esc(r[1]) + '</td></tr>'; }).join('');
 
