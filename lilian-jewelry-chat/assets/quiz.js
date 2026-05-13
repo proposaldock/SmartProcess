@@ -944,70 +944,43 @@
 
     el('ljc-quiz').innerHTML =
       '<div class=”ljc-results”>' +
+
         '<div class=”ljc-progress-bar”><div class=”ljc-progress-fill” style=”width:100%”></div></div>' +
         '<div class=”ljc-nav”><button class=”ljc-back-btn” id=”ljc-back-res” type=”button”>← Tillbaka</button><span></span></div>' +
-        '<p class=”ljc-eyebrow” style=”text-align:center;”>Din ringprofil</p>' +
-        '<h2 class=”ljc-q-title” style=”text-align:center;”>' + esc(prof.name) + '</h2>' +
-        hybridHtml +
-        '<blockquote class=”ljc-profile-quote” style=”text-align:center;border-left:none;padding-left:0;”>”' + esc(prof.quote) + '”</blockquote>' +
-        confHtml +
-        '<div class=”ljc-profile-card” style=”max-width:680px;margin:0 auto 32px;”><table class=”ljc-profile-table”>' + tableHtml + '</table></div>' +
-        '<div class=”ljc-profile-spec” style=”max-width:680px;margin:0 auto 40px;”><h3>Vad detta innebär för din ring</h3><ul class=”ljc-spec-list”>' +
-          '<li><strong>Sten:</strong> '               + esc(prof.stone)    + '</li>' +
-          '<li><strong>Infattning:</strong> '         + esc(prof.mounting) + '</li>' +
-          '<li><strong>Kramlor:</strong> '            + esc(prof.prongs)   + '</li>' +
-          '<li><strong>Band:</strong> '               + esc(prof.band)     + '</li>' +
-          '<li><strong>Metall:</strong> '             + esc(prof.metal)    + '</li>' +
-          '<li><strong>Rekommenderat karat:</strong> '+ esc(prof.carat)    + '</li>' +
-        '</ul></div>' +
-        ringsHtml +
-        '<div class=”ljc-booking-section”>' +
-          '<h3>Ta nästa steg</h3>' +
-          '<div class=”ljc-booking-form”>' +
-            '<h3>Boka din konsultation</h3>' +
-            '<p>Fyll i dina uppgifter, vi skickar din ringprofil till Lilians Jewelry inför din konsultation för bästa möjliga service</p>' +
-            '<div class=”ljc-form-field”><label for=”ljc-email”>E-postadress</label><input type=”email” id=”ljc-email” placeholder=”Din mail” autocomplete=”email”></div>' +
-            '<p class=”ljc-form-error” id=”ljc-form-err”></p>' +
-            '<button class=”ljc-btn-primary” id=”ljc-book-btn” type=”button”>Boka konsultation &rarr;</button>' +
-          '</div>' +
+
+        '<div class=”ljc-res-hero”>' +
+          '<p class=”ljc-eyebrow”>Din ringprofil</p>' +
+          '<h2 class=”ljc-q-title”>' + esc(prof.name) + '</h2>' +
+          hybridHtml +
+          '<blockquote class=”ljc-profile-quote”>”' + esc(prof.quote) + '”</blockquote>' +
+          confHtml +
         '</div>' +
+
+        '<div class=”ljc-profile-card”><table class=”ljc-profile-table”>' + tableHtml + '</table></div>' +
+
+        '<div class=”ljc-profile-spec”>' +
+          '<h3>Vad detta innebär för din ring</h3>' +
+          '<ul class=”ljc-spec-list”>' +
+            '<li><strong>Sten:</strong> '                + esc(prof.stone)    + '</li>' +
+            '<li><strong>Infattning:</strong> '          + esc(prof.mounting) + '</li>' +
+            '<li><strong>Kramlor:</strong> '             + esc(prof.prongs)   + '</li>' +
+            '<li><strong>Band:</strong> '                + esc(prof.band)     + '</li>' +
+            '<li><strong>Metall:</strong> '              + esc(prof.metal)    + '</li>' +
+            '<li><strong>Rekommenderat karat:</strong> ' + esc(prof.carat)    + '</li>' +
+          '</ul>' +
+        '</div>' +
+
+        ringsHtml +
+
+        '<div class=”ljc-booking-section”>' +
+          '<h3>Redo att hitta din ring?</h3>' +
+          '<p>Boka en kostnadsfri konsultation med Lilian och ta med dig din ringprofil.</p>' +
+          '<a href=”' + esc(AMELIA) + '” class=”ljc-btn-primary”>Boka konsultation &rarr;</a>' +
+        '</div>' +
+
       '</div>';
 
     el('ljc-back-res').addEventListener('click', function () { currentStep = questions.length - 1; renderQuestion(currentStep); });
-
-    el('ljc-book-btn').addEventListener('click', function () {
-      var btn   = this;
-      var email = (el('ljc-email').value || '').trim();
-      var errEl = el('ljc-form-err');
-
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        errEl.textContent = 'Ange en giltig e-postadress.'; return;
-      }
-      errEl.textContent = '';
-      btn.disabled = true;
-      btn.textContent = 'Skickar...';
-
-      var fd = new FormData();
-      fd.append('action',          'ljc_book');
-      fd.append('nonce',           NONCE);
-      fd.append('name',            '');
-      fd.append('email',           email);
-      fd.append('style_primary',   result.style.primary);
-      fd.append('style_secondary', result.style.secondary || '');
-      fd.append('metal',           result.metal);
-      fd.append('shape',           result.shape);
-      fd.append('mounting',        result.mounting);
-      fd.append('prong',           result.prong);
-      fd.append('band',            result.band);
-      fd.append('feel',            result.feel);
-      fd.append('budget',          result.budget);
-
-      function goAmelia() { window.location.href = AMELIA; }
-      var timer = setTimeout(goAmelia, 4000);
-      fetch(AJAX_URL, { method: 'POST', body: fd })
-        .then(function () { clearTimeout(timer); goAmelia(); })
-        .catch(function () { clearTimeout(timer); goAmelia(); });
-    });
   }
 
   // ── Boot ───────────────────────────────────────────────────────────────────
