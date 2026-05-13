@@ -5,6 +5,8 @@
   var AJAX_URL = (window.LJC && window.LJC.ajaxUrl)   ? window.LJC.ajaxUrl   : '';
   var NONCE    = (window.LJC && window.LJC.nonce)     ? window.LJC.nonce     : '';
   var AMELIA   = (window.LJC && window.LJC.ameliaUrl) ? window.LJC.ameliaUrl : '/boka/';
+  // Strip stray typographic quotes WordPress editors may inject around the URL
+  AMELIA = AMELIA.replace(/^[“”‘’«»"'\s]+|[“”‘’«»"'\s]+$/g, '');
   var IMAGES   = (window.LJC && window.LJC.images)    ? window.LJC.images    : {};
   var WELCOME  = (window.LJC && window.LJC.welcome)   ? window.LJC.welcome   : {};
   var STRINGS       = (window.LJC && window.LJC.strings)   ? window.LJC.strings   : {};
