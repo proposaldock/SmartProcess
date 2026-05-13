@@ -944,25 +944,32 @@
       ringsHtml = '<div class=”ljc-ring-section”><h3>Ringar för din profil</h3><div class=”ljc-ring-grid”>' + cards + '</div></div>';
     }
 
+    var S_CENTER = 'text-align:center !important;';
+    var S_BTN    = 'display:inline-block !important;background:#111518 !important;color:#FBFBFC !important;' +
+                   'text-decoration:none !important;border:none !important;border-radius:40px !important;' +
+                   'padding:17px 52px !important;font-size:15px !important;font-family:Poppins,sans-serif !important;' +
+                   'font-weight:500 !important;letter-spacing:0.04em !important;cursor:pointer !important;' +
+                   'box-shadow:0 4px 18px rgba(17,21,24,0.22) !important;';
+
     el('ljc-quiz').innerHTML =
       '<div class=”ljc-results”>' +
 
         '<div class=”ljc-progress-bar”><div class=”ljc-progress-fill” style=”width:100%”></div></div>' +
         '<div class=”ljc-nav”><button class=”ljc-back-btn” id=”ljc-back-res” type=”button”>← Tillbaka</button><span></span></div>' +
 
-        '<div class=”ljc-res-hero”>' +
-          '<p class=”ljc-eyebrow”>Din ringprofil</p>' +
-          '<h2 class=”ljc-q-title”>' + esc(prof.name) + '</h2>' +
+        '<div class=”ljc-res-hero” style=”text-align:center;max-width:680px;margin:0 auto 40px;”>' +
+          '<p class=”ljc-eyebrow” style=”' + S_CENTER + '”>Din ringprofil</p>' +
+          '<h2 class=”ljc-q-title” style=”' + S_CENTER + '”>' + esc(prof.name) + '</h2>' +
           hybridHtml +
-          '<blockquote class=”ljc-profile-quote”>”' + esc(prof.quote) + '”</blockquote>' +
+          '<blockquote class=”ljc-profile-quote” style=”' + S_CENTER + 'border:none !important;padding:0 !important;”>”' + esc(prof.quote) + '”</blockquote>' +
           confHtml +
         '</div>' +
 
-        '<div class=”ljc-profile-card”><table class=”ljc-profile-table”>' + tableHtml + '</table></div>' +
+        '<div class=”ljc-profile-card” style=”max-width:680px;margin:0 auto 32px;”><table class=”ljc-profile-table”>' + tableHtml + '</table></div>' +
 
-        '<div class=”ljc-profile-spec”>' +
-          '<h3>Vad detta innebär för din ring</h3>' +
-          '<ul class=”ljc-spec-list”>' +
+        '<div class=”ljc-profile-spec” style=”max-width:680px;margin:0 auto 40px;”>' +
+          '<h3 style=”font-size:11px !important;font-weight:600 !important;letter-spacing:0.12em !important;text-transform:uppercase !important;color:#0f4528 !important;margin:0 0 16px !important;font-family:Poppins,sans-serif !important;”>Vad detta innebär för din ring</h3>' +
+          '<ul class=”ljc-spec-list” style=”list-style:none !important;padding:0 !important;margin:0 !important;”>' +
             '<li><strong>Sten:</strong> '                + esc(prof.stone)    + '</li>' +
             '<li><strong>Infattning:</strong> '          + esc(prof.mounting) + '</li>' +
             '<li><strong>Kramlor:</strong> '             + esc(prof.prongs)   + '</li>' +
@@ -974,10 +981,10 @@
 
         ringsHtml +
 
-        '<div class=”ljc-booking-section”>' +
-          '<h3>Redo att hitta din ring?</h3>' +
-          '<p>Boka en kostnadsfri konsultation med Lilian och ta med dig din ringprofil.</p>' +
-          '<a href=”' + esc(AMELIA) + '” class=”ljc-btn-primary”>Boka konsultation &rarr;</a>' +
+        '<div class=”ljc-booking-section” style=”text-align:center !important;padding:56px 0 40px;border-top:1px solid #E7EBEE;”>' +
+          '<h3 style=”' + S_CENTER + 'font-family:\'Dancing Script\',cursive !important;font-size:40px !important;color:#111518 !important;margin:0 0 14px !important;”>Redo att hitta din ring?</h3>' +
+          '<p style=”' + S_CENTER + 'color:#777 !important;font-size:15px !important;margin:0 auto 32px !important;max-width:420px !important;line-height:1.6 !important;”>Boka en kostnadsfri konsultation med Lilian och ta med dig din ringprofil.</p>' +
+          '<a href=”' + esc(AMELIA) + '” class=”ljc-btn-primary” style=”' + S_BTN + '”>Boka konsultation &rarr;</a>' +
         '</div>' +
 
       '</div>';
