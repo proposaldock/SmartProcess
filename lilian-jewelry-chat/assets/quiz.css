@@ -225,9 +225,15 @@
   font-size: 14px;
   text-align: center;
   flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  display: flex;
+  gap: 4px;
+}
+.ljc-card--text .ljc-card-sub {
+  text-align: center;
+  display: block;
 }
 /* Word grid: compact chip look */
 .ljc-cards--text .ljc-card--text .ljc-card-label {

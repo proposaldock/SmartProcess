@@ -295,14 +295,14 @@
   };
 
   var A_Q4B = {
-    id: 'a_height', cols: 2, type: 'single', textOnly: true,
+    id: 'a_height', cols: 2, type: 'single',
     title: 'Hur högt ska ringen sitta på fingret?',
     subtitle: 'Infattningshöjden påverkar komfort och karaktär',
     options: [
-      { id: 'low',     label: 'Lågt och diskret',      sub: 'Knappt upphöjd över fingret',  img: '', fallback: '—', scores: { 'MN:bezel': 3, 'PR:bezel': 2, 'SZ:delicate': 1 } },
-      { id: 'mid',     label: 'Lite upphöjd',           sub: 'Synlig men inte dramatisk',               img: '', fallback: '―', scores: { 'MN:solitaire': 2, 'PR:fourProng': 2, 'SZ:balanced': 1 } },
-      { id: 'high',    label: 'Högt och prominent',     sub: 'Stenen i fokus, hjälteplacering',   img: '', fallback: '▲', scores: { 'MN:cathedral': 3, 'PR:sixProng': 2, 'SZ:statement': 1 } },
-      { id: 'notsure', label: 'Inte säker',             sub: 'Inga poäng – fortsätt',   img: '', fallback: '❓', scores: {} }
+      { id: 'low',     label: 'Lågt och diskret',   sub: 'Knappt upphöjd — bekväm varje dag',      img: 'height-low.jpg',     fallback: '▭', scores: { 'MN:bezel': 3, 'PR:bezel': 2, 'SZ:delicate': 1 } },
+      { id: 'mid',     label: 'Lite upphöjd',        sub: 'Synlig men inte dramatisk',              img: 'height-mid.jpg',     fallback: '◈', scores: { 'MN:solitaire': 2, 'PR:fourProng': 2, 'SZ:balanced': 1 } },
+      { id: 'high',    label: 'Högt och prominent',  sub: 'Stenen dominerar — klassisk hjälte',    img: 'height-high.jpg',    fallback: '▲', scores: { 'MN:cathedral': 3, 'PR:sixProng': 2, 'SZ:statement': 1 } },
+      { id: 'notsure', label: 'Inte säker',          sub: 'Vi räknar inte det här — fortsätt',     img: 'height-notsure.jpg', fallback: '❓', scores: {} }
     ]
   };
 

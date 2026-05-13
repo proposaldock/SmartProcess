@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 define( 'LJC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LJC_URL', plugin_dir_url( __FILE__ ) );
-define( 'LJC_VER', '2.8.4' );
+define( 'LJC_VER', '2.8.5' );
 
 // ── Register custom image size ─────────────────────────────────────────────
 // 600×600 square crop — crisp on retina for quiz cards (~240 px display size)
@@ -135,6 +135,12 @@ function ljc_image_groups() {
             'val_sparkle'   => 'Maximal glans',
             'val_story'     => 'Berättelsen',
             'val_invest'    => 'Värdebeständighet',
+        ],
+        'Ringhöjd' => [
+            'height_low'     => 'Lågt (bezel/lågprofil)',
+            'height_mid'     => 'Lite upphöjd (standard)',
+            'height_high'    => 'Högt (cathedral)',
+            'height_notsure' => 'Inte säker',
         ],
         'Ringinspiration' => [
             'fullring_classic'    => 'Klassisk solitär',
