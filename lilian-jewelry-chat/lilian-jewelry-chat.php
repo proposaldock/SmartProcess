@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Lilians Jewelry Consultant
  * Description: Interaktiv ringguide med poängbaserade rekommendationer, bildhantering och Amelia-integrering.
- * Version:     2.8.1
+ * Version:     2.8.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 define( 'LJC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LJC_URL', plugin_dir_url( __FILE__ ) );
-define( 'LJC_VER', '2.8.1' );
+define( 'LJC_VER', '2.8.2' );
 
 // ── Register custom image size ─────────────────────────────────────────────
 // 600×600 square crop — crisp on retina for quiz cards (~240 px display size)
@@ -686,7 +686,7 @@ function ljc_enqueue() {
         'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
         'nonce'     => wp_create_nonce( 'ljc_nonce' ),
         'imgBase'   => LJC_URL . 'images/',
-        'ameliaUrl' => esc_url( get_option( 'ljc_amelia_url', '/boka/' ) ),
+        'ameliaUrl' => esc_url( preg_replace( '/^[^a-zA-Z\/]+/', '', trim( get_option( 'ljc_amelia_url', '/boka/' ) ) ) ),
         'images'    => $images,
         'welcome'   => [
             'title' => get_option( 'ljc_welcome_title', 'Hitta din perfekta ring' ),
