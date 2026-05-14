@@ -12,8 +12,8 @@ const directEmail =
 
 const navItems = [
   { href: "#tjanster", label: "Tjänster" },
-  { href: "#process", label: "Process" },
   { href: "#exempel", label: "Exempel" },
+  { href: "#anvandningsomraden", label: "Lösningar" },
   { href: "#om", label: "Om SmartProcess" },
 ];
 
@@ -70,29 +70,6 @@ const solutionPillars = [
   },
 ];
 
-const processSteps = [
-  {
-    step: "01",
-    phase: "Audit",
-    title: "Kartläggning & Roadmap",
-    body: "Vi analyserar era arbetsflöden, flaskhalsar och manuella processer och identifierar var AI skapar mest värde. Resultatet är en prioriterad roadmap med tydlig koppling till affärsnytta — utan gissningar.",
-    deliverables: ["Processanalys", "Prioriterad roadmap", "Affärskoppling"],
-  },
-  {
-    step: "02",
-    phase: "Build",
-    title: "Byggnation & Implementation",
-    body: "Vi bygger anpassade AI-lösningar, interna verktyg och integrationer baserade på era faktiska processer. Teamet tränas och lösningarna integreras smidigt i den dagliga verksamheten.",
-    deliverables: ["Anpassad AI-lösning", "Systemintegration", "Teamträning"],
-  },
-  {
-    step: "03",
-    phase: "Optimize",
-    title: "Optimering & Partnerskap",
-    body: "Vi fortsätter förbättra lösningarna baserat på faktisk användning, feedback och nya behov. AI är inte ett engångsprojekt — det är ett löpande partnerskap som växer med er verksamhet.",
-    deliverables: ["Löpande förbättring", "Ny kapacitet", "Strategisk partner"],
-  },
-];
 
 const useCaseTiers = [
   {
@@ -447,63 +424,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Process ─── */}
-      <section
-        id="process"
-        className="border-b border-[color:var(--border)]"
-      >
-        <div className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
-            Process
-          </p>
-          <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_1.4fr]">
-            <h2 className="text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[3.5rem] lg:leading-[1.0]">
-              En tydlig process från idé till värde
-            </h2>
-            <p className="max-w-2xl self-end text-base leading-8 text-[var(--muted)] sm:text-lg sm:leading-9">
-              Från manuellt arbete till fungerande AI-lösning på veckor —
-              inte månader. Vi håller processen tydlig, snabb och fokuserad
-              på det som faktiskt skapar affärsvärde.
-            </p>
-          </div>
-
-          <div className="mt-10 grid gap-5 sm:mt-12 lg:grid-cols-3">
-            {processSteps.map((step) => (
-              <div
-                key={step.step}
-                className="relative rounded-2xl border border-[color:var(--border)] bg-white p-6 shadow-[0_4px_24px_-8px_rgba(23,19,18,0.09)] sm:p-8"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="text-5xl font-semibold leading-none tracking-tight text-[var(--accent)] opacity-30 sm:text-6xl">
-                    {step.step}
-                  </div>
-                  <span className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-                    {step.phase}
-                  </span>
-                </div>
-                <h3 className="mt-5 text-xl font-semibold tracking-tight text-[var(--foreground)] sm:text-2xl">
-                  {step.title}
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
-                  {step.body}
-                </p>
-                <div className="mt-5 flex flex-wrap gap-2 border-t border-[color:var(--border)] pt-4">
-                  {step.deliverables.map((d) => (
-                    <span
-                      key={d}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--border)] px-2.5 py-1 text-xs font-medium text-[var(--foreground)]"
-                    >
-                      <span className="block size-1 rounded-full bg-[var(--accent)]" />
-                      {d}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ─── Example: ProposalDock ─── */}
       <section
         id="exempel"
@@ -825,8 +745,8 @@ export default function HomePage() {
           <nav className="flex flex-wrap gap-x-6 gap-y-2">
             {[
               { href: "#tjanster", label: "Tjänster" },
-              { href: "#process", label: "Process" },
               { href: "#exempel", label: "Exempel" },
+              { href: "#anvandningsomraden", label: "Lösningar" },
               { href: "#om", label: "Om SmartProcess" },
               { href: "#kontakt", label: "Kontakt" },
               { href: "/privacy", label: "Integritetspolicy" },
