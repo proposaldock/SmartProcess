@@ -1,6 +1,6 @@
 export function HeroTransformPanel() {
   return (
-    <div className="overflow-hidden rounded-[36px] bg-[linear-gradient(145deg,rgba(190,47,36,0.38)_0%,rgba(23,19,18,0.98)_50%,rgba(23,19,18,1)_100%)] bg-[var(--foreground)] p-6 shadow-[0_24px_64px_-20px_rgba(23,19,18,0.28)] sm:p-8">
+    <div className="overflow-hidden rounded-[36px] bg-[linear-gradient(145deg,rgba(190,47,36,0.28)_0%,rgba(23,19,18,0.98)_68%,rgba(23,19,18,1)_100%)] bg-[var(--foreground)] p-6 shadow-[0_24px_64px_-20px_rgba(23,19,18,0.28)] sm:p-8">
 
       {/* Title */}
       <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
