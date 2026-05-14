@@ -14,7 +14,7 @@ const navItems = [
   { href: "#tjanster", label: "Tjänster" },
   { href: "#exempel", label: "Exempel" },
   { href: "#anvandningsomraden", label: "Lösningar" },
-  { href: "#om", label: "Om SmartProcess" },
+  { href: "/om-oss", label: "Om oss" },
 ];
 
 const problemPoints = [
@@ -141,42 +141,6 @@ const useCaseTiers = [
       },
     ],
   },
-];
-
-const whyPoints = [
-  {
-    title: "Affärsnytta före teknik",
-    body: "Vi börjar alltid med vad ni vill uppnå — inte med vilken teknik som är trendig. Tekniken väljs för att lösa ett verkligt problem.",
-  },
-  {
-    title: "Anpassat, inte standardiserat",
-    body: "Inga standardpaket. Varje lösning byggs runt era faktiska processer, system och sätt att arbeta.",
-  },
-  {
-    title: "Fokus på faktisk användning",
-    body: "En lösning som inte används skapar inget värde. Vi hjälper teamet faktiskt börja och fortsätta använda det vi bygger.",
-  },
-  {
-    title: "Löpande optimering",
-    body: "Vi stannar kvar och förbättrar lösningarna baserat på feedback, nya behov och möjligheter som uppstår.",
-  },
-  {
-    title: "Snabb och flexibel",
-    body: "Vi passar företag som vill röra sig snabbt. Kort väg från idé till fungerande lösning — utan onödig byråkrati.",
-  },
-  {
-    title: "Strategi och teknik i ett",
-    body: "Ni behöver inte anlita flera parter. Vi kombinerar strategiskt tänkande med praktisk AI-utveckling under ett tak.",
-  },
-];
-
-const targetTypes = [
-  "Tjänsteföretag",
-  "Byråer och konsultbolag",
-  "E-handel och butiker",
-  "Lokala serviceföretag",
-  "Administrativa verksamheter",
-  "Företag med mycket mejl, dokument eller rapportering",
 ];
 
 const faqItems = [
@@ -558,66 +522,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Why SmartProcess ─── */}
-      <section id="om" className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
-        <div className="border-t border-[color:var(--border)] pt-12 sm:pt-16">
-          <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:items-start lg:gap-20">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
-                Om SmartProcess
-              </p>
-              <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[3.25rem] lg:leading-[1.02]">
-                Inte bara utveckling. Riktning, implementation och förbättring.
-              </h2>
-              <p className="mt-6 text-base leading-8 text-[var(--muted)] sm:text-lg">
-                SmartProcess är en AI-partner för mindre och växande företag
-                som vill använda AI praktiskt — inte bara prata om det.
-              </p>
-              <p className="mt-4 text-base leading-8 text-[var(--muted)]">
-                Vi kombinerar strategiskt tänkande med konkret AI-utveckling
-                och stannar kvar som partner genom hela resan.
-              </p>
-
-              {/* Target audience */}
-              <div className="mt-8 rounded-2xl border border-[color:var(--border)] bg-white/60 p-5 shadow-[0_2px_12px_-6px_rgba(23,19,18,0.07)]">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
-                  Passar bra för
-                </p>
-                <ul className="mt-3 space-y-2">
-                  {targetTypes.map((type) => (
-                    <li key={type} className="flex items-center gap-2.5 text-sm text-[var(--foreground)]">
-                      <span className="block size-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
-                      {type}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              {whyPoints.map((point) => (
-                <div
-                  key={point.title}
-                  className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-5 shadow-[0_2px_10px_-4px_rgba(23,19,18,0.06)]"
-                >
-                  <div className="flex size-8 items-center justify-center rounded-lg bg-[rgba(190,47,36,0.08)]">
-                    <svg viewBox="0 0 16 16" fill="none" className="size-4 text-[var(--accent)]" stroke="currentColor" strokeWidth="2">
-                      <path d="m3 8 3 3 7-6" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                  <h3 className="mt-4 text-sm font-semibold tracking-tight text-[var(--foreground)]">
-                    {point.title}
-                  </h3>
-                  <p className="mt-1.5 text-sm leading-6 text-[var(--muted)]">
-                    {point.body}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ─── CTA Section ─── */}
       <section className="border-y border-[color:var(--border)] bg-[var(--foreground)]">
         <div className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
@@ -747,7 +651,7 @@ export default function HomePage() {
               { href: "#tjanster", label: "Tjänster" },
               { href: "#exempel", label: "Exempel" },
               { href: "#anvandningsomraden", label: "Lösningar" },
-              { href: "#om", label: "Om SmartProcess" },
+              { href: "/om-oss", label: "Om oss" },
               { href: "#kontakt", label: "Kontakt" },
               { href: "/privacy", label: "Integritetspolicy" },
             ].map((item) => (
