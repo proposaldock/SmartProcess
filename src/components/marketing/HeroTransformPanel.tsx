@@ -70,16 +70,6 @@ export function HeroTransformPanel() {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="mt-5 flex items-center justify-between border-t border-white/[0.07] pt-5">
-        <div className="flex items-center gap-2">
-          <span className="block size-1.5 rounded-full bg-[var(--accent)]" />
-          <span className="text-xs text-white/40">Anpassat för 10–50 anställda</span>
-        </div>
-        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/30">
-          SmartProcess
-        </span>
-      </div>
     </div>
   );
 }
