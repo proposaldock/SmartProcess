@@ -1,103 +1,84 @@
 export function HeroTransformPanel() {
   return (
-    <div className="relative overflow-hidden rounded-[40px] border border-[color:var(--border)] bg-white/80 p-5 shadow-[0_20px_60px_-20px_rgba(23,19,18,0.12)] backdrop-blur-sm sm:p-7">
+    <div className="overflow-hidden rounded-[36px] bg-[linear-gradient(145deg,rgba(190,47,36,0.22)_0%,rgba(23,19,18,0.98)_45%,rgba(23,19,18,1)_100%)] bg-[var(--foreground)] p-6 shadow-[0_24px_64px_-20px_rgba(23,19,18,0.28)] sm:p-8">
 
-      {/* Outer header */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--muted)]">
-            AI Transformation Roadmap
+      {/* Title */}
+      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
+        AI Transformation Roadmap
+      </p>
+      <p className="mt-2 text-sm leading-5 text-white/55">
+        En tydlig väg från nuläge till fungerande AI-lösningar
+      </p>
+
+      {/* Phases */}
+      <div className="mt-7 space-y-0">
+
+        {/* Phase 01 */}
+        <div className="py-5">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/35">01</span>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/60">Audit</span>
+          </div>
+          <h3 className="mt-2 text-base font-semibold tracking-tight text-white/90">
+            Kartläggning & Roadmap
+          </h3>
+          <p className="mt-1.5 text-sm leading-6 text-white/52">
+            Analyserar era processer och identifierar var AI skapar mest värde
           </p>
-          <p className="mt-1.5 text-sm leading-5 text-[var(--muted)]">
-            En tydlig väg från nuläge till fungerande AI-lösningar
+          <div className="mt-3 flex flex-wrap gap-2">
+            {["Processanalys", "Kundanskaffningsanalys", "Roadmap"].map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-white/10 bg-white/6 px-2.5 py-1 text-[10px] font-medium text-white/55"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="border-t border-white/[0.08]" />
+
+        {/* Phase 02 */}
+        <div className="py-5">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/30">02</span>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/48">Build</span>
+          </div>
+          <h3 className="mt-2 text-base font-semibold tracking-tight text-white/72">
+            Byggnation & Implementation
+          </h3>
+          <p className="mt-1.5 text-sm leading-6 text-white/40">
+            Bygger anpassade AI-lösningar och integrerar dem i era arbetsflöden
           </p>
         </div>
-        <span className="shrink-0 rounded-full border border-[color:var(--border)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
+
+        <div className="border-t border-white/[0.06]" />
+
+        {/* Phase 03 */}
+        <div className="pb-2 pt-5">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/25">03</span>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/38">Optimize</span>
+          </div>
+          <h3 className="mt-2 text-base font-semibold tracking-tight text-white/55">
+            Optimering & Partnerskap
+          </h3>
+          <p className="mt-1.5 text-sm leading-6 text-white/30">
+            Förbättrar lösningarna kontinuerligt baserat på användning och feedback
+          </p>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="mt-5 flex items-center justify-between border-t border-white/[0.07] pt-5">
+        <div className="flex items-center gap-2">
+          <span className="block size-1.5 rounded-full bg-[var(--accent)]" />
+          <span className="text-xs text-white/40">Anpassat för 10–50 anställda</span>
+        </div>
+        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/30">
           SmartProcess
         </span>
-      </div>
-
-      {/* Inner dark card */}
-      <div className="mt-5 overflow-hidden rounded-[28px] bg-[var(--foreground)] p-5 sm:p-6">
-
-        {/* Single gradient container flowing across all 3 phases */}
-        <div className="overflow-hidden rounded-[18px] bg-[linear-gradient(180deg,rgba(255,255,255,0.13)_0%,rgba(255,255,255,0.08)_48%,rgba(255,255,255,0.04)_100%)]">
-
-          {/* Phase 01 */}
-          <div className="p-4 sm:p-5">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">01</span>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">Audit</span>
-            </div>
-            <h3 className="mt-2 text-sm font-semibold text-white/88 sm:text-base">
-              Kartläggning & Roadmap
-            </h3>
-            <p className="mt-1 text-xs leading-5 text-white/52">
-              Analyserar era processer och identifierar var AI skapar mest värde
-            </p>
-            <div className="mt-3 grid grid-cols-3 gap-1.5">
-              {["Processanalys", "Kundanskaffningsanalys", "Roadmap"].map((tag) => (
-                <div
-                  key={tag}
-                  className="rounded-xl border border-white/10 bg-[rgba(255,255,255,0.07)] px-2 py-2 text-center"
-                >
-                  <span className="text-[10px] font-medium leading-4 text-white/60">{tag}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="mx-4 border-t border-white/[0.07]" />
-
-          {/* Phase 02 */}
-          <div className="p-4 sm:p-5">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">02</span>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">Build</span>
-            </div>
-            <h3 className="mt-2 text-sm font-semibold text-white/75">
-              Byggnation & Implementation
-            </h3>
-            <p className="mt-1 text-xs leading-5 text-white/43">
-              Bygger anpassade AI-lösningar och integrerar dem i era arbetsflöden
-            </p>
-          </div>
-
-          {/* Divider */}
-          <div className="mx-4 border-t border-white/[0.05]" />
-
-          {/* Phase 03 */}
-          <div className="p-4 sm:p-5">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">03</span>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">Optimize</span>
-            </div>
-            <h3 className="mt-2 text-sm font-semibold text-white/62">
-              Optimering & Partnerskap
-            </h3>
-            <p className="mt-1 text-xs leading-5 text-white/36">
-              Förbättrar lösningarna kontinuerligt baserat på användning och feedback
-            </p>
-          </div>
-        </div>
-
-        {/* Inner footer */}
-        <div className="mt-4 flex items-center gap-2 border-t border-white/10 pt-4">
-          <span className="block size-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
-          <p className="text-xs text-white/50">Anpassat för företag med 10–50 anställda</p>
-        </div>
-      </div>
-
-      {/* Outer footer */}
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[color:var(--border)] pt-4">
-        <p className="text-sm leading-6 text-[var(--muted)]">
-          Strategi, implementation och löpande optimering — i ett partnerskap.
-        </p>
-        <div className="inline-flex items-center gap-2 text-sm font-medium text-[var(--foreground)]">
-          <span className="block size-2 rounded-full bg-[var(--accent)]" />
-          AI Transformation
-        </div>
       </div>
     </div>
   );
