@@ -20,7 +20,7 @@ export function BrandMark() {
           SmartProcess
         </div>
         <div className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--muted)]">
-          AI Workflow Systems
+          AI Strategy & Development
         </div>
       </div>
     </Link>

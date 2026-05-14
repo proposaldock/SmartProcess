@@ -15,9 +15,9 @@ const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
 });
 
-const siteTitle = "SmartProcess | AI-automation för manuella arbetsflöden";
+const siteTitle = "SmartProcess – AI-strategi och utveckling för växande företag";
 const siteDescription =
-  "SmartProcess hjälper företag identifiera manuella processer och bygga skräddarsydda AI-lösningar, interna verktyg och SaaS-flöden som sparar tid och förbättrar kvaliteten.";
+  "SmartProcess hjälper mindre företag gå från AI-förvirring till konkreta AI-lösningar genom strategi, utveckling, implementation och löpande optimering.";
 const socialImage = "/opengraph-image.png";
 
 export const metadata: Metadata = {
