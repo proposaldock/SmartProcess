@@ -23,10 +23,7 @@ html {
 
 body {
   min-height: 100%;
-  background:
-    radial-gradient(circle at 0% 0%, rgba(190, 47, 36, 0.09), transparent 58%),
-    radial-gradient(circle at 100% 4%, rgba(190, 47, 36, 0.06), transparent 44%),
-    var(--background);
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), sans-serif;
   text-rendering: optimizeLegibility;

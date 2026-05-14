@@ -283,7 +283,7 @@ export default function HomePage() {
       </header>
 
       {/* ─── Hero ─── */}
-      <section className="relative">
+      <section className="relative bg-[radial-gradient(circle_at_0%_0%,rgba(190,47,36,0.11),transparent_55%),radial-gradient(circle_at_100%_0%,rgba(190,47,36,0.08),transparent_42%)]">
         <div className="mx-auto grid max-w-[104rem] gap-14 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-2 lg:gap-16 lg:px-10 lg:py-36">
           <div className="relative flex flex-col justify-center">
             <span className="inline-flex w-fit rounded-full border border-[rgba(190,47,36,0.16)] bg-[rgba(190,47,36,0.07)] px-4 py-2 text-sm font-semibold text-[var(--accent)]">
