@@ -1,7 +1,7 @@
 import { BrandMark } from "@/components/marketing/BrandMark";
 import { ContactForm } from "@/components/marketing/ContactForm";
 import { FaqAccordion } from "@/components/marketing/FaqAccordion";
-import { HeroWorkflowPanel } from "@/components/marketing/HeroWorkflowPanel";
+import { HeroTransformPanel } from "@/components/marketing/HeroTransformPanel";
 import { AnchorButton } from "@/components/marketing/MarketingPrimitives";
 import { ProposalDockPanel } from "@/components/marketing/ProposalDockPanel";
 
@@ -10,227 +10,200 @@ const directEmail =
   process.env.CONTACT_TO_EMAIL ||
   "marcus@smartprocess.se";
 
-const heroBenefits = [
-  "Mindre manuellt arbete",
-  "Kortare ledtider",
-  "Färre fel",
-  "Jämnare kvalitet",
+const navItems = [
+  { href: "#tjanster", label: "Tjänster" },
+  { href: "#process", label: "Process" },
+  { href: "#exempel", label: "Exempel" },
+  { href: "#om", label: "Om SmartProcess" },
 ];
 
 const problemPoints = [
   {
-    title: "Manuell inmatning, kontroll och uppföljning",
-    body: "Återkommande inmatning, kontroll och uppföljning tar tid från arbete som skapar mer värde.",
+    title: "AI-verktyg testas utan tydlig plan",
+    body: "Företag experimenterar med verktyg men saknar en strategi för vad som ska uppnås och hur det mäts.",
   },
   {
-    title: "Dokument som måste läsas igenom manuellt innan arbete kan börja",
-    body: "PDF:er, underlag, bilagor och mejltrådar måste ofta tolkas manuellt innan nästa steg ens kan påbörjas.",
+    title: "Interna processer förblir manuella",
+    body: "Trots AI-trend läggs timmarna fortfarande på uppgifter som borde kunna automatiseras — varje dag.",
   },
   {
-    title: "Repetitiva arbetsmoment",
-    body: "Samma bedömningar, svar, sammanställningar och kontroller görs om och om igen i olika delar av verksamheten.",
+    title: "Lösningar används inte av teamet",
+    body: "Verktyg som köps in passar sällan verksamhetens faktiska arbetsflöden och hamnar på hyllan.",
   },
   {
-    title: "Fragmenterade system och manuella överlämningar",
-    body: "Information flyttas mellan e-post, kalkylark, CRM, interna verktyg och checklistor i stället för att finnas i ett sammanhållet flöde.",
+    title: "Svårt att veta vad som ska prioriteras",
+    body: "Med hundratals AI-verktyg på marknaden är det oklart var man ska börja och vad som faktiskt ger affärsvärde.",
   },
   {
-    title: "Onödiga flaskhalsar i processen",
-    body: "Viktiga steg fastnar hos en person eller ett team när arbetsflödet saknar tydligt stöd och struktur.",
+    title: "Teknik utan koppling till affärsvärde",
+    body: "Lösningar skapas utan tydlig koppling till vilka problem de löser, vad de sparar eller hur de ska mätas.",
+  },
+];
+
+const solutionPillars = [
+  {
+    title: "Strategisk tydlighet",
+    body: "Vi börjar alltid med vad ni vill uppnå affärsmässigt. Resultatet är en prioriterad AI-roadmap med tydlig koppling till nytta — inte en lista med verktyg.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-6">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Teknisk implementation",
+    body: "Vi bygger anpassade AI-lösningar, interna verktyg och integrationer som passar era faktiska processer och befintliga system — från grunden.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-6">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l5.654-4.654m5.614-4.615-.814 2.105a.75.75 0 0 0 .175.829l.165.164a.75.75 0 0 0 .829.175l2.105-.814m0 0a2.25 2.25 0 0 0-2.652-2.651l-.894 2.241" />
+      </svg>
+    ),
+  },
+  {
+    title: "Löpande förbättring",
+    body: "AI är inte ett engångsprojekt. Vi följer upp, justerar och vidareutvecklar lösningarna baserat på hur de faktiskt används i teamet — och vad nästa steg borde vara.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-6">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+      </svg>
+    ),
   },
 ];
 
 const processSteps = [
   {
-    title: "Kartlägg workflow",
-    body: "Nuvarande steg, handoffs, datakällor och manuella moment identifieras.",
+    step: "01",
+    phase: "Audit",
+    title: "Kartläggning & Roadmap",
+    body: "Vi analyserar era arbetsflöden, flaskhalsar och manuella processer och identifierar var AI skapar mest värde. Resultatet är en prioriterad roadmap med tydlig koppling till affärsnytta — utan gissningar.",
+    deliverables: ["Processanalys", "Prioriterad roadmap", "Affärskoppling"],
   },
   {
-    title: "Identifiera var arbete kan automatiseras",
-    body: "Moment med hög repetition, stora dokumentmängder eller tydliga beslutspunkter väljs ut först.",
+    step: "02",
+    phase: "Build",
+    title: "Byggnation & Implementation",
+    body: "Vi bygger anpassade AI-lösningar, interna verktyg och integrationer baserade på era faktiska processer. Teamet tränas och lösningarna integreras smidigt i den dagliga verksamheten.",
+    deliverables: ["Anpassad AI-lösning", "Systemintegration", "Teamträning"],
   },
   {
-    title: "Bygg lösning",
-    body: "Ett skräddarsytt verktyg byggs utifrån faktisk process och affärslogik.",
-  },
-  {
-    title: "Integrera i verksamheten",
-    body: "Lösningen kopplas till befintliga system, arbetsflöden och användare.",
-  },
-  {
-    title: "Förbättra efter användning",
-    body: "Träffsäkerhet, användning och nya behov följs upp över tid.",
+    step: "03",
+    phase: "Optimize",
+    title: "Optimering & Partnerskap",
+    body: "Vi fortsätter förbättra lösningarna baserat på faktisk användning, feedback och nya behov. AI är inte ett engångsprojekt — det är ett löpande partnerskap som växer med er verksamhet.",
+    deliverables: ["Löpande förbättring", "Ny kapacitet", "Strategisk partner"],
   },
 ];
 
-const caseProofPoints = [
-  "Från timmar av genomläsning till beslutsunderlag på minuter",
-  "Minskar risken att viktiga krav missas",
-  "Gör teamets roll mer granskande än manuellt sammanställande",
-];
-
-const useCaseSections = [
+const useCaseItems = [
   {
-    eyebrow: "E-postautomation",
-    title: "När team inte ska börja med att sortera och besvara mejl manuellt",
-    body: "Inkommande mejl kan klassificeras, prioriteras och förberedas automatiskt så att rätt ärenden hamnar rätt och svar kan gå ut snabbare.",
-    examples: [
-      "Sortera inkommande mejl efter ämne, prioritet och ansvarigt team",
-      "Föreslå svar utifrån tidigare dialog och rätt kontext",
-      "Lyfta bara de mejl som kräver mänsklig bedömning",
-    ],
-    visualLabel: "E-post workflow",
-    visualTitle: "Inkommande mejl hanterade",
-    visualMeta:
-      "Meddelanden sorteras, prioriteras och förbereds innan teamet tar över.",
-    visualPill: "Automation aktiv",
-    visualRows: [
-      { label: "Sortering", value: "Prioritet satt" },
-      { label: "Svarsförslag", value: "2 utkast klara" },
-      { label: "Routing", value: "Rätt team valt" },
-    ],
-    visualFooter:
-      "Mindre tid går till inbox-sortering och manuella svar.",
-    dark: true,
+    title: "AI-assisterad mejlhantering",
+    body: "Klassificering, prioritering och automatiska svar på inkommande mejl.",
   },
   {
-    eyebrow: "Dokumentanalys",
-    title: "När viktiga punkter gömmer sig i avtal, bilagor och underlag",
-    body: "Dokumentanalys gör det möjligt att lyfta fram det som faktiskt är viktigt, minska tiden för manuell tolkning och ge ett tydligt underlag vidare i processen.",
-    examples: [
-      "Lyfta fram kritiska villkor och avvikelser snabbare",
-      "Samla det viktigaste i ett tydligt underlag",
-      "Förbereda nästa steg utan manuell tolkning",
-    ],
-    visualLabel: "Dokument",
-    visualTitle: "Dokumentöversikt",
-    visualMeta:
-      "Avtal, bilagor och villkor strukturerade i ett tydligt underlag.",
-    visualPill: "Dokumentvy",
-    visualRows: [
-      { label: "Avvikelser", value: "4 markerade" },
-      { label: "Nyckelvillkor", value: "Sammanfattade" },
-      { label: "Nästa steg", value: "Redo för granskning" },
-    ],
-    visualFooter: "Viktiga punkter syns utan manuell tolkning.",
-    dark: false,
+    title: "Interna dashboards och beslutsstöd",
+    body: "Sammanställer data och ger teamet rätt underlag för snabbare beslut.",
   },
   {
-    eyebrow: "Skräddarsydd app & webb",
-    title: "När standardsystem inte räcker för hur verksamheten faktiskt arbetar",
-    body: "SmartProcess kan bygga en intern app, webbapp eller arbetsyta med AI-kopplingar som utgår från företagets processer, datakällor och sätt att fatta beslut.",
-    examples: [
-      "Samla arbetsflöden i ett gränssnitt som passar teamets faktiska arbete",
-      "Koppla AI till dokument, data och interna rutiner",
-      "Bygg stöd för analys, prioritering, utkast och beslut i samma lösning",
-    ],
-    visualLabel: "Anpassad app",
-    visualTitle: "Företagsanpassad arbetsyta",
-    visualMeta:
-      "Ett webbaserat verktyg byggt runt process, data och AI-stöd.",
-    visualPill: "Skräddarsydd lösning",
-    visualRows: [
-      { label: "Datakällor", value: "CRM / dokument / e-post" },
-      { label: "AI-stöd", value: "Sök / analys / utkast" },
-      { label: "Gränssnitt", value: "Byggt för teamet" },
-    ],
-    visualFooter:
-      "Lösningen byggs runt hur verksamheten faktiskt arbetar.",
-    dark: true,
+    title: "Automatiserad rapportering",
+    body: "Rapporter och sammanställningar som genereras automatiskt från era datakällor.",
   },
   {
-    eyebrow: "Rapportering och intern administration",
-    title: "När uppföljning och interna processer skapar onödigt dubbelarbete",
-    body: "Återkommande sammanställningar, datakontroller och överlämningar mellan system kan automatiseras för att ge bättre tempo, färre fel och tydligare uppföljning.",
-    examples: [
-      "Generera rapporter från befintliga datakällor",
-      "Minska manuella kontroller och överföringar",
-      "Ge team tydligt beslutsunderlag istället för manuella sammanställningar",
-    ],
-    visualLabel: "Operations",
-    visualTitle: "Operativ uppföljning",
-    visualMeta:
-      "Rapporter och kontroller byggs från befintliga datakällor.",
-    visualPill: "Rapportflöde",
-    visualRows: [
-      { label: "Rapportstatus", value: "Uppdaterad idag" },
-      { label: "Kontroller", value: "Automatiserade" },
-      { label: "Underlag", value: "Klart för uppföljning" },
-    ],
-    visualFooter: "Mindre administration i återkommande arbetsflöden.",
-    dark: false,
+    title: "Dokument- och offertanalys",
+    body: "Läser, tolkar och kategoriserar avtal, offerter, underlag och bilagor.",
+  },
+  {
+    title: "Kundsupportflöden",
+    body: "Automatiserade svar, kategorisering och routing av inkommande ärenden.",
+  },
+  {
+    title: "CRM- och säljautomation",
+    body: "Automatiserar uppföljning, kategorisering och registrering i CRM-system.",
+  },
+  {
+    title: "Processspecifika AI-verktyg",
+    body: "Anpassade lösningar byggda exakt efter era arbetsflöden och specifika behov.",
+  },
+  {
+    title: "Systemintegrationer",
+    body: "Kopplar ihop era befintliga system och eliminerar manuell dataöverföring.",
   },
 ];
 
-const whyItems = [
-  "AI används där den ersätter eller minskar manuellt arbete.",
-  "Beslut och kvalitetssäkring ligger kvar hos teamet.",
-  "Lösningar byggs runt faktiska processer och system, inte standardmallar.",
-  "Formatet väljs efter workflow: webbapp, internt verktyg, SaaS eller integration.",
+const whyPoints = [
+  {
+    title: "Affärsnytta före teknik",
+    body: "Vi börjar alltid med vad ni vill uppnå — inte med vilken teknik som är trendig. Tekniken väljs för att lösa ett verkligt problem.",
+  },
+  {
+    title: "Anpassat, inte standardiserat",
+    body: "Inga standardpaket. Varje lösning byggs runt era faktiska processer, system och sätt att arbeta.",
+  },
+  {
+    title: "Fokus på faktisk användning",
+    body: "En lösning som inte används skapar inget värde. Vi hjälper teamet faktiskt börja och fortsätta använda det vi bygger.",
+  },
+  {
+    title: "Löpande optimering",
+    body: "Vi stannar kvar och förbättrar lösningarna baserat på feedback, nya behov och möjligheter som uppstår.",
+  },
+  {
+    title: "Snabb och flexibel",
+    body: "Vi passar företag som vill röra sig snabbt. Kort väg från idé till fungerande lösning — utan onödig byråkrati.",
+  },
+  {
+    title: "Strategi och teknik i ett",
+    body: "Ni behöver inte anlita flera parter. Vi kombinerar strategiskt tänkande med praktisk AI-utveckling under ett tak.",
+  },
 ];
 
-const relevantItems = [
-  "Har mycket dokument som måste läsas igenom manuellt",
-  "Lägger tid på att sammanställa information från flera källor",
-  "Upprepar samma administrativa moment varje vecka",
-  "Växlar mellan flera system för att få ihop ett underlag",
-  "Upplever att arbete fastnar mellan personer eller team",
+const targetTypes = [
+  "Tjänsteföretag",
+  "Byråer och konsultbolag",
+  "E-handel och butiker",
+  "Lokala serviceföretag",
+  "Administrativa verksamheter",
+  "Företag med mycket mejl, dokument eller rapportering",
 ];
-
-const firstConversationSummary =
-  "30 min genomgång, bedömning av potential och förslag på nästa steg.";
 
 const faqItems = [
   {
-    question: "Passar detta våra befintliga system?",
+    question: "Vad innebär en AI-kartläggning?",
     answer:
-      "Ja, upplägget utgår från hur arbetet redan fungerar idag och kopplas till de system som teamet använder.",
+      "En AI-kartläggning är ett strukturerat genomgång av era arbetsflöden, processer och system för att identifiera var AI kan skapa mest värde. Resultatet är en prioriterad roadmap med konkreta rekommendationer och tydlig koppling till affärsmål.",
   },
   {
-    question: "När är AI rätt väg?",
+    question: "Behöver vi vara tekniska för att arbeta med er?",
     answer:
-      "När flera personer lägger återkommande tid på att läsa, tolka, sammanställa eller flytta information mellan olika system.",
+      "Nej. Ni bidrar med kunskap om era processer och mål — vi sköter det tekniska. Vår uppgift är att göra AI enkelt, konkret och användbart för er verksamhet.",
   },
   {
-    question: "Hur mycket manuellt arbete måste finnas för att det ska vara värt det?",
+    question: "Hur lång tid tar det att få en fungerande lösning?",
     answer:
-      "Det räcker ofta att samma typ av moment tar några timmar i veckan för flera personer för att potentialen ska bli tydlig.",
-  },
-  {
-    question: "Hur lång tid tar det att bygga en lösning?",
-    answer:
-      "Enklare automatiseringar kan vara på plats inom ett par veckor. Mer komplexa lösningar med flera integrationer tar längre tid. Första samtalet ger en realistisk bild av vad som gäller för just er process.",
+      "Det beror på komplexiteten, men vi arbetar i snabba iterationer. Enklare lösningar kan levereras inom 2–4 veckor. Mer komplexa projekt tar typiskt 4–12 veckor. Vi sätter alltid tydliga förväntningar innan vi börjar.",
   },
   {
     question: "Vad kostar det?",
     answer:
-      "Kostnaden beror på processens komplexitet och vilka system som ska kopplas ihop. Vi gör alltid en bedömning av potential och genomförbarhet innan vi sätter ett pris.",
+      "Kostnaden varierar beroende på processens komplexitet och vilka system som ska integreras. Vi gör alltid en bedömning av potential och genomförbarhet innan vi sätter ett pris — utan dolda kostnader.",
+  },
+  {
+    question: "Kan ni integrera med våra befintliga system?",
+    answer:
+      "Ja. Vi anpassar lösningarna till era befintliga system och arbetsflöden, oavsett om det handlar om e-post, CRM, dokumenthantering, affärssystem eller interna verktyg.",
   },
   {
     question: "Hur hanteras vår data?",
     answer:
-      "Data behandlas enligt GDPR och stannar hos er. Vi arbetar aldrig med känslig data utan tydlig överenskommelse om hantering och lagring.",
+      "Era data och processer hanteras konfidentiellt. Vi arbetar inom ramen för GDPR och delar aldrig er data med tredje part.",
   },
-];
-
-const assessmentPoints = [
-  "Potential",
-  "Genomförbarhet",
-  "Rätt lösningstyp",
-];
-
-const navItems = [
-  { href: "#problem", label: "Problem" },
-  { href: "#process", label: "Process" },
-  { href: "#case", label: "Exempel" },
-  { href: "#anvandningsomraden", label: "Områden" },
-  { href: "#kontakt", label: "Kontakt" },
 ];
 
 export default function HomePage() {
   return (
     <main className="relative overflow-hidden pb-24 md:pb-0">
-      <header className="sticky top-0 z-50 border-b border-[color:var(--border)] bg-[rgba(246,241,236,0.88)] backdrop-blur-xl">
+
+      {/* ─── Header ─── */}
+      <header className="sticky top-0 z-50 border-b border-[color:var(--border)] bg-[rgba(246,241,236,0.92)] backdrop-blur-xl">
         <nav
           className="mx-auto flex max-w-[104rem] items-center justify-between gap-6 px-5 py-4 sm:px-8 lg:px-10"
           aria-label="Huvudnavigation"
@@ -241,7 +214,7 @@ export default function HomePage() {
               <a
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-[var(--muted)] hover:text-[var(--foreground)]"
+                className="text-sm font-medium text-[var(--muted)] transition-colors hover:text-[var(--foreground)]"
               >
                 {item.label}
               </a>
@@ -253,16 +226,17 @@ export default function HomePage() {
             analyticsEvent="cta_click"
             analyticsLabel="header_booking"
           >
-            Kom i kontakt
+            Boka samtal
           </AnchorButton>
         </nav>
+        {/* Mobile pill nav */}
         <div className="border-t border-[color:var(--border)] md:hidden">
-          <div className="mx-auto flex max-w-[104rem] gap-3 overflow-x-auto px-5 py-3 sm:px-8 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="mx-auto flex max-w-[104rem] gap-2 overflow-x-auto px-5 py-3 sm:px-8 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {navItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="inline-flex shrink-0 items-center rounded-full border border-[color:var(--border)] bg-white px-3 py-2 text-sm font-medium text-[var(--foreground)] shadow-[0_16px_30px_-28px_rgba(23,19,18,0.34)]"
+                className="inline-flex shrink-0 items-center rounded-full border border-[color:var(--border)] bg-white px-3 py-2 text-sm font-medium text-[var(--foreground)] shadow-[0_8px_24px_-12px_rgba(23,19,18,0.2)]"
               >
                 {item.label}
               </a>
@@ -271,28 +245,29 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="relative">
+      {/* ─── Hero ─── */}
+      <section className="relative overflow-hidden">
         <div
           aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-[48rem] bg-[radial-gradient(circle_at_top_left,_rgba(190,47,36,0.12),transparent_34%),radial-gradient(circle_at_78%_14%,_rgba(190,47,36,0.08),transparent_22%)]"
+          className="absolute inset-x-0 top-0 h-[56rem] bg-[radial-gradient(circle_at_top_left,_rgba(190,47,36,0.10),transparent_32%),radial-gradient(circle_at_80%_12%,_rgba(190,47,36,0.07),transparent_24%)]"
         />
-        <div className="mx-auto grid max-w-[104rem] gap-14 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-[0.86fr_1.14fr] lg:gap-20 lg:px-10 lg:py-32">
-          <div className="relative">
-            <span className="inline-flex rounded-full border border-[rgba(190,47,36,0.14)] bg-[rgba(190,47,36,0.08)] px-4 py-2 text-sm font-semibold text-[var(--accent)]">
-              Skräddarsydd AI-automation för företag
+        <div className="mx-auto grid max-w-[104rem] gap-14 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-2 lg:gap-16 lg:px-10 lg:py-36">
+          <div className="relative flex flex-col justify-center">
+            <span className="inline-flex w-fit rounded-full border border-[rgba(190,47,36,0.16)] bg-[rgba(190,47,36,0.07)] px-4 py-2 text-sm font-semibold text-[var(--accent)]">
+              AI Strategy & Development
             </span>
-            <h1 className="mt-8 max-w-5xl text-balance text-[2.85rem] font-semibold leading-[0.98] tracking-tight text-[var(--foreground)] sm:text-6xl sm:leading-[0.96] lg:text-7xl xl:text-[6rem] xl:leading-[0.92]">
-              Automatisera manuella arbetsflöden med{" "}
-              <span className="whitespace-nowrap text-[var(--accent)]">skräddarsydd AI</span>
+            <h1 className="mt-7 max-w-2xl text-balance text-[2.7rem] font-semibold leading-[1.02] tracking-tight text-[var(--foreground)] sm:text-5xl sm:leading-[1.0] lg:text-[3.5rem] xl:text-[4rem] xl:leading-[0.98]">
+              AI-strategi och utveckling för{" "}
+              <span className="text-[var(--accent)]">växande företag</span>
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--muted)] sm:mt-8 sm:text-xl sm:leading-9">
-              Identifierar arbetsmoment som tar tid och bygger AI-lösningar som
-              gör arbetet snabbare, mer konsekvent och med mindre
-              handpåläggning.
+            <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--muted)] sm:mt-7 sm:text-xl sm:leading-9">
+              SmartProcess hjälper mindre företag gå från AI-förvirring till
+              konkreta AI-lösningar som sparar tid, effektiviserar arbetsflöden
+              och skapar mätbart värde.
             </p>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--foreground)] sm:text-lg">
-              Ofta motsvarar det flera timmar per vecka och person — i arbete
-              som kan automatiseras.
+            <p className="mt-4 max-w-lg text-base leading-7 text-[var(--foreground)]">
+              Strategi, implementation och löpande optimering — från idé till
+              fungerande AI-lösning.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3 sm:mt-10">
@@ -300,23 +275,28 @@ export default function HomePage() {
                 href="#kontakt"
                 className="w-full sm:w-auto"
                 analyticsEvent="cta_click"
-                analyticsLabel="hero_booking"
+                analyticsLabel="hero_primary"
               >
-                Kom i kontakt
+                Boka ett samtal
               </AnchorButton>
               <AnchorButton
-                href="#anvandningsomraden"
+                href="#process"
                 variant="secondary"
                 className="w-full sm:w-auto"
                 analyticsEvent="cta_click"
-                analyticsLabel="hero_use_cases"
+                analyticsLabel="hero_secondary"
               >
-                Se användningsområden
+                Se hur det fungerar
               </AnchorButton>
             </div>
 
             <ul className="mt-10 flex flex-wrap gap-2 border-t border-[color:var(--border)] pt-5 sm:mt-12 sm:pt-6">
-              {heroBenefits.map((item) => (
+              {[
+                "Tydlig AI-strategi",
+                "Anpassade lösningar",
+                "Löpande partner",
+                "10–50 anställda",
+              ].map((item) => (
                 <li key={item}>
                   <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-white/70 px-3.5 py-1.5 text-xs font-semibold text-[var(--foreground)] shadow-[0_1px_4px_rgba(23,19,18,0.06)] backdrop-blur-sm">
                     <span className="block size-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
@@ -327,52 +307,57 @@ export default function HomePage() {
             </ul>
           </div>
 
-          <div className="relative lg:pt-2">
-            <HeroWorkflowPanel />
+          <div className="relative lg:pt-4">
+            <HeroTransformPanel />
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
-        <div className="border-t border-[color:var(--border)] pt-12 sm:pt-16">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
-            Vad vi gör
-          </p>
-          <h2 className="mt-5 max-w-4xl text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[4.25rem] lg:leading-[0.98]">
-            AI-lösningar för arbetsflöden som kostar tid
-          </h2>
-          <div className="mt-6 grid gap-8 sm:mt-8 sm:gap-10 lg:grid-cols-[1.12fr_0.88fr]">
-            <p className="max-w-3xl text-lg leading-8 text-[var(--foreground)] sm:text-xl sm:leading-9">
-              I de flesta verksamheter finns arbetsflöden där dokument läses
-              manuellt, information flyttas mellan system och interna steg
-              bromsar tempo och kvalitet.
-            </p>
-            <p className="max-w-2xl text-base leading-8 text-[var(--muted)]">
-              SmartProcess analyserar var tiden försvinner, identifierar vad
-              som kan automatiseras och bygger lösningar som minskar manuellt
-              arbete i praktiken.
-            </p>
-          </div>
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-4 lg:grid-cols-3">
-            {[
-              { value: "80%", label: "av manuellt arbete kan ofta automatiseras bort" },
-              { value: "Veckor", label: "inte månader — till en fungerande lösning" },
-              { value: "3–6 mån", label: "typisk återbetalningstid på en AI-lösning" },
-            ].map((stat) => (
-              <div
-                key={stat.value}
-                className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-5 shadow-[0_2px_12px_-6px_rgba(23,19,18,0.08)]"
-              >
-                <div className="text-2xl font-semibold tracking-tight text-[var(--foreground)] sm:text-3xl">
-                  {stat.value}
+      {/* ─── Problem ─── */}
+      <section
+        id="tjanster"
+        className="border-y border-[color:var(--border)] bg-[rgba(255,255,255,0.48)]"
+      >
+        <div className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
+          <div className="grid gap-16 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
+
+            {/* Left: heading */}
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
+                Problemet
+              </p>
+              <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[3.5rem] lg:leading-[1.0]">
+                Många företag testar AI. Få får ut verkligt värde.
+              </h2>
+              <p className="mt-5 max-w-md text-base leading-8 text-[var(--muted)] sm:text-lg">
+                Utan en tydlig strategi och rätt implementation fastnar de flesta i
+                experiment, lösa verktyg och lösningar som inte skapar konkret affärsvärde.
+              </p>
+            </div>
+
+            {/* Right: problem cards */}
+            <div className="grid gap-3 sm:grid-cols-2">
+              {problemPoints.map((item, index) => (
+                <div
+                  key={item.title}
+                  className="group rounded-2xl border border-[color:var(--border)] bg-white/70 p-5 shadow-[0_2px_12px_-6px_rgba(23,19,18,0.06)] transition-all duration-200 hover:border-[rgba(190,47,36,0.22)] hover:shadow-[0_4px_20px_-8px_rgba(190,47,36,0.10)]"
+                >
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
+                  <h3 className="mt-3 text-base font-semibold tracking-tight text-[var(--foreground)]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                    {item.body}
+                  </p>
                 </div>
-                <p className="mt-1.5 text-sm leading-6 text-[var(--muted)]">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-          <div className="mt-4 rounded-2xl bg-[var(--foreground)] p-6 sm:mt-5 sm:px-8 sm:py-7">
+
+          {/* Cost callout */}
+          <div className="mt-10 rounded-2xl bg-[var(--foreground)] p-6 sm:mt-12 sm:px-8 sm:py-7">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/50">
               Konkret besparing
             </p>
@@ -391,41 +376,37 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section
-        id="problem"
-        className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28"
-      >
-        <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
-              Problem
-            </p>
-            <p className="mt-4 text-sm leading-7 text-[var(--muted)]">
-              Detta är vanligt i de flesta verksamheter
-            </p>
-            <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[4rem] lg:leading-[0.98]">
-              Många processer tar längre tid än de borde
+      {/* ─── Solution pillars ─── */}
+      <section className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
+        <div className="border-t border-[color:var(--border)] pt-12 sm:pt-16">
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
+            Lösningen
+          </p>
+          <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_1.6fr]">
+            <h2 className="text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[3.5rem] lg:leading-[1.0]">
+              Från osäkerhet till fungerande AI-lösningar
             </h2>
-            <p className="mt-5 max-w-xl text-base leading-8 text-[var(--muted)] sm:mt-6 sm:text-lg">
-              När dokument, beslut och uppföljning hanteras manuellt skapas
-              väntetider, dubbelarbete och högre kostnad per ärende.
+            <p className="max-w-2xl self-end text-lg leading-8 text-[var(--muted)] sm:text-xl sm:leading-9">
+              SmartProcess kombinerar strategi, utveckling och implementation
+              för att identifiera var AI skapar mest värde, bygga lösningarna
+              och hjälpa teamet använda dem i vardagen.
             </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            {problemPoints.map((item, index) => (
+          <div className="mt-10 grid gap-4 sm:mt-12 lg:grid-cols-3">
+            {solutionPillars.map((pillar) => (
               <div
-                key={item.title}
-                className="group rounded-2xl border border-[color:var(--border)] bg-white/60 p-5 shadow-[0_2px_12px_-6px_rgba(23,19,18,0.06)] transition-all duration-200 hover:border-[rgba(190,47,36,0.24)] hover:shadow-[0_4px_20px_-8px_rgba(190,47,36,0.10)]"
+                key={pillar.title}
+                className="rounded-2xl border border-[color:var(--border)] bg-white/70 p-6 shadow-[0_2px_16px_-6px_rgba(23,19,18,0.08)] sm:p-7"
               >
-                <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
-                  {String(index + 1).padStart(2, "0")}
+                <div className="flex size-11 items-center justify-center rounded-xl border border-[color:var(--border)] bg-white text-[var(--accent)] shadow-[0_2px_8px_-4px_rgba(23,19,18,0.1)]">
+                  {pillar.icon}
                 </div>
-                <h3 className="mt-3 text-base font-semibold tracking-tight text-[var(--foreground)]">
-                  {item.title}
+                <h3 className="mt-5 text-xl font-semibold tracking-tight text-[var(--foreground)]">
+                  {pillar.title}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-                  {item.body}
+                <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
+                  {pillar.body}
                 </p>
               </div>
             ))}
@@ -433,418 +414,385 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ─── Process ─── */}
       <section
         id="process"
         className="border-y border-[color:var(--border)] bg-[rgba(255,255,255,0.55)]"
       >
         <div className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
-          <div className="grid gap-16 lg:grid-cols-[0.76fr_1.24fr] lg:items-start">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
-                Process
-              </p>
-              <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[4rem] lg:leading-[0.98]">
-                Så går det till
-              </h2>
-              <p className="mt-5 max-w-xl text-base leading-8 text-[var(--muted)] sm:mt-6 sm:text-lg">
-                Från manuellt arbete till fungerande lösning på veckor — inte
-                månader.
-              </p>
-            </div>
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
+            Process
+          </p>
+          <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_1.4fr]">
+            <h2 className="text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[3.5rem] lg:leading-[1.0]">
+              En tydlig process från idé till värde
+            </h2>
+            <p className="max-w-2xl self-end text-base leading-8 text-[var(--muted)] sm:text-lg sm:leading-9">
+              Från manuellt arbete till fungerande AI-lösning på veckor —
+              inte månader. Vi håller processen tydlig, snabb och fokuserad
+              på det som faktiskt skapar affärsvärde.
+            </p>
+          </div>
 
-            <ol className="relative border-l border-[color:var(--border)] pl-6 sm:pl-8">
-              {processSteps.map((item, index) => (
-                <li
-                  key={item.title}
-                  className={`${index > 0 ? "mt-8" : ""} relative`}
-                >
-                  <span className="absolute -left-[2.05rem] top-1.5 grid size-6 place-items-center rounded-full border border-[rgba(190,47,36,0.22)] bg-[var(--background)] text-[11px] font-semibold text-[var(--accent)] sm:-left-[2.55rem]">
-                    0{index + 1}
+          <div className="mt-10 grid gap-5 sm:mt-12 lg:grid-cols-3">
+            {processSteps.map((step) => (
+              <div
+                key={step.step}
+                className="relative rounded-2xl border border-[color:var(--border)] bg-white p-6 shadow-[0_4px_24px_-8px_rgba(23,19,18,0.09)] sm:p-8"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="text-5xl font-semibold leading-none tracking-tight text-[var(--accent)] opacity-30 sm:text-6xl">
+                    {step.step}
+                  </div>
+                  <span className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                    {step.phase}
                   </span>
-                  <h3 className="text-xl font-semibold tracking-tight text-[var(--foreground)]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 max-w-2xl text-sm leading-7 text-[var(--muted)]">
-                    {item.body}
-                  </p>
-                </li>
-              ))}
-            </ol>
+                </div>
+                <h3 className="mt-5 text-xl font-semibold tracking-tight text-[var(--foreground)] sm:text-2xl">
+                  {step.title}
+                </h3>
+                <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
+                  {step.body}
+                </p>
+                <div className="mt-5 flex flex-wrap gap-2 border-t border-[color:var(--border)] pt-4">
+                  {step.deliverables.map((d) => (
+                    <span
+                      key={d}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--border)] px-2.5 py-1 text-xs font-medium text-[var(--foreground)]"
+                    >
+                      <span className="block size-1 rounded-full bg-[var(--accent)]" />
+                      {d}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
+      {/* ─── Example: ProposalDock ─── */}
       <section
-        id="case"
+        id="exempel"
         className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28"
       >
-        <div className="grid gap-16 lg:grid-cols-[0.88fr_1.12fr] lg:items-center">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
-              Implementerad lösning
-            </p>
-            <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[4.25rem] lg:leading-[0.98]">
-              Exempel: ProposalDock
-            </h2>
-            <p className="mt-4 text-base font-medium leading-7 text-[var(--foreground)] sm:text-lg">
-              Ett konkret exempel på hur manuellt analysarbete ersatts med AI.
-            </p>
-            <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--muted)] sm:mt-6 sm:text-lg">
-              ProposalDock är utvecklad av SmartProcess och är ett exempel på
-              en AI-lösning för RFP- och offertprocesser. Verktyget analyserar
-              RFP-underlag, identifierar krav, risker och viktiga punkter samt
-              hjälper team att bedöma täckningsgrad.
-            </p>
-
-            <div className="mt-10 border-t border-[color:var(--border)]">
-              {caseProofPoints.map((item) => (
-                <div
-                  key={item}
-                  className="flex items-start justify-between gap-4 border-b border-[color:var(--border)] py-5"
+        <div className="border-t border-[color:var(--border)] pt-12 sm:pt-16">
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
+            Exempel
+          </p>
+          <div className="mt-5 grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start lg:gap-16">
+            <div>
+              <h2 className="text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[3.25rem] lg:leading-[1.02]">
+                Så här kan en AI-lösning se ut i praktiken
+              </h2>
+              <p className="mt-5 max-w-xl text-base leading-8 text-[var(--muted)] sm:text-lg">
+                ProposalDock är ett verktyg vi byggt för RFP- och
+                offertprocesser. Det analyserar upphandlingsunderlag,
+                identifierar krav, risker och viktiga punkter samt
+                hjälper teamet att bedöma täckningsgrad.
+              </p>
+              <ul className="mt-7 space-y-4">
+                {[
+                  "Från timmar av genomläsning till beslutsunderlag på minuter",
+                  "Minskar risken att viktiga krav missas",
+                  "Gör teamets roll mer granskande än manuellt sammanställande",
+                ].map((point) => (
+                  <li key={point} className="flex items-start gap-3">
+                    <svg
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      className="mt-0.5 size-5 shrink-0 text-[var(--accent)]"
+                    >
+                      <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
+                      <path d="m6.5 10 2.5 2.5 4.5-4.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span className="text-sm leading-6 text-[var(--foreground)]">{point}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8">
+                <a
+                  href="https://proposaldock.se"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-5 py-2.5 text-sm font-semibold text-[var(--foreground)] shadow-[0_2px_8px_-4px_rgba(23,19,18,0.12)] transition-all hover:shadow-[0_4px_16px_-6px_rgba(23,19,18,0.16)]"
                 >
-                  <p className="text-lg font-medium text-[var(--foreground)]">
-                    {item}
-                  </p>
-                  <span className="mt-2 block size-2 shrink-0 rounded-full bg-[var(--accent)]" />
-                </div>
-              ))}
+                  Besök ProposalDock
+                  <svg viewBox="0 0 16 16" fill="none" className="size-3.5" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M3 8h10M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </a>
+              </div>
             </div>
-
-            <div className="mt-8">
-              <a
-                href="https://www.proposaldock.com"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-[rgba(190,47,36,0.18)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--foreground)] shadow-[0_18px_38px_-28px_rgba(23,19,18,0.35)] hover:border-[rgba(190,47,36,0.32)] hover:text-[var(--accent)]"
-              >
-                Besök ProposalDock
-                <svg
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                  className="size-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                >
-                  <path d="M7 17 17 7" />
-                  <path d="M9 7h8v8" />
-                </svg>
-              </a>
+            <div>
+              <ProposalDockPanel />
             </div>
           </div>
-
-          <ProposalDockPanel />
         </div>
       </section>
 
+      {/* ─── Use Cases Grid ─── */}
       <section
         id="anvandningsomraden"
-        className="border-y border-[color:var(--border)] bg-[rgba(255,255,255,0.55)]"
+        className="border-y border-[color:var(--border)] bg-[rgba(255,255,255,0.48)]"
       >
         <div className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
-              Användningsområden
-            </p>
-            <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[4rem] lg:leading-[0.98]">
-              Vanliga områden där AI skapar värde
-            </h2>
-            <p className="mt-5 text-base leading-8 text-[var(--muted)] sm:mt-6 sm:text-lg">
-              Exempel på var manuellt arbete kan ersättas med bättre systemstöd
-              och AI-driven logik.
-            </p>
-          </div>
-
-          <div className="mt-12 border-t border-[color:var(--border)] sm:mt-16">
-            {useCaseSections.map((item, index) => (
-              <article
-                key={item.title}
-                className="grid gap-10 border-b border-[color:var(--border)] py-12 sm:gap-12 sm:py-16 lg:grid-cols-[0.92fr_1.08fr] lg:items-center"
-              >
-                <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
-                    {item.eyebrow}
-                  </p>
-                  <h3 className="mt-5 max-w-3xl text-2xl font-semibold tracking-tight text-[var(--foreground)] sm:text-3xl lg:text-4xl">
-                    {item.title}
-                  </h3>
-                  <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--muted)]">
-                    {item.body}
-                  </p>
-
-                  <ul className="mt-8 space-y-3">
-                    {item.examples.map((example) => (
-                      <li
-                        key={example}
-                        className="flex items-start gap-3 text-sm leading-7 text-[var(--foreground)]"
-                      >
-                        <span className="mt-2 block size-2 shrink-0 rounded-full bg-[var(--accent)]" />
-                        <span>{example}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className={index % 2 === 1 ? "lg:order-1" : ""}>
-                  <div
-                    className={`rounded-[32px] p-6 sm:rounded-[40px] sm:p-8 ${
-                      item.dark
-                        ? "bg-[var(--foreground)] text-white"
-                        : "border border-[color:var(--border)] bg-white text-[var(--foreground)] shadow-[0_24px_60px_-48px_rgba(23,19,18,0.22)]"
-                    }`}
-                  >
-                    <div
-                      className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${
-                        item.dark ? "text-white/52" : "text-[var(--muted)]"
-                      }`}
-                    >
-                      {item.visualLabel}
-                    </div>
-
-                    <div
-                      className={`mt-8 rounded-[26px] border p-4 sm:p-5 ${
-                        item.dark
-                          ? "border-white/10 bg-[rgba(255,255,255,0.06)]"
-                          : "border-[color:var(--border)] bg-[rgba(247,241,236,0.76)]"
-                      }`}
-                    >
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div className="max-w-md">
-                          <h4
-                            className={`text-base font-semibold tracking-tight ${
-                              item.dark
-                                ? "text-white"
-                                : "text-[var(--foreground)]"
-                            }`}
-                          >
-                            {item.visualTitle}
-                          </h4>
-                          <p
-                            className={`mt-2 text-sm leading-6 ${
-                              item.dark
-                                ? "text-white/70"
-                                : "text-[var(--muted)]"
-                            }`}
-                          >
-                            {item.visualMeta}
-                          </p>
-                        </div>
-                        <span
-                          className={`rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] ${
-                            item.dark
-                              ? "border border-[rgba(190,47,36,0.28)] bg-[rgba(190,47,36,0.18)] text-white"
-                              : "border border-[rgba(190,47,36,0.18)] bg-white text-[var(--accent)]"
-                          }`}
-                        >
-                          {item.visualPill}
-                        </span>
-                      </div>
-
-                      <div className="mt-5 space-y-3">
-                        {item.visualRows.map((row) => (
-                          <div
-                            key={row.label}
-                            className={`flex items-center justify-between gap-4 rounded-[18px] px-4 py-3 ${
-                              item.dark
-                                ? "bg-white/6"
-                                : "border border-[rgba(104,74,65,0.08)] bg-white"
-                            }`}
-                          >
-                            <span
-                              className={`text-sm ${
-                                item.dark
-                                  ? "text-white/76"
-                                  : "text-[var(--foreground)]"
-                              }`}
-                            >
-                              {row.label}
-                            </span>
-                            <span
-                              className={`text-[11px] font-semibold uppercase tracking-[0.14em] ${
-                                item.dark
-                                  ? "text-white/58"
-                                  : "text-[var(--muted)]"
-                              }`}
-                            >
-                              {row.value}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div
-                        className={`mt-5 flex items-start gap-3 border-t pt-4 text-sm leading-6 ${
-                          item.dark
-                            ? "border-white/10 text-white/72"
-                            : "border-[color:var(--border)] text-[var(--muted)]"
-                        }`}
-                      >
-                        <span className="mt-2 block size-2 shrink-0 rounded-full bg-[var(--accent)]" />
-                        <p>{item.visualFooter}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
-        <div className="grid gap-16 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
-              Varför detta upplägg
-            </p>
-            <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[4rem] lg:leading-[0.98]">
-              Praktisk AI, byggd runt verkliga processer
-            </h2>
-          </div>
-
-          <ul className="border-t border-[color:var(--border)]">
-            {whyItems.map((item) => (
-              <li
-                key={item}
-                className="flex items-start gap-4 border-b border-[color:var(--border)] py-5 text-base leading-8 text-[var(--foreground)]"
-              >
-                <span className="mt-3 block size-2 shrink-0 rounded-full bg-[var(--accent)]" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <section className="border-y border-[color:var(--border)] bg-[rgba(255,255,255,0.55)]">
-        <div className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
-          <div className="grid gap-16 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+          <div className="grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:items-start">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
-                Relevans
+                Användningsområden
               </p>
-              <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[4rem] lg:leading-[0.98]">
-                Detta gäller er om ni känner igen er i något av detta:
+              <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[3rem] lg:leading-[1.04]">
+                Exempel på AI-lösningar vi kan bygga
               </h2>
-            </div>
-
-            <ul className="border-t border-[color:var(--border)]">
-              {relevantItems.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-start gap-4 border-b border-[color:var(--border)] py-5 text-base leading-8 text-[var(--foreground)]"
+              <p className="mt-5 text-base leading-8 text-[var(--muted)]">
+                Lösningarna varierar beroende på er verksamhet, era processer
+                och var AI skapar mest värde för just er.
+              </p>
+              <div className="mt-8">
+                <AnchorButton
+                  href="#kontakt"
+                  analyticsEvent="cta_click"
+                  analyticsLabel="usecases_cta"
                 >
-                  <span className="mt-3 block size-2 shrink-0 rounded-full bg-[var(--accent)]" />
-                  <span>{item}</span>
-                </li>
+                  Boka ett samtal
+                </AnchorButton>
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {useCaseItems.map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-[color:var(--border)] bg-white/70 p-5 shadow-[0_2px_10px_-4px_rgba(23,19,18,0.07)]"
+                >
+                  <h3 className="text-sm font-semibold tracking-tight text-[var(--foreground)]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-1.5 text-sm leading-6 text-[var(--muted)]">
+                    {item.body}
+                  </p>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* ─── Why SmartProcess ─── */}
+      <section id="om" className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
+        <div className="border-t border-[color:var(--border)] pt-12 sm:pt-16">
+          <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:items-start lg:gap-20">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
+                Om SmartProcess
+              </p>
+              <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[3.25rem] lg:leading-[1.02]">
+                Inte bara utveckling. Riktning, implementation och förbättring.
+              </h2>
+              <p className="mt-6 text-base leading-8 text-[var(--muted)] sm:text-lg">
+                SmartProcess är en AI-partner för mindre och växande företag
+                som vill använda AI praktiskt — inte bara prata om det.
+              </p>
+              <p className="mt-4 text-base leading-8 text-[var(--muted)]">
+                Vi kombinerar strategiskt tänkande med konkret AI-utveckling
+                och stannar kvar som partner genom hela resan.
+              </p>
+
+              {/* Target audience */}
+              <div className="mt-8 rounded-2xl border border-[color:var(--border)] bg-white/60 p-5 shadow-[0_2px_12px_-6px_rgba(23,19,18,0.07)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
+                  Passar bra för
+                </p>
+                <ul className="mt-3 space-y-2">
+                  {targetTypes.map((type) => (
+                    <li key={type} className="flex items-center gap-2.5 text-sm text-[var(--foreground)]">
+                      <span className="block size-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
+                      {type}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {whyPoints.map((point) => (
+                <div
+                  key={point.title}
+                  className="rounded-2xl border border-[color:var(--border)] bg-white/60 p-5 shadow-[0_2px_10px_-4px_rgba(23,19,18,0.06)]"
+                >
+                  <div className="flex size-8 items-center justify-center rounded-lg bg-[rgba(190,47,36,0.08)]">
+                    <svg viewBox="0 0 16 16" fill="none" className="size-4 text-[var(--accent)]" stroke="currentColor" strokeWidth="2">
+                      <path d="m3 8 3 3 7-6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  <h3 className="mt-4 text-sm font-semibold tracking-tight text-[var(--foreground)]">
+                    {point.title}
+                  </h3>
+                  <p className="mt-1.5 text-sm leading-6 text-[var(--muted)]">
+                    {point.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── CTA Section ─── */}
+      <section className="border-y border-[color:var(--border)] bg-[var(--foreground)]">
+        <div className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
+                Ta nästa steg
+              </p>
+              <h2 className="mt-5 max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-[3.25rem] lg:leading-[1.04]">
+                Vill du veta var AI kan skapa mest värde i ditt företag?
+              </h2>
+              <p className="mt-5 max-w-xl text-base leading-8 text-white/65 sm:text-lg">
+                Boka ett samtal så identifierar vi vilka processer som kan
+                effektiviseras, automatiseras eller förbättras med AI —
+                anpassat efter just er verksamhet.
+              </p>
+            </div>
+            <div className="lg:flex lg:justify-end">
+              <div className="rounded-2xl border border-white/10 bg-[rgba(255,255,255,0.06)] p-6 sm:p-7">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
+                  Första samtalet
+                </p>
+                <p className="mt-2 text-base font-semibold text-white">
+                  30 min genomgång av er situation
+                </p>
+                <p className="mt-2 text-sm leading-6 text-white/60">
+                  Bedömning av potential, genomförbarhet och rätt nästa steg
+                  — utan förpliktelser.
+                </p>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {["Potential", "Genomförbarhet", "Rätt lösningstyp"].map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-white/15 px-3 py-1 text-xs font-medium text-white/70"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <div className="mt-6">
+                  <AnchorButton
+                    href="#kontakt"
+                    analyticsEvent="cta_click"
+                    analyticsLabel="cta_section"
+                  >
+                    Boka ett samtal
+                  </AnchorButton>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FAQ ─── */}
       <section className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
-        <div className="grid gap-16 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+        <div className="grid gap-12 lg:grid-cols-[0.65fr_1.35fr] lg:items-start">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
               Vanliga frågor
             </p>
-            <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[4rem] lg:leading-[0.98]">
-              Frågor som ofta kommer upp inför ett första samtal
+            <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl">
+              Frågor och svar
             </h2>
+            <p className="mt-5 text-base leading-8 text-[var(--muted)]">
+              Har du en fråga som inte finns med? Skriv till oss så svarar vi.
+            </p>
           </div>
-
           <FaqAccordion items={faqItems} />
         </div>
       </section>
 
-      <section id="kontakt" className="relative">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 top-10 bg-[radial-gradient(circle_at_left_bottom,_rgba(190,47,36,0.1),transparent_24%),radial-gradient(circle_at_85%_20%,_rgba(190,47,36,0.08),transparent_20%)]"
-        />
-        <div className="relative z-10 mx-auto max-w-[104rem] px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
-          <div className="rounded-[38px] bg-[var(--foreground)] px-5 py-7 text-white shadow-[0_45px_120px_-68px_rgba(23,19,18,0.65)] sm:rounded-[46px] sm:px-8 sm:py-8 lg:px-10 lg:py-9">
-            <div className="grid gap-10 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1fr)] lg:gap-16 lg:items-start">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-white/56">
-                  Kontakt
+      {/* ─── Contact ─── */}
+      <section
+        id="kontakt"
+        className="border-t border-[color:var(--border)] bg-[var(--foreground)]"
+      >
+        <div className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
+          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-16">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
+                Kontakt
+              </p>
+              <h2 className="mt-5 max-w-lg text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-[3.25rem] lg:leading-[1.04]">
+                Redo att se hur AI kan hjälpa er verksamhet?
+              </h2>
+              <p className="mt-5 max-w-md text-base leading-8 text-white/65 sm:text-lg">
+                Beskriv ett arbetsmoment som tar tid eller känns onödigt
+                manuellt. En första bedömning visar om och hur det kan
+                effektiviseras med AI.
+              </p>
+              <div className="mt-7 rounded-2xl border border-white/10 bg-[rgba(255,255,255,0.06)] p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
+                  Första samtalet
                 </p>
-                <h2 className="mt-5 max-w-xl text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-[3.35rem] lg:leading-[1.02]">
-                  Har ni ett arbetsmoment som tar onödigt mycket tid?
-                </h2>
-                <p className="mt-5 max-w-xl text-base leading-8 text-white/72 sm:mt-6 sm:text-lg">
-                  Beskriv ett arbetsmoment som tar tid eller känns onödigt
-                  manuellt. En första bedömning visar om och hur det kan
-                  effektiviseras med AI.
+                <p className="mt-2 text-sm leading-6 text-white/70">
+                  30 min genomgång, bedömning av potential och förslag på nästa steg.
                 </p>
-
-                <div className="mt-7 max-w-md rounded-[24px] border border-white/10 bg-[rgba(255,255,255,0.04)] p-4 sm:p-5">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/56">
-                    Första samtalet
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-white/72">
-                    {firstConversationSummary}
-                  </p>
-                  <div className="mt-4 flex flex-wrap gap-2.5">
-                    {assessmentPoints.map((item) => (
-                      <span
-                        key={item}
-                        className="rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-[11px] font-medium text-white/88"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {["Potential", "Genomförbarhet", "Rätt lösningstyp"].map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-white/12 px-2.5 py-1 text-xs font-medium text-white/60"
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
               </div>
-
-              <div className="lg:justify-self-end lg:w-full lg:max-w-[38rem]">
-                <ContactForm directEmail={directEmail} />
-              </div>
+            </div>
+            <div>
+              <ContactForm directEmail={directEmail} />
             </div>
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-[color:var(--border)] bg-[rgba(255,255,255,0.72)]">
-        <div className="mx-auto flex max-w-[104rem] flex-col gap-6 px-5 py-8 text-sm text-[var(--muted)] sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
+      {/* ─── Footer ─── */}
+      <footer className="border-t border-[color:var(--border)] bg-[rgba(246,241,236,0.8)]">
+        <div className="mx-auto flex max-w-[104rem] flex-wrap items-center justify-between gap-6 px-5 py-8 sm:px-8 lg:px-10">
           <div>
-            <div className="font-semibold text-[var(--foreground)]">
-              SmartProcess
-            </div>
-            <div className="mt-1">
-              AI-automation för manuella arbetsflöden.
-            </div>
+            <div className="text-sm font-semibold text-[var(--foreground)]">SmartProcess</div>
+            <div className="mt-0.5 text-xs text-[var(--muted)]">AI-strategi och utveckling för växande företag</div>
           </div>
-          <div className="flex flex-wrap gap-4">
-            {navItems.map((item) => (
+          <nav className="flex flex-wrap gap-x-6 gap-y-2">
+            {[
+              { href: "#tjanster", label: "Tjänster" },
+              { href: "#process", label: "Process" },
+              { href: "#exempel", label: "Exempel" },
+              { href: "#om", label: "Om SmartProcess" },
+              { href: "#kontakt", label: "Kontakt" },
+              { href: "/privacy", label: "Integritetspolicy" },
+            ].map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="hover:text-[var(--foreground)]"
+                className="text-sm text-[var(--muted)] hover:text-[var(--foreground)]"
               >
                 {item.label}
               </a>
             ))}
-            <a href="/privacy" className="hover:text-[var(--foreground)]">
-              Integritetspolicy
-            </a>
-          </div>
+          </nav>
         </div>
       </footer>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--border)] bg-[rgba(246,241,236,0.92)] backdrop-blur-xl md:hidden">
-        <div className="mx-auto max-w-[104rem] px-5 py-3">
-          <AnchorButton
-            href="#kontakt"
-            className="w-full"
-            analyticsEvent="cta_click"
-            analyticsLabel="mobile_sticky_booking"
-          >
-            Kom i kontakt
-          </AnchorButton>
-        </div>
+      {/* ─── Mobile sticky CTA ─── */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--border)] bg-[rgba(246,241,236,0.96)] p-4 backdrop-blur-md md:hidden">
+        <AnchorButton
+          href="#kontakt"
+          className="w-full"
+          analyticsEvent="cta_click"
+          analyticsLabel="mobile_sticky"
+        >
+          Boka samtal
+        </AnchorButton>
       </div>
     </main>
   );
