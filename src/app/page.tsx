@@ -94,38 +94,75 @@ const processSteps = [
   },
 ];
 
-const useCaseItems = [
+const useCaseTiers = [
   {
-    title: "AI-assisterad mejlhantering",
-    body: "Klassificering, prioritering och automatiska svar på inkommande mejl.",
+    label: "Små projekt",
+    timeframe: "1–3 veckor",
+    description: "Snabba vinster med hög ROI och kort implementationstid.",
+    items: [
+      {
+        title: "AI-assisterad mejlhantering",
+        body: "Klassificering, prioritering och automatiska svar på inkommande mejl.",
+      },
+      {
+        title: "Automatiserade sammanfattningar",
+        body: "Mötesprotokoll, rapportsammanfattningar och nyhetsbrev genereras automatiskt.",
+      },
+      {
+        title: "Enkel dokumentanalys",
+        body: "Läser, tolkar och kategoriserar avtal, offerter och bilagor automatiskt.",
+      },
+      {
+        title: "Automatiserad rapportering",
+        body: "Rapporter och sammanställningar som genereras automatiskt från era datakällor.",
+      },
+    ],
   },
   {
-    title: "Interna dashboards och beslutsstöd",
-    body: "Sammanställer data och ger teamet rätt underlag för snabbare beslut.",
+    label: "Mellanstora projekt",
+    timeframe: "3–6 veckor",
+    description: "Djupare automationer med systemkopplingar och anpassad logik.",
+    items: [
+      {
+        title: "Kundsupportflöden",
+        body: "Automatiserade svar, kategorisering och routing av inkommande ärenden.",
+      },
+      {
+        title: "CRM- och säljautomation",
+        body: "Automatiserar uppföljning, kategorisering och registrering i CRM-system.",
+      },
+      {
+        title: "Offert- och kravanalys",
+        body: "Identifierar krav, risker och viktiga punkter i RFP-underlag och offerter.",
+      },
+      {
+        title: "Interna dashboards",
+        body: "Sammanställer data från flera källor och ger teamet rätt beslutsunderlag.",
+      },
+    ],
   },
   {
-    title: "Automatiserad rapportering",
-    body: "Rapporter och sammanställningar som genereras automatiskt från era datakällor.",
-  },
-  {
-    title: "Dokument- och offertanalys",
-    body: "Läser, tolkar och kategoriserar avtal, offerter, underlag och bilagor.",
-  },
-  {
-    title: "Kundsupportflöden",
-    body: "Automatiserade svar, kategorisering och routing av inkommande ärenden.",
-  },
-  {
-    title: "CRM- och säljautomation",
-    body: "Automatiserar uppföljning, kategorisering och registrering i CRM-system.",
-  },
-  {
-    title: "Processspecifika AI-verktyg",
-    body: "Anpassade lösningar byggda exakt efter era arbetsflöden och specifika behov.",
-  },
-  {
-    title: "Systemintegrationer",
-    body: "Kopplar ihop era befintliga system och eliminerar manuell dataöverföring.",
+    label: "Större projekt",
+    timeframe: "6–12 veckor",
+    description: "Skräddarsydda AI-system och djupgående integrationer.",
+    items: [
+      {
+        title: "Processspecifika AI-verktyg",
+        body: "Anpassade lösningar byggda exakt efter era arbetsflöden och specifika behov.",
+      },
+      {
+        title: "Systemintegrationer",
+        body: "Kopplar ihop era befintliga system och eliminerar manuell dataöverföring.",
+      },
+      {
+        title: "Interna AI-agenter",
+        body: "Autonoma agenter som hanterar komplexa arbetsflöden baserat på era regler.",
+      },
+      {
+        title: "End-to-end automatiseringsplattformar",
+        body: "Fullständiga lösningar som täcker hela processer från input till leverans.",
+      },
+    ],
   },
 ];
 
@@ -537,7 +574,8 @@ export default function HomePage() {
         className="border-y border-[color:var(--border)] bg-[rgba(255,255,255,0.48)]"
       >
         <div className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
-          <div className="grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:items-start">
+          {/* Header */}
+          <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
                 Användningsområden
@@ -545,35 +583,61 @@ export default function HomePage() {
               <h2 className="mt-5 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-[3rem] lg:leading-[1.04]">
                 Exempel på AI-lösningar vi kan bygga
               </h2>
-              <p className="mt-5 text-base leading-8 text-[var(--muted)]">
-                Lösningarna varierar beroende på er verksamhet, era processer
-                och var AI skapar mest värde för just er.
+              <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--muted)]">
+                Lösningarna varierar i komplexitet och scope beroende på era
+                processer och var AI skapar mest värde för just er.
               </p>
-              <div className="mt-8">
-                <AnchorButton
-                  href="#kontakt"
-                  analyticsEvent="cta_click"
-                  analyticsLabel="usecases_cta"
-                >
-                  Boka ett samtal
-                </AnchorButton>
-              </div>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {useCaseItems.map((item) => (
-                <div
-                  key={item.title}
-                  className="rounded-2xl border border-[color:var(--border)] bg-white/70 p-5 shadow-[0_2px_10px_-4px_rgba(23,19,18,0.07)]"
-                >
-                  <h3 className="text-sm font-semibold tracking-tight text-[var(--foreground)]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-1.5 text-sm leading-6 text-[var(--muted)]">
-                    {item.body}
-                  </p>
+            <div className="shrink-0">
+              <AnchorButton
+                href="#kontakt"
+                analyticsEvent="cta_click"
+                analyticsLabel="usecases_cta"
+              >
+                Boka ett samtal
+              </AnchorButton>
+            </div>
+          </div>
+
+          {/* Tier columns */}
+          <div className="mt-10 grid gap-4 sm:mt-12 lg:grid-cols-3">
+            {useCaseTiers.map((tier) => (
+              <div
+                key={tier.label}
+                className="rounded-2xl border border-[color:var(--border)] bg-white/80 p-5 shadow-[0_2px_12px_-6px_rgba(23,19,18,0.07)] sm:p-6"
+              >
+                {/* Tier header */}
+                <div className="flex items-start justify-between gap-3 border-b border-[color:var(--border)] pb-4">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--accent)]">
+                      {tier.label}
+                    </p>
+                    <p className="mt-1.5 text-xs leading-5 text-[var(--muted)]">
+                      {tier.description}
+                    </p>
+                  </div>
+                  <span className="shrink-0 rounded-full border border-[color:var(--border)] px-2.5 py-1 text-[10px] font-semibold text-[var(--muted)]">
+                    {tier.timeframe}
+                  </span>
                 </div>
-              ))}
-            </div>
+                {/* Items */}
+                <div className="mt-4 space-y-2.5">
+                  {tier.items.map((item) => (
+                    <div
+                      key={item.title}
+                      className="rounded-xl border border-[color:var(--border)] bg-white/70 p-4"
+                    >
+                      <h3 className="text-sm font-semibold tracking-tight text-[var(--foreground)]">
+                        {item.title}
+                      </h3>
+                      <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+                        {item.body}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
