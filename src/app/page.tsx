@@ -394,16 +394,16 @@ export default function HomePage() {
           </div>
 
           {/* Cost callout */}
-          <div className="mt-10 rounded-2xl bg-[var(--foreground)] p-6 sm:mt-12 sm:px-8 sm:py-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/50">
+          <div className="mt-10 rounded-2xl border border-[rgba(190,47,36,0.18)] bg-[rgba(190,47,36,0.05)] p-6 sm:mt-12 sm:px-8 sm:py-7">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--accent)]">
               Konkret besparing
             </p>
-            <p className="mt-3 max-w-3xl text-lg font-semibold leading-7 text-white sm:text-xl sm:leading-8">
+            <p className="mt-3 max-w-3xl text-lg font-semibold leading-7 text-[var(--foreground)] sm:text-xl sm:leading-8">
               En anställd som lägger 2 timmar om dagen på manuella
               rutinuppgifter arbetar bort ca 400 betalda timmar per år på
               uppgifter som kan automatiseras.
             </p>
-            <p className="mt-3 text-sm leading-7 text-white/65">
+            <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
               Med fem anställda i samma situation är det 2 000 betalda timmar
               om året — tid ni betalar för men som inte skapar värde. Det
               motsvarar 500 000–1 000 000 kr i lönekostnader. En AI-lösning
