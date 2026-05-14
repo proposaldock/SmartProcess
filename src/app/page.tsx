@@ -349,7 +349,7 @@ export default function HomePage() {
       {/* ─── Problem ─── */}
       <section
         id="tjanster"
-        className="border-y border-[color:var(--border)] bg-[rgba(255,255,255,0.48)]"
+        className="border-b border-[color:var(--border)]"
       >
         <div className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
           <div className="grid gap-16 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
@@ -450,7 +450,7 @@ export default function HomePage() {
       {/* ─── Process ─── */}
       <section
         id="process"
-        className="border-y border-[color:var(--border)] bg-[rgba(255,255,255,0.55)]"
+        className="border-b border-[color:var(--border)]"
       >
         <div className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--accent)]">
@@ -567,7 +567,7 @@ export default function HomePage() {
       {/* ─── Use Cases Grid ─── */}
       <section
         id="anvandningsomraden"
-        className="border-y border-[color:var(--border)] bg-[rgba(255,255,255,0.48)]"
+        className="border-b border-[color:var(--border)]"
       >
         <div className="mx-auto max-w-[104rem] px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
           {/* Header */}
