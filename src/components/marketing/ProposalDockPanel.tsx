@@ -68,8 +68,7 @@ export function ProposalDockPanel() {
           </div>
         </div>
 
-        <div className="mt-6 rounded-[24px] border border-white/10 bg-white/4 p-4 sm:p-5">
-          <div className="hidden items-center gap-3 xl:flex">
+        <div className="hidden items-center gap-3 mt-6 xl:flex">
             {workflowSteps.map((step, index) => (
               <div key={step.title} className="contents">
                 <article
@@ -102,7 +101,7 @@ export function ProposalDockPanel() {
             ))}
           </div>
 
-          <div className="grid gap-3 xl:hidden">
+        <div className="grid gap-3 mt-6 xl:hidden">
             {workflowSteps.map((step, index) => (
               <article
                 key={step.title}
@@ -132,7 +131,6 @@ export function ProposalDockPanel() {
                 </p>
               </article>
             ))}
-          </div>
         </div>
       </div>
     </div>
