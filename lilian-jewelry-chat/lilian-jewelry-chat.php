@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Lilians Jewelry Consultant
  * Description: Interaktiv ringguide med poängbaserade rekommendationer, bildhantering och Amelia-integrering.
- * Version:     2.9.0
+ * Version:     2.9.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 define( 'LJC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LJC_URL', plugin_dir_url( __FILE__ ) );
-define( 'LJC_VER', '2.9.0' );
+define( 'LJC_VER', '2.9.1' );
 
 // ── Register custom image size ─────────────────────────────────────────────
 // 600×600 square crop — crisp on retina for quiz cards (~240 px display size)
@@ -1026,6 +1026,27 @@ function ljc_send_profile() {
     }
 }
 
+// ── AJAX: admin delete leads ──────────────────────────────────────────────
+
+add_action( 'wp_ajax_ljc_delete_leads', 'ljc_delete_leads_ajax' );
+
+function ljc_delete_leads_ajax() {
+    if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( 'unauthorized' ); }
+    if ( ! check_ajax_referer( 'ljc_admin_nonce', 'nonce', false ) ) { wp_send_json_error( 'nonce' ); }
+
+    $raw  = sanitize_text_field( $_POST['ids'] ?? '' );
+    $ids  = array_filter( array_map( 'intval', explode( ',', $raw ) ), function ( $id ) { return $id > 0; } );
+
+    if ( ! empty( $ids ) ) {
+        global $wpdb;
+        $table        = $wpdb->prefix . 'ljc_leads';
+        $placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+        $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id IN ({$placeholders})", $ids ) ); // phpcs:ignore
+    }
+
+    wp_send_json_success( [ 'deleted' => count( $ids ) ] );
+}
+
 // ── CSV export ─────────────────────────────────────────────────────────────
 
 add_action( 'admin_init', 'ljc_maybe_export_csv' );
@@ -1582,75 +1603,233 @@ function ljc_settings_page() {
         <?php elseif ( $tab === 'leads' ) : ?>
           <?php
           global $wpdb;
-          $table  = $wpdb->prefix . 'ljc_leads';
-          $leads  = $wpdb->get_results( "SELECT * FROM {$table} ORDER BY created_at DESC LIMIT 200", ARRAY_A );
-          $total  = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
+          $table      = $wpdb->prefix . 'ljc_leads';
+          $leads      = $wpdb->get_results( "SELECT * FROM {$table} ORDER BY created_at DESC LIMIT 200", ARRAY_A );
+          $total      = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
           $export_url = wp_nonce_url( admin_url( 'admin.php?page=ljc-settings&tab=leads&ljc_export=leads' ), 'ljc_export_leads' );
+
+          // Label maps (same as ljc_send_profile)
+          $path_labels = [ 'A' => 'Överraskning', 'B' => 'Tillsammans', 'C' => 'Till mig själv' ];
+          $metal_l  = [ 'yellowGold'=>'Gult guld (18k)', 'roseGold'=>'Roséguld (18k)', 'whiteGold'=>'Vitguld (18k)', 'platinum'=>'Platina', 'mixed'=>'Blandade metaller' ];
+          $shape_l  = [ 'round'=>'Rund', 'oval'=>'Oval', 'cushion'=>'Cushion', 'pear'=>'Päron', 'emeraldCut'=>'Emerald', 'princess'=>'Princess', 'marquise'=>'Marquise', 'asscher'=>'Asscher', 'radiant'=>'Radiant', 'heart'=>'Hjärta' ];
+          $mount_l  = [ 'solitaire'=>'Klassisk solitär', 'cathedral'=>'Cathedral solitär', 'splitShank'=>'Split shank', 'halo'=>'Halo', 'bezel'=>'Bezel', 'threeStone'=>'Tre stenar', 'cluster'=>'Vintage cluster', 'floral'=>'Naturinspirerat', 'eastWest'=>'East-West' ];
+          $prong_l  = [ 'fourProng'=>'4 kramlor', 'sixProng'=>'6 kramlor', 'doubleProng'=>'Dubbla kramlor', 'claw'=>'Klokramlor', 'vProng'=>'V-kramlor', 'bezel'=>'Bezel', 'bezProng'=>'Bezel' ];
+          $band_l   = [ 'plain'=>'Slätt polerat', 'pave'=>'Pavé', 'twisted'=>'Tvinnat', 'milgrain'=>'Milgrain', 'engraved'=>'Graverat', 'knifeEdge'=>'Knife-edge', 'florBand'=>'Blom-/bladdetalj', 'split'=>'Split shank' ];
+          $feel_l   = [ 'delicate'=>'Delikat', 'balanced'=>'Balanserad', 'statement'=>'Statement' ];
+          $budget_l = [ 'tier1'=>'Under 10 000 kr', 'tier2'=>'10 000-25 000 kr', 'tier3'=>'25 000-50 000 kr', 'tier4'=>'50 000-100 000 kr', 'tier5'=>'100 000+ kr', 'flex'=>'Flexibelt' ];
           ?>
+
           <div class="ljc-card-box">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
               <div>
-                <h2 style="border:none;padding:0;margin:0 0 4px;">Leads <span style="font-weight:400;color:#646970;">(<?php echo $total; ?> totalt)</span></h2>
-                <p class="description">Sparas automatiskt varje gång en besökare fullföljer quizet.</p>
+                <h2 style="border:none;padding:0;margin:0 0 4px;">Leads
+                  <span style="font-weight:400;color:#646970;">
+                    (<span id="ljc-lead-count"><?php echo count( $leads ); ?></span> av <?php echo $total; ?> visas)
+                  </span>
+                </h2>
+                <p class="description">Klicka på pilen vid ett lead för att se hela ringprofilen.</p>
               </div>
-              <a href="<?php echo esc_url($export_url); ?>" class="button button-secondary">&#8595; Exportera CSV</a>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                <button type="button" id="ljc-bulk-delete-btn" class="button"
+                        onclick="ljcDeleteSelected()" disabled
+                        style="color:#b00020;border-color:#b00020;">Ta bort markerade</button>
+                <a href="<?php echo esc_url( $export_url ); ?>" class="button button-secondary">&#8595; Exportera CSV</a>
+              </div>
             </div>
           </div>
 
-          <?php if ( empty($leads) ) : ?>
+          <?php if ( empty( $leads ) ) : ?>
           <div class="ljc-card-box">
-            <p style="color:#646970;text-align:center;padding:20px 0;">Inga leads ännu — de dyker upp här när besökare fullföljer quizet.</p>
+            <p style="color:#646970;text-align:center;padding:20px 0;">Inga leads ännu.</p>
           </div>
           <?php else : ?>
           <div class="ljc-card-box" style="padding:0;overflow:hidden;">
-            <table class="widefat striped" style="border:none;">
+            <table class="widefat striped" style="border:none;" id="ljc-leads-table">
               <thead><tr>
+                <th style="width:28px;padding-left:12px;">
+                  <input type="checkbox" id="ljc-select-all" onchange="ljcSelectAll(this)" title="Markera alla">
+                </th>
+                <th style="width:28px;"></th>
                 <th>Datum</th>
                 <th>Namn</th>
                 <th>E-post</th>
                 <th>Bokad</th>
                 <th>Nyhetsbrev</th>
-                <th>Väg</th>
                 <th>Stil</th>
-                <th>Metall</th>
-                <th>Stenform</th>
                 <th>Budget</th>
-                <th>Bild</th>
+                <th style="width:52px;">Bild</th>
+                <th style="width:36px;"></th>
               </tr></thead>
               <tbody>
               <?php foreach ( $leads as $row ) :
-                $booked = ! empty($row['booked']);
+                $lid    = (int) $row['id'];
+                $booked = ! empty( $row['booked'] );
+                $pl     = $path_labels[ $row['path'] ] ?? $row['path'];
               ?>
-              <tr>
-                <td style="white-space:nowrap;color:#646970;font-size:12px;"><?php echo esc_html( $row['created_at'] ); ?></td>
-                <td><strong><?php echo $row['name'] ? esc_html($row['name']) : '<span style="color:#c3c4c7">—</span>'; ?></strong></td>
-                <td><?php echo $row['email'] ? '<a href="mailto:' . esc_attr($row['email']) . '">' . esc_html($row['email']) . '</a>' : '<span style="color:#c3c4c7">—</span>'; ?></td>
-                <td><?php echo $booked ? '<span style="color:#0a7b3d;font-weight:600;">✓ Ja</span>' : '<span style="color:#c3c4c7">Nej</span>'; ?></td>
-                <td><?php echo ! empty($row['newsletter_optin']) ? '<span style="color:#0a7b3d;">✓</span>' : '<span style="color:#c3c4c7">—</span>'; ?></td>
-                <td><?php echo esc_html( $row['path'] ); ?></td>
-                <td><?php echo esc_html( $row['style_primary'] . ($row['style_secondary'] ? ' / '.$row['style_secondary'] : '') ); ?></td>
-                <td><?php echo esc_html( $row['metal'] ); ?></td>
-                <td><?php echo esc_html( $row['shape'] ); ?></td>
-                <td><?php echo esc_html( $row['budget'] ); ?></td>
+              <tr id="ljc-lead-row-<?php echo $lid; ?>">
+                <td style="padding-left:12px;">
+                  <input type="checkbox" class="ljc-lead-cb" value="<?php echo $lid; ?>"
+                         onchange="ljcSyncBulkBtn()">
+                </td>
+                <td>
+                  <button type="button" id="ljc-expand-<?php echo $lid; ?>"
+                          onclick="ljcToggleDetail(<?php echo $lid; ?>)"
+                          class="button button-small"
+                          style="font-size:10px;line-height:1;padding:1px 5px;" title="Visa ringprofil">&#9660;</button>
+                </td>
+                <td style="white-space:nowrap;color:#646970;font-size:12px;"><?php echo esc_html( substr( $row['created_at'], 0, 16 ) ); ?></td>
+                <td><strong><?php echo $row['name'] ? esc_html( $row['name'] ) : '<span style="color:#c3c4c7">&#8212;</span>'; ?></strong></td>
+                <td><?php echo $row['email'] ? '<a href="mailto:' . esc_attr( $row['email'] ) . '">' . esc_html( $row['email'] ) . '</a>' : '<span style="color:#c3c4c7">&#8212;</span>'; ?></td>
+                <td><?php echo $booked ? '<span style="color:#0a7b3d;font-weight:600;">&#10003; Ja</span>' : '<span style="color:#c3c4c7">Nej</span>'; ?></td>
+                <td><?php echo ! empty( $row['newsletter_optin'] ) ? '<span style="color:#0a7b3d;">&#10003;</span>' : '<span style="color:#c3c4c7">&#8212;</span>'; ?></td>
+                <td style="font-size:13px;"><?php echo esc_html( $row['style_primary'] . ( $row['style_secondary'] ? ' / ' . $row['style_secondary'] : '' ) ); ?></td>
+                <td style="font-size:13px;"><?php echo esc_html( $budget_l[ $row['budget'] ] ?? $row['budget'] ); ?></td>
                 <td>
                   <?php if ( ! empty( $row['reference_image_url'] ) ) : ?>
-                    <a href="<?php echo esc_url( $row['reference_image_url'] ); ?>" target="_blank" title="Visa bild">
-                      <img src="<?php echo esc_url( $row['reference_image_url'] ); ?>" alt="Inspirationsbild"
-                           style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #ddd;display:block;">
+                    <a href="<?php echo esc_url( $row['reference_image_url'] ); ?>" target="_blank">
+                      <img src="<?php echo esc_url( $row['reference_image_url'] ); ?>" alt=""
+                           style="width:40px;height:40px;object-fit:cover;border-radius:4px;border:1px solid #ddd;display:block;">
                     </a>
                   <?php else : ?>
-                    <span style="color:#c3c4c7">—</span>
+                    <span style="color:#c3c4c7">&#8212;</span>
                   <?php endif; ?>
+                </td>
+                <td>
+                  <button type="button" class="button button-small"
+                          onclick="ljcDeleteOne(<?php echo $lid; ?>)"
+                          style="color:#b00020;border-color:#b00020;font-size:10px;padding:1px 5px;" title="Ta bort lead">&#10005;</button>
+                </td>
+              </tr>
+              <tr id="ljc-lead-detail-<?php echo $lid; ?>" style="display:none;">
+                <td colspan="11" style="background:#f6f7f7;padding:20px 24px;border-top:2px solid #0f4528;">
+                  <div style="max-width:640px;">
+                    <p style="margin:0 0 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#0a3018;">
+                      Ringprofil &#8212; Lead #<?php echo $lid; ?> &nbsp;|&nbsp;
+                      <span style="font-weight:400;color:#646970;"><?php echo esc_html( $pl ); ?></span>
+                    </p>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px 28px;">
+                      <?php
+                      $profile_rows = [
+                        'Primär stil'   => $row['style_primary'],
+                        'Sekundär stil' => $row['style_secondary'],
+                        'Metall'        => $metal_l[ $row['metal'] ]    ?? $row['metal'],
+                        'Stenform'      => $shape_l[ $row['shape'] ]    ?? $row['shape'],
+                        'Infattning'    => $mount_l[ $row['mounting'] ] ?? $row['mounting'],
+                        'Kramlor'       => $prong_l[ $row['prong'] ]    ?? $row['prong'],
+                        'Band'          => $band_l[  $row['band'] ]     ?? $row['band'],
+                        'Känsla'        => $feel_l[  $row['feel'] ]     ?? $row['feel'],
+                        'Budget'        => $budget_l[ $row['budget'] ]  ?? $row['budget'],
+                      ];
+                      foreach ( $profile_rows as $label => $val ) :
+                        if ( $val === '' || $val === null ) { continue; }
+                      ?>
+                      <div>
+                        <span style="display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#646970;margin-bottom:2px;"><?php echo esc_html( $label ); ?></span>
+                        <strong style="font-size:13px;color:#1d2327;"><?php echo esc_html( $val ); ?></strong>
+                      </div>
+                      <?php endforeach; ?>
+                    </div>
+                    <?php if ( ! empty( $row['reference_image_url'] ) ) : ?>
+                    <div style="margin-top:16px;">
+                      <span style="display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#646970;margin-bottom:6px;">Referensbild</span>
+                      <a href="<?php echo esc_url( $row['reference_image_url'] ); ?>" target="_blank">
+                        <img src="<?php echo esc_url( $row['reference_image_url'] ); ?>" alt="Inspirationsbild"
+                             style="width:110px;height:110px;object-fit:cover;border-radius:8px;border:1px solid #ddd;">
+                      </a>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ( $row['email'] ) : ?>
+                    <div style="margin-top:14px;padding-top:12px;border-top:1px solid #ddd;font-size:12px;color:#646970;">
+                      E-post: <a href="mailto:<?php echo esc_attr( $row['email'] ); ?>"><?php echo esc_html( $row['email'] ); ?></a>
+                      <?php if ( ! empty( $row['newsletter_optin'] ) ) : ?>
+                        &nbsp;<span style="color:#0a7b3d;">&#10003; Nyhetsbrev</span>
+                      <?php endif; ?>
+                      <?php if ( $booked ) : ?>
+                        &nbsp;<span style="color:#0a7b3d;font-weight:600;">&#10003; Bokad</span>
+                      <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
+                  </div>
                 </td>
               </tr>
               <?php endforeach; ?>
               </tbody>
             </table>
-            <?php if ($total > 200) : ?>
+            <?php if ( $total > 200 ) : ?>
             <p class="description" style="padding:8px 16px;">Visar de senaste 200 av <?php echo $total; ?> leads. Exportera CSV för hela listan.</p>
             <?php endif; ?>
           </div>
           <?php endif; ?>
+
+          <script>
+          var ljcAdminNonce = '<?php echo wp_create_nonce( 'ljc_admin_nonce' ); ?>';
+
+          function ljcToggleDetail(id) {
+            var row = document.getElementById('ljc-lead-detail-' + id);
+            var btn = document.getElementById('ljc-expand-' + id);
+            if (!row) { return; }
+            var isOpen = row.style.display !== 'none';
+            row.style.display = isOpen ? 'none' : 'table-row';
+            btn.innerHTML = isOpen ? '&#9660;' : '&#9650;';
+          }
+
+          function ljcSelectAll(cb) {
+            document.querySelectorAll('.ljc-lead-cb').forEach(function(c) { c.checked = cb.checked; });
+            ljcSyncBulkBtn();
+          }
+
+          function ljcSyncBulkBtn() {
+            var checked = document.querySelectorAll('.ljc-lead-cb:checked').length;
+            var total   = document.querySelectorAll('.ljc-lead-cb').length;
+            var btn     = document.getElementById('ljc-bulk-delete-btn');
+            var all     = document.getElementById('ljc-select-all');
+            if (btn) { btn.disabled = (checked === 0); }
+            if (all) {
+              all.indeterminate = (checked > 0 && checked < total);
+              all.checked = (total > 0 && checked === total);
+            }
+          }
+
+          function ljcDeleteSelected() {
+            var ids = Array.from(document.querySelectorAll('.ljc-lead-cb:checked')).map(function(c) { return c.value; });
+            if (!ids.length) { return; }
+            var msg = ids.length === 1 ? 'Ta bort 1 lead? Det går inte att ångra.' : 'Ta bort ' + ids.length + ' leads? Det går inte att ångra.';
+            if (!confirm(msg)) { return; }
+            ljcDoDelete(ids);
+          }
+
+          function ljcDeleteOne(id) {
+            if (!confirm('Ta bort detta lead? Det går inte att ångra.')) { return; }
+            ljcDoDelete([String(id)]);
+          }
+
+          function ljcDoDelete(ids) {
+            var fd = new FormData();
+            fd.append('action', 'ljc_delete_leads');
+            fd.append('nonce', ljcAdminNonce);
+            fd.append('ids', ids.join(','));
+            fetch(ajaxurl, { method: 'POST', body: fd })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                if (!data.success) { alert('Kunde inte ta bort leads. Försök igen.'); return; }
+                ids.forEach(function(id) {
+                  var row    = document.getElementById('ljc-lead-row-'    + id);
+                  var detail = document.getElementById('ljc-lead-detail-' + id);
+                  if (row)    { row.remove(); }
+                  if (detail) { detail.remove(); }
+                });
+                var remaining = document.querySelectorAll('.ljc-lead-cb').length;
+                var countEl   = document.getElementById('ljc-lead-count');
+                if (countEl) { countEl.textContent = remaining; }
+                ljcSyncBulkBtn();
+                if (remaining === 0) {
+                  var tbody = document.querySelector('#ljc-leads-table tbody');
+                  if (tbody) { tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;padding:24px;color:#646970;">Inga leads kvar.</td></tr>'; }
+                }
+              })
+              .catch(function() { alert('Nätverksfel — försök igen.'); });
+          }
+          </script>
 
         <?php endif; ?>
 
