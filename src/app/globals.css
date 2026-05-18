@@ -158,6 +158,8 @@ textarea {
 .sp-nav-links { display:flex; gap: 28px; align-items: center;}
 .sp-nav-links a { font-size: 14px; font-weight: 500; color: var(--sp-fg-2); text-decoration: none; transition: color 120ms;}
 .sp-nav-links a:hover { color: var(--sp-ink); }
+.sp-nav-links a.btn-primary { color: #fff; }
+.sp-nav-links a.btn-primary:hover { color: #fff; }
 
 /* ===== Buttons ===== */
 .btn {
