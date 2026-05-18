@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Lilians Jewelry Consultant
  * Description: Interaktiv ringguide med poängbaserade rekommendationer, bildhantering och Amelia-integrering.
- * Version:     2.9.2
+ * Version:     2.9.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 define( 'LJC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LJC_URL', plugin_dir_url( __FILE__ ) );
-define( 'LJC_VER', '2.9.2' );
+define( 'LJC_VER', '2.9.3' );
 
 // ── Register custom image size ─────────────────────────────────────────────
 // 600×600 square crop — crisp on retina for quiz cards (~240 px display size)
@@ -987,27 +987,127 @@ function ljc_send_profile() {
     $feel_l   = [ 'delicate'=>'Delikat', 'balanced'=>'Balanserad', 'statement'=>'Statement' ];
     $budget_l = [ 'tier1'=>'Under 10 000 kr', 'tier2'=>'10 000-25 000 kr', 'tier3'=>'25 000-50 000 kr', 'tier4'=>'50 000-100 000 kr', 'tier5'=>'100 000+ kr', 'flex'=>'Flexibelt' ];
 
-    $style_str = $style1 . ( $style2 ? ' / ' . $style2 : '' );
-    $sep       = str_repeat( '-', 40 );  // plain ASCII — avoids encoding edge cases
-    $amelia    = get_option( 'ljc_amelia_url', '/boka/' );
+    $style_str  = $style1 . ( $style2 ? ' / ' . $style2 : '' );
+    $amelia_url = esc_url( get_option( 'ljc_amelia_url', '/boka/' ) );
+    if ( ! preg_match( '/^https?:\/\//', $amelia_url ) ) {
+        $amelia_url = home_url( $amelia_url );
+    }
 
-    $body  = "Hej!\n\n";
-    $body .= "Tack för att du använde Lilians Jewelry ringguide.\n";
-    $body .= "Här är din personliga ringprofil:\n\n";
-    $body .= "$sep\n";
-    $body .= "DIN RINGPROFIL\n";
-    $body .= "$sep\n\n";
-    $body .= sprintf( "%-18s %s\n", "Stil:",       $style_str );
-    $body .= sprintf( "%-18s %s\n", "Metall:",     $metal_l[$metal]   ?? $metal );
-    $body .= sprintf( "%-18s %s\n", "Stenform:",   $shape_l[$shape]   ?? $shape );
-    $body .= sprintf( "%-18s %s\n", "Infattning:", $mount_l[$mount]   ?? $mount );
-    $body .= sprintf( "%-18s %s\n", "Kramlor:",    $prong_l[$prong]   ?? $prong );
-    $body .= sprintf( "%-18s %s\n", "Band:",       $band_l[$band]     ?? $band );
-    $body .= sprintf( "%-18s %s\n", "Känsla:",     $feel_l[$feel]     ?? $feel );
-    $body .= sprintf( "%-18s %s\n", "Budget:",     $budget_l[$budget] ?? $budget );
-    $body .= "\n$sep\n\n";
-    $body .= "Boka din gratis konsultation med Lilian:\n$amelia\n\n";
-    $body .= "Varmt välkommen!\nLilians Jewelry\n";
+    // ── Build profile rows ────────────────────────────────────────────────
+    $profile_data = [
+        'Stil'       => $style_str,
+        'Metall'     => $metal_l[ $metal ]   ?? $metal,
+        'Stenform'   => $shape_l[ $shape ]   ?? $shape,
+        'Infattning' => $mount_l[ $mount ]   ?? $mount,
+        'Kramlor'    => $prong_l[ $prong ]   ?? $prong,
+        'Band'       => $band_l[  $band  ]   ?? $band,
+        'Känsla'     => $feel_l[  $feel  ]   ?? $feel,
+        'Budget'     => $budget_l[ $budget ] ?? $budget,
+    ];
+    $profile_data = array_filter( $profile_data, function ( $v ) { return $v !== '' && $v !== null; } );
+
+    $rows_html = '';
+    $count     = count( $profile_data );
+    $idx       = 0;
+    foreach ( $profile_data as $lbl => $val ) {
+        $idx++;
+        $border     = ( $idx < $count ) ? 'border-bottom:1px solid #E7EBEE;' : '';
+        $rows_html .= '<tr style="' . $border . '">';
+        $rows_html .= '<td bgcolor="#F9FAF8" style="background-color:#F9FAF8;padding:13px 24px;width:36%;'
+            . 'font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.10em;'
+            . 'text-transform:uppercase;color:#888888;white-space:nowrap;vertical-align:middle;">'
+            . esc_html( $lbl ) . '</td>';
+        $rows_html .= '<td bgcolor="#ffffff" style="background-color:#ffffff;padding:13px 24px;'
+            . 'font-family:Georgia,serif;font-size:14px;color:#111518;vertical-align:middle;">'
+            . esc_html( $val ) . '</td>';
+        $rows_html .= '</tr>';
+    }
+
+    // ── Build HTML email ──────────────────────────────────────────────────
+    $body  = '<!DOCTYPE html><html lang="sv"><head><meta charset="UTF-8">'
+           . '<meta name="viewport" content="width=device-width,initial-scale=1">'
+           . '<title>Din ringprofil</title></head>'
+           . '<body style="margin:0;padding:0;background-color:#F3F5F7;">';
+
+    // Outer wrapper table
+    $body .= '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"'
+           . ' style="background-color:#F3F5F7;min-width:100%;">'
+           . '<tr><td align="center" style="padding:40px 16px 52px;">';
+
+    // Inner card table
+    $body .= '<table role="presentation" width="600" cellpadding="0" cellspacing="0"'
+           . ' style="max-width:600px;width:100%;border-radius:20px;overflow:hidden;'
+           . 'box-shadow:0 8px 48px rgba(0,0,0,0.12);">';
+
+    // ── Header ──
+    $body .= '<tr><td align="center" bgcolor="#111518"'
+           . ' style="background-color:#111518;padding:52px 48px 44px;">'
+           . '<p style="margin:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:10px;'
+           . 'letter-spacing:0.22em;text-transform:uppercase;color:#9ba8b5;">SMYCKESKONSULTATION</p>'
+           . '<h1 style="margin:0;font-family:Georgia,\'Times New Roman\',serif;font-size:48px;'
+           . 'font-weight:400;color:#FBFBFC;line-height:1.05;letter-spacing:0.01em;">Lilians Jewelry</h1>'
+           . '<p style="margin:14px 0 0;font-family:Georgia,serif;font-size:16px;'
+           . 'color:#9ba8b5;font-style:italic;">Din personliga ringprofil</p>'
+           . '</td></tr>';
+
+    // ── Green accent bar ──
+    $body .= '<tr><td bgcolor="#0f4528" style="background-color:#0f4528;height:4px;'
+           . 'font-size:1px;line-height:1px;">&nbsp;</td></tr>';
+
+    // ── Intro ──
+    $body .= '<tr><td bgcolor="#ffffff" style="background-color:#ffffff;padding:44px 48px 28px;">'
+           . '<p style="margin:0 0 14px;font-family:Georgia,serif;font-size:22px;'
+           . 'color:#111518;line-height:1.35;">Hej!</p>'
+           . '<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;'
+           . 'color:#555555;line-height:1.80;">Tack för att du använde Lilians Jewelry ringguide. '
+           . 'Vi har sammanställt din personliga ringprofil baserat på dina svar &mdash; '
+           . 'spara den gärna inför din konsultation.</p>'
+           . '</td></tr>';
+
+    // ── Profile card ──
+    $body .= '<tr><td bgcolor="#ffffff" style="background-color:#ffffff;padding:0 48px 16px;">'
+           . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"'
+           . ' style="border:2px solid #111518;border-radius:14px;overflow:hidden;">'
+           // Card header
+           . '<tr><td colspan="2" bgcolor="#111518"'
+           . ' style="background-color:#111518;padding:15px 24px;">'
+           . '<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:10px;'
+           . 'letter-spacing:0.16em;text-transform:uppercase;color:#9ba8b5;">DIN RINGPROFIL</p>'
+           . '</td></tr>'
+           // Dimension rows
+           . $rows_html
+           . '</table>'
+           . '</td></tr>';
+
+    // ── Divider ──
+    $body .= '<tr><td bgcolor="#ffffff" style="background-color:#ffffff;padding:28px 48px 0;">'
+           . '<div style="border-top:1px solid #E7EBEE;"></div>'
+           . '</td></tr>';
+
+    // ── CTA ──
+    $body .= '<tr><td align="center" bgcolor="#ffffff"'
+           . ' style="background-color:#ffffff;padding:32px 48px 56px;">'
+           . '<p style="margin:0 0 24px;font-family:Arial,Helvetica,sans-serif;font-size:15px;'
+           . 'color:#555555;line-height:1.75;">Redo att hitta din drömring? Boka en kostnadsfri '
+           . 'konsultation med Lilian &mdash; vi utgår från din profil.</p>'
+           . '<a href="' . $amelia_url . '"'
+           . ' style="display:inline-block;background-color:#0f4528;color:#ffffff;'
+           . 'text-decoration:none;padding:18px 44px;border-radius:40px;'
+           . 'font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;'
+           . 'letter-spacing:0.04em;line-height:1;">Boka kostnadsfri konsultation &rarr;</a>'
+           . '</td></tr>';
+
+    // ── Footer ──
+    $body .= '<tr><td align="center" bgcolor="#F3F5F7"'
+           . ' style="background-color:#F3F5F7;padding:28px 48px 36px;border-top:1px solid #E7EBEE;">'
+           . '<p style="margin:0 0 6px;font-family:Arial,Helvetica,sans-serif;font-size:12px;'
+           . 'color:#999999;line-height:1.65;">Du får detta mail för att du genomförde '
+           . 'Lilians Jewelry ringguide.</p>'
+           . '<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;'
+           . 'color:#bbbbbb;">&copy; Lilians Jewelry</p>'
+           . '</td></tr>';
+
+    $body .= '</table></td></tr></table></body></html>';
 
     // Use wp_mail_from filters instead of a From: header — more reliable with
     // PHPMailer/SMTP plugins which often ignore the raw header in favour of their
@@ -1027,9 +1127,9 @@ function ljc_send_profile() {
 
     $sent = wp_mail(
         $email,
-        'Din ringprofil fran Lilians Jewelry',
+        'Din ringprofil från Lilians Jewelry',
         $body,
-        [ 'Content-Type: text/plain; charset=UTF-8' ]
+        [ 'Content-Type: text/html; charset=UTF-8' ]
     );
 
     remove_filter( 'wp_mail_from',      $from_email );
