@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Lilians Jewelry Consultant
  * Description: Interaktiv ringguide med poängbaserade rekommendationer, bildhantering och Amelia-integrering.
- * Version:     2.8.3
+ * Version:     2.9.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 define( 'LJC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LJC_URL', plugin_dir_url( __FILE__ ) );
-define( 'LJC_VER', '2.8.9' );
+define( 'LJC_VER', '2.9.0' );
 
 // ── Register custom image size ─────────────────────────────────────────────
 // 600×600 square crop — crisp on retina for quiz cards (~240 px display size)
@@ -630,6 +630,7 @@ function ljc_quiz_shortcode() { return '<div id="ljc-quiz"></div>'; }
 add_action( 'wp_enqueue_scripts', 'ljc_enqueue' );
 
 function ljc_enqueue() {
+    if ( get_option( 'ljc_plugin_enabled', '1' ) === '0' ) { return; }
     if ( ! is_page( 'smyckeskonsultation' ) ) { return; }
 
     wp_enqueue_style( 'ljc-google-fonts',
@@ -735,6 +736,7 @@ function ljc_body_class( $classes ) {
 add_action( 'wp_footer', 'ljc_float_button' );
 
 function ljc_float_button() {
+    if ( get_option( 'ljc_plugin_enabled', '1' ) === '0' ) { return; }
     if ( is_page( 'smyckeskonsultation' ) ) { return; }
     if ( ! get_option( 'ljc_bubble_enabled', '1' ) ) { return; }
     $page = get_page_by_path( 'smyckeskonsultation' );
@@ -1092,6 +1094,7 @@ function ljc_settings_page() {
         if ( $tab === 'general' ) {
             update_option( 'admin_email',        sanitize_email(      $_POST['ljc_email']          ?? get_option('admin_email') ) );
             update_option( 'ljc_amelia_url',     esc_url_raw(         $_POST['ljc_amelia']         ?? '/boka/' ) );
+            update_option( 'ljc_plugin_enabled', isset( $_POST['ljc_plugin_enabled'] ) ? '1' : '0' );
             update_option( 'ljc_bubble_enabled', isset( $_POST['ljc_bubble_enabled'] ) ? '1' : '0' );
             update_option( 'ljc_bubble_text',    sanitize_text_field( $_POST['ljc_bubble_text']    ?? '' ) );
             update_option( 'ljc_bubble_emoji',   sanitize_text_field( $_POST['ljc_bubble_emoji']   ?? '💍' ) );
@@ -1229,6 +1232,23 @@ function ljc_settings_page() {
                 <th>Bildmapp (fallback)</th>
                 <td><code><?php echo esc_html( LJC_DIR . 'images/' ); ?></code>
                   <p class="description">Bilder utan uppladdning i mediabiblioteket hämtas härifrån med emoji-placeholder som fallback.</p>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="ljc-card-box">
+            <h2>Synlighet</h2>
+            <table class="form-table">
+              <tr>
+                <th><label for="ljc_plugin_enabled">Visa ringguiden</label></th>
+                <td>
+                  <label>
+                    <input type="checkbox" id="ljc_plugin_enabled" name="ljc_plugin_enabled" value="1"
+                           <?php checked( get_option('ljc_plugin_enabled','1'), '1' ); ?>>
+                    Visa ringguiden och pratbubblan på webbplatsen
+                  </label>
+                  <p class="description">Avmarkera för att tillfälligt dölja ringguiden utan att avinstallera pluginet.</p>
                 </td>
               </tr>
             </table>
