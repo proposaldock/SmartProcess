@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 define( 'LJC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LJC_URL', plugin_dir_url( __FILE__ ) );
-define( 'LJC_VER', '2.8.8' );
+define( 'LJC_VER', '2.8.9' );
 
 // ── Register custom image size ─────────────────────────────────────────────
 // 600×600 square crop — crisp on retina for quiz cards (~240 px display size)
@@ -576,6 +576,7 @@ function ljc_create_leads_table() {
         budget varchar(20) DEFAULT '',
         booked tinyint(1) DEFAULT 0,
         reference_image_url varchar(500) DEFAULT '',
+        newsletter_optin tinyint(1) DEFAULT 0,
         PRIMARY KEY (id)
     ) {$charset};";
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -595,7 +596,8 @@ function ljc_maybe_upgrade() {
         if ( $cols && ! in_array( 'email',               $cols, true ) ) { $wpdb->query( "ALTER TABLE {$table} ADD COLUMN `email`               varchar(100) DEFAULT '' AFTER `name`" ); }
         if ( $cols && ! in_array( 'booked',              $cols, true ) ) { $wpdb->query( "ALTER TABLE {$table} ADD COLUMN `booked`              tinyint(1)   DEFAULT 0  AFTER `budget`" ); }
         if ( $cols && ! in_array( 'reference_image_url', $cols, true ) ) { $wpdb->query( "ALTER TABLE {$table} ADD COLUMN `reference_image_url` varchar(500) DEFAULT '' AFTER `booked`" ); }
-        update_option( 'ljc_db_version', '2.8.4' );
+        if ( $cols && ! in_array( 'newsletter_optin',    $cols, true ) ) { $wpdb->query( "ALTER TABLE {$table} ADD COLUMN `newsletter_optin`    tinyint(1)   DEFAULT 0  AFTER `reference_image_url`" ); }
+        update_option( 'ljc_db_version', '2.8.9' );
     }
 }
 
@@ -615,7 +617,7 @@ function ljc_activate() {
         ] );
     }
     ljc_create_leads_table();
-    update_option( 'ljc_db_version', '2.8.4' );
+    update_option( 'ljc_db_version', '2.8.9' );
 }
 
 // ── Shortcode ──────────────────────────────────────────────────────────────
@@ -856,9 +858,10 @@ function ljc_book() {
         wp_send_json_error( 'Säkerhetsfel' );
     }
 
-    $name    = sanitize_text_field( $_POST['name']  ?? '' );
-    $email   = sanitize_email(      $_POST['email'] ?? '' );
-    $lead_id = (int)               ( $_POST['lead_id'] ?? 0 );
+    $name       = sanitize_text_field( $_POST['name']             ?? '' );
+    $email      = sanitize_email(      $_POST['email']            ?? '' );
+    $lead_id    = (int)               ( $_POST['lead_id']         ?? 0  );
+    $newsletter = (int)               ( $_POST['newsletter_optin'] ?? 0 );
 
     if ( ! is_email( $email ) ) {
         wp_send_json_error( 'Ogiltig e-postadress' );
@@ -879,10 +882,13 @@ function ljc_book() {
     global $wpdb;
     $table = $wpdb->prefix . 'ljc_leads';
     if ( $lead_id ) {
-        $wpdb->update( $table, [ 'name' => $name, 'email' => $email, 'booked' => 1 ], [ 'id' => $lead_id ] );
+        $wpdb->update( $table,
+            [ 'name' => $name, 'email' => $email, 'booked' => 1, 'newsletter_optin' => $newsletter ],
+            [ 'id' => $lead_id ]
+        );
     } else {
         $wpdb->insert( $table, [
-            'name' => $name, 'email' => $email, 'booked' => 1,
+            'name' => $name, 'email' => $email, 'booked' => 1, 'newsletter_optin' => $newsletter,
             'path' => $path, 'style_primary' => $style1, 'style_secondary' => $style2,
             'metal' => $metal, 'shape' => $shape, 'mounting' => $mount,
             'prong' => $prong, 'band' => $band, 'feel' => $feel, 'budget' => $budget,
@@ -890,36 +896,132 @@ function ljc_book() {
     }
 
     // Build admin notification email
-    $path_labels = [ 'A' => 'Överraskning', 'B' => 'Vi väljer tillsammans', 'C' => 'Till mig själv' ];
+    $display_name = $name ?: $email;
+    $path_labels  = [ 'A' => 'Överraskning', 'B' => 'Vi väljer tillsammans', 'C' => 'Till mig själv' ];
     $sep  = str_repeat( '-', 46 );
     $body = "Ny ringkonsultation – kunden vill boka!\n\n";
     $body .= "$sep\nKUNDUPPGIFTER\n$sep\n";
-    $body .= "Namn:      $name\n";
-    $body .= "E-post:    $email\n\n";
+    if ( $name ) { $body .= "Namn:          $name\n"; }
+    $body .= "E-post:        $email\n";
+    $body .= "Nyhetsbrev:    " . ( $newsletter ? 'Ja' : 'Nej' ) . "\n\n";
     $body .= "$sep\nRINGPROFIL\n$sep\n";
-    $body .= sprintf( "%-22s %s\n", "Sökväg:",       $path_labels[ $path ] ?? $path );
-    $body .= sprintf( "%-22s %s\n", "Primär stil:",   $style1 );
-    if ( $style2 ) { $body .= sprintf( "%-22s %s\n", "Sekundär stil:",  $style2 ); }
-    $body .= sprintf( "%-22s %s\n", "Metall:",        $metal );
-    $body .= sprintf( "%-22s %s\n", "Stenform:",      $shape );
-    $body .= sprintf( "%-22s %s\n", "Infattning:",    $mount );
-    $body .= sprintf( "%-22s %s\n", "Kramlor:",       $prong );
-    $body .= sprintf( "%-22s %s\n", "Band:",          $band );
-    $body .= sprintf( "%-22s %s\n", "Känsla:",        $feel );
-    $body .= sprintf( "%-22s %s\n", "Budget:",        $budget );
+    $body .= sprintf( "%-22s %s\n", "Sökväg:",      $path_labels[ $path ] ?? $path );
+    $body .= sprintf( "%-22s %s\n", "Primär stil:",  $style1 );
+    if ( $style2 ) { $body .= sprintf( "%-22s %s\n", "Sekundär stil:", $style2 ); }
+    $body .= sprintf( "%-22s %s\n", "Metall:",       $metal );
+    $body .= sprintf( "%-22s %s\n", "Stenform:",     $shape );
+    $body .= sprintf( "%-22s %s\n", "Infattning:",   $mount );
+    $body .= sprintf( "%-22s %s\n", "Kramlor:",      $prong );
+    $body .= sprintf( "%-22s %s\n", "Band:",         $band );
+    $body .= sprintf( "%-22s %s\n", "Känsla:",       $feel );
+    $body .= sprintf( "%-22s %s\n", "Budget:",       $budget );
     $body .= "\n$sep\nSkickat automatiskt från Lilian's Ringguide\n";
 
     wp_mail(
         get_option( 'admin_email' ),
-        "Ny bokning från ringguiden – $name",
+        "Ny bokning från ringguiden – $display_name",
         $body,
         [
             'Content-Type: text/plain; charset=UTF-8',
-            "Reply-To: $name <$email>",
+            "Reply-To: $display_name <$email>",
         ]
     );
 
     wp_send_json_success();
+}
+
+// ── AJAX: send ring profile to customer's email ───────────────────────────
+
+add_action( 'wp_ajax_nopriv_ljc_send_profile', 'ljc_send_profile' );
+add_action( 'wp_ajax_ljc_send_profile',        'ljc_send_profile' );
+
+function ljc_send_profile() {
+    if ( ! check_ajax_referer( 'ljc_nonce', 'nonce', false ) ) {
+        wp_send_json_error( 'nonce' );
+    }
+
+    $email      = sanitize_email( $_POST['email']            ?? '' );
+    $lead_id    = (int)          ( $_POST['lead_id']         ?? 0  );
+    $newsletter = (int)          ( $_POST['newsletter_optin'] ?? 1 );
+
+    if ( ! is_email( $email ) ) {
+        wp_send_json_error( 'Ogiltig e-postadress' );
+    }
+
+    $path    = sanitize_text_field( $_POST['path']            ?? '' );
+    $style1  = sanitize_text_field( $_POST['style_primary']   ?? '' );
+    $style2  = sanitize_text_field( $_POST['style_secondary'] ?? '' );
+    $metal   = sanitize_text_field( $_POST['metal']           ?? '' );
+    $shape   = sanitize_text_field( $_POST['shape']           ?? '' );
+    $mount   = sanitize_text_field( $_POST['mounting']        ?? '' );
+    $prong   = sanitize_text_field( $_POST['prong']           ?? '' );
+    $band    = sanitize_text_field( $_POST['band']            ?? '' );
+    $feel    = sanitize_text_field( $_POST['feel']            ?? '' );
+    $budget  = sanitize_text_field( $_POST['budget']          ?? '' );
+
+    // Save email + newsletter opt-in to the lead row
+    global $wpdb;
+    $table = $wpdb->prefix . 'ljc_leads';
+    if ( $lead_id ) {
+        $wpdb->update( $table,
+            [ 'email' => $email, 'newsletter_optin' => $newsletter ],
+            [ 'id' => $lead_id ]
+        );
+    } else {
+        $wpdb->insert( $table, [
+            'email' => $email, 'newsletter_optin' => $newsletter,
+            'path' => $path, 'style_primary' => $style1, 'style_secondary' => $style2,
+            'metal' => $metal, 'shape' => $shape, 'mounting' => $mount,
+            'prong' => $prong, 'band' => $band, 'feel' => $feel, 'budget' => $budget,
+        ] );
+    }
+
+    // Label maps (matches JS BUDGET_LABELS / METAL_LABELS etc.)
+    $metal_l  = [ 'yellowGold'=>'Gult guld (18k)', 'roseGold'=>'Roséguld (18k)', 'whiteGold'=>'Vitguld (18k)', 'platinum'=>'Platina', 'mixed'=>'Blandade metaller' ];
+    $shape_l  = [ 'round'=>'Rund', 'oval'=>'Oval', 'cushion'=>'Cushion', 'pear'=>'Päron', 'emeraldCut'=>'Emerald', 'princess'=>'Princess', 'marquise'=>'Marquise', 'asscher'=>'Asscher', 'radiant'=>'Radiant', 'heart'=>'Hjärta' ];
+    $mount_l  = [ 'solitaire'=>'Klassisk solitär', 'cathedral'=>'Cathedral solitär', 'splitShank'=>'Split shank', 'halo'=>'Halo', 'bezel'=>'Bezel', 'threeStone'=>'Tre stenar', 'cluster'=>'Vintage cluster', 'floral'=>'Naturinspirerat', 'eastWest'=>'East-West' ];
+    $prong_l  = [ 'fourProng'=>'4 kramlor', 'sixProng'=>'6 kramlor', 'doubleProng'=>'Dubbla kramlor', 'claw'=>'Klokramlor', 'vProng'=>'V-kramlor', 'bezel'=>'Bezel', 'bezProng'=>'Bezel' ];
+    $band_l   = [ 'plain'=>'Slätt polerat', 'pave'=>'Pavé', 'twisted'=>'Tvinnat', 'milgrain'=>'Milgrain', 'engraved'=>'Graverat', 'knifeEdge'=>'Knife-edge', 'florBand'=>'Blom-/bladdetalj', 'split'=>'Split shank' ];
+    $feel_l   = [ 'delicate'=>'Delikat — ringen viskar', 'balanced'=>'Balanserad', 'statement'=>'Statement' ];
+    $budget_l = [ 'tier1'=>'Under 10 000 kr', 'tier2'=>'10 000–25 000 kr', 'tier3'=>'25 000–50 000 kr', 'tier4'=>'50 000–100 000 kr', 'tier5'=>'100 000+ kr', 'flex'=>'Flexibelt' ];
+
+    $style_str = $style1 . ( $style2 ? ' / ' . $style2 : '' );
+    $sep       = str_repeat( '─', 40 );
+    $amelia    = get_option( 'ljc_amelia_url', '/boka/' );
+
+    $body  = "Hej!\n\n";
+    $body .= "Tack för att du använde Lilians Jewelry ringguide.\n";
+    $body .= "Här är din personliga ringprofil:\n\n";
+    $body .= "$sep\n";
+    $body .= "DIN RINGPROFIL\n";
+    $body .= "$sep\n\n";
+    $body .= sprintf( "%-18s %s\n", "Stil:",       $style_str );
+    $body .= sprintf( "%-18s %s\n", "Metall:",     $metal_l[$metal]   ?? $metal );
+    $body .= sprintf( "%-18s %s\n", "Stenform:",   $shape_l[$shape]   ?? $shape );
+    $body .= sprintf( "%-18s %s\n", "Infattning:", $mount_l[$mount]   ?? $mount );
+    $body .= sprintf( "%-18s %s\n", "Kramlor:",    $prong_l[$prong]   ?? $prong );
+    $body .= sprintf( "%-18s %s\n", "Band:",       $band_l[$band]     ?? $band );
+    $body .= sprintf( "%-18s %s\n", "Känsla:",     $feel_l[$feel]     ?? $feel );
+    $body .= sprintf( "%-18s %s\n", "Budget:",     $budget_l[$budget] ?? $budget );
+    $body .= "\n$sep\n\n";
+    $body .= "Boka din gratis konsultation med Lilian:\n$amelia\n\n";
+    $body .= "Varmt välkommen!\nLilians Jewelry\n";
+
+    $sent = wp_mail(
+        $email,
+        'Din ringprofil från Lilians Jewelry',
+        $body,
+        [
+            'Content-Type: text/plain; charset=UTF-8',
+            'From: Lilians Jewelry <' . get_option( 'admin_email' ) . '>',
+        ]
+    );
+
+    if ( $sent ) {
+        wp_send_json_success();
+    } else {
+        wp_send_json_error( 'mail_failed' );
+    }
 }
 
 // ── CSV export ─────────────────────────────────────────────────────────────
@@ -1487,6 +1589,7 @@ function ljc_settings_page() {
                 <th>Namn</th>
                 <th>E-post</th>
                 <th>Bokad</th>
+                <th>Nyhetsbrev</th>
                 <th>Väg</th>
                 <th>Stil</th>
                 <th>Metall</th>
@@ -1503,6 +1606,7 @@ function ljc_settings_page() {
                 <td><strong><?php echo $row['name'] ? esc_html($row['name']) : '<span style="color:#c3c4c7">—</span>'; ?></strong></td>
                 <td><?php echo $row['email'] ? '<a href="mailto:' . esc_attr($row['email']) . '">' . esc_html($row['email']) . '</a>' : '<span style="color:#c3c4c7">—</span>'; ?></td>
                 <td><?php echo $booked ? '<span style="color:#0a7b3d;font-weight:600;">✓ Ja</span>' : '<span style="color:#c3c4c7">Nej</span>'; ?></td>
+                <td><?php echo ! empty($row['newsletter_optin']) ? '<span style="color:#0a7b3d;">✓</span>' : '<span style="color:#c3c4c7">—</span>'; ?></td>
                 <td><?php echo esc_html( $row['path'] ); ?></td>
                 <td><?php echo esc_html( $row['style_primary'] . ($row['style_secondary'] ? ' / '.$row['style_secondary'] : '') ); ?></td>
                 <td><?php echo esc_html( $row['metal'] ); ?></td>
