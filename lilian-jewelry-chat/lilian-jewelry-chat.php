@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Lilians Jewelry Consultant
  * Description: Interaktiv ringguide med poängbaserade rekommendationer, bildhantering och Amelia-integrering.
- * Version:     2.9.1
+ * Version:     2.9.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 define( 'LJC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LJC_URL', plugin_dir_url( __FILE__ ) );
-define( 'LJC_VER', '2.9.1' );
+define( 'LJC_VER', '2.9.2' );
 
 // ── Register custom image size ─────────────────────────────────────────────
 // 600×600 square crop — crisp on retina for quiz cards (~240 px display size)
@@ -984,11 +984,11 @@ function ljc_send_profile() {
     $mount_l  = [ 'solitaire'=>'Klassisk solitär', 'cathedral'=>'Cathedral solitär', 'splitShank'=>'Split shank', 'halo'=>'Halo', 'bezel'=>'Bezel', 'threeStone'=>'Tre stenar', 'cluster'=>'Vintage cluster', 'floral'=>'Naturinspirerat', 'eastWest'=>'East-West' ];
     $prong_l  = [ 'fourProng'=>'4 kramlor', 'sixProng'=>'6 kramlor', 'doubleProng'=>'Dubbla kramlor', 'claw'=>'Klokramlor', 'vProng'=>'V-kramlor', 'bezel'=>'Bezel', 'bezProng'=>'Bezel' ];
     $band_l   = [ 'plain'=>'Slätt polerat', 'pave'=>'Pavé', 'twisted'=>'Tvinnat', 'milgrain'=>'Milgrain', 'engraved'=>'Graverat', 'knifeEdge'=>'Knife-edge', 'florBand'=>'Blom-/bladdetalj', 'split'=>'Split shank' ];
-    $feel_l   = [ 'delicate'=>'Delikat — ringen viskar', 'balanced'=>'Balanserad', 'statement'=>'Statement' ];
-    $budget_l = [ 'tier1'=>'Under 10 000 kr', 'tier2'=>'10 000–25 000 kr', 'tier3'=>'25 000–50 000 kr', 'tier4'=>'50 000–100 000 kr', 'tier5'=>'100 000+ kr', 'flex'=>'Flexibelt' ];
+    $feel_l   = [ 'delicate'=>'Delikat', 'balanced'=>'Balanserad', 'statement'=>'Statement' ];
+    $budget_l = [ 'tier1'=>'Under 10 000 kr', 'tier2'=>'10 000-25 000 kr', 'tier3'=>'25 000-50 000 kr', 'tier4'=>'50 000-100 000 kr', 'tier5'=>'100 000+ kr', 'flex'=>'Flexibelt' ];
 
     $style_str = $style1 . ( $style2 ? ' / ' . $style2 : '' );
-    $sep       = str_repeat( '─', 40 );
+    $sep       = str_repeat( '-', 40 );  // plain ASCII — avoids encoding edge cases
     $amelia    = get_option( 'ljc_amelia_url', '/boka/' );
 
     $body  = "Hej!\n\n";
@@ -1009,20 +1009,38 @@ function ljc_send_profile() {
     $body .= "Boka din gratis konsultation med Lilian:\n$amelia\n\n";
     $body .= "Varmt välkommen!\nLilians Jewelry\n";
 
+    // Use wp_mail_from filters instead of a From: header — more reliable with
+    // PHPMailer/SMTP plugins which often ignore the raw header in favour of their
+    // own configuration. Using a filter means any active SMTP plugin still wins.
+    $admin_email = get_option( 'admin_email' );
+    $from_email  = function () use ( $admin_email ) { return $admin_email; };
+    $from_name   = function () { return 'Lilians Jewelry'; };
+    add_filter( 'wp_mail_from',      $from_email );
+    add_filter( 'wp_mail_from_name', $from_name  );
+
+    // Capture PHPMailer errors so we can surface them to the frontend
+    $mail_error = null;
+    $error_cb   = function ( $wp_error ) use ( &$mail_error ) {
+        $mail_error = $wp_error->get_error_message();
+    };
+    add_action( 'wp_mail_failed', $error_cb );
+
     $sent = wp_mail(
         $email,
-        'Din ringprofil från Lilians Jewelry',
+        'Din ringprofil fran Lilians Jewelry',
         $body,
-        [
-            'Content-Type: text/plain; charset=UTF-8',
-            'From: Lilians Jewelry <' . get_option( 'admin_email' ) . '>',
-        ]
+        [ 'Content-Type: text/plain; charset=UTF-8' ]
     );
+
+    remove_filter( 'wp_mail_from',      $from_email );
+    remove_filter( 'wp_mail_from_name', $from_name  );
+    remove_action( 'wp_mail_failed',    $error_cb   );
 
     if ( $sent ) {
         wp_send_json_success();
     } else {
-        wp_send_json_error( 'mail_failed' );
+        // Return the actual PHPMailer error message so the frontend can show it
+        wp_send_json_error( $mail_error ?: 'mail_failed' );
     }
 }
 
