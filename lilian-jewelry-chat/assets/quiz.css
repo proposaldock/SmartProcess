@@ -963,7 +963,7 @@
 }
 .ljc-book-btn {
   width: 100%;
-  background: #111518;
+  background: #0f4528;
   color: #FBFBFC;
   border: none;
   border-radius: 40px;
@@ -973,8 +973,12 @@
   font-weight: 500;
   letter-spacing: 0.04em;
   cursor: pointer;
-  box-shadow: 0 4px 18px rgba(17,21,24,0.22);
-  transition: opacity 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 18px rgba(15,69,40,0.28);
+  transition: background 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+.ljc-book-btn:hover:not(:disabled) {
+  background: #0a3018;
+  box-shadow: 0 8px 28px rgba(15,69,40,0.38);
 }
 .ljc-book-btn:disabled {
   opacity: 0.35;
@@ -984,8 +988,8 @@
 .ljc-send-btn {
   width: 100%;
   background: transparent;
-  color: #111518;
-  border: 1.5px solid #111518;
+  color: #0f4528;
+  border: 1.5px solid #0f4528;
   border-radius: 40px;
   padding: 15px 0;
   font-size: 15px;
@@ -993,7 +997,11 @@
   font-weight: 500;
   letter-spacing: 0.04em;
   cursor: pointer;
-  transition: opacity 0.2s, background 0.2s, color 0.2s;
+  transition: opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+}
+.ljc-send-btn:hover:not(:disabled) {
+  background: #0f4528;
+  color: #fff;
 }
 .ljc-send-btn:disabled {
   opacity: 0.35;
