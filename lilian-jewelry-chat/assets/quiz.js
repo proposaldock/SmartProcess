@@ -1304,13 +1304,21 @@
             } else {
               ctaSendBtn.disabled = false;
               ctaSendBtn.textContent = 'Skicka min ringprofil →';
-              if (ctaStatus) { ctaStatus.textContent = 'Något gick fel. Försök igen.'; ctaStatus.style.color = '#c00'; }
+              var errMsg = (data && data.data && typeof data.data === 'string') ? data.data : '';
+              if (ctaStatus) {
+                ctaStatus.textContent = errMsg === 'mail_failed'
+                  ? 'E-postservern kunde inte skicka. Kontakta oss direkt.'
+                  : errMsg
+                  ? 'Fel: ' + errMsg
+                  : 'Något gick fel. Försök igen.';
+                ctaStatus.style.color = '#c00';
+              }
             }
           })
           .catch(function () {
             ctaSendBtn.disabled = false;
             ctaSendBtn.textContent = 'Skicka min ringprofil →';
-            if (ctaStatus) { ctaStatus.textContent = 'Något gick fel. Försök igen.'; ctaStatus.style.color = '#c00'; }
+            if (ctaStatus) { ctaStatus.textContent = 'Nätverksfel. Försök igen.'; ctaStatus.style.color = '#c00'; }
           });
       });
     }
