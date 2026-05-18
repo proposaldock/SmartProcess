@@ -578,7 +578,7 @@
   var unsureCount = 0;
   var preState    = { backTo: 'path_select', checkedItems: [], cq1Dest: null };
   var snapshots   = [];        // [{step, questions[], answers{}}] — one per question step entered
-  var currentLeadId = null;   // lead row ID from ljc_lead AJAX, used by image upload
+  var uploadedImageUrl = '';   // URL returned by image upload, included in lead when user books/sends
 
   // ── Score computation ──────────────────────────────────────────────────────
   function computeScores() {
@@ -1014,27 +1014,8 @@
     var quizEl = document.getElementById('ljc-quiz');
     if (!quizEl) { return; }
 
-    // ── Save anonymous lead (fire-and-forget, no UI impact) ─────────────────
-    if (AJAX_URL && NONCE) {
-      var fd = new FormData();
-      fd.append('action',          'ljc_lead');
-      fd.append('nonce',           NONCE);
-      fd.append('path',            path || '');
-      fd.append('style_primary',   result.style.primary);
-      fd.append('style_secondary', result.style.secondary || '');
-      fd.append('metal',           result.metal);
-      fd.append('shape',           result.shape);
-      fd.append('mounting',        result.mounting);
-      fd.append('prong',           result.prong);
-      fd.append('band',            result.band);
-      fd.append('feel',            result.feel);
-      fd.append('budget',          result.budget);
-      currentLeadId = null;
-      fetch(AJAX_URL, { method: 'POST', body: fd })
-        .then(function (r) { return r.json(); })
-        .then(function (data) { if (data && data.success && data.data) { currentLeadId = data.data.lead_id || null; } })
-        .catch(function () {});
-    }
+    // Lead sparas inte automatiskt — sparas först när kunden bokar eller skickar sin profil
+    uploadedImageUrl = '';
 
     quizEl.innerHTML =
       '<div class="ljc-results">' +
@@ -1175,12 +1156,13 @@
       var ufd = new FormData();
       ufd.append('action',  'ljc_upload_reference');
       ufd.append('nonce',   NONCE);
-      ufd.append('lead_id', currentLeadId || 0);
+      ufd.append('lead_id', 0);
       ufd.append('file',    file);
       fetch(AJAX_URL, { method: 'POST', body: ufd })
         .then(function (r) { return r.json(); })
         .then(function (data) {
           if (data && data.success) {
+            uploadedImageUrl = (data.data && data.data.url) ? data.data.url : '';
             if (uploadStatus) { uploadStatus.textContent = 'Bilden är uppladdad! ✓'; uploadStatus.style.color = '#0f4528'; }
           } else {
             if (uploadStatus) { uploadStatus.textContent = 'Något gick fel. Försök igen.'; uploadStatus.style.color = '#c00'; }
@@ -1203,17 +1185,7 @@
           if (uploadArea) { uploadArea.style.display = 'none'; }
         };
         reader.readAsDataURL(file);
-        if (currentLeadId) {
-          doUpload(file);
-        } else {
-          if (uploadStatus) { uploadStatus.textContent = 'Väntar...'; uploadStatus.style.color = '#aaa'; }
-          var waitAttempts = 0;
-          var waitTimer = setInterval(function () {
-            waitAttempts++;
-            if (currentLeadId) { clearInterval(waitTimer); doUpload(file); }
-            else if (waitAttempts >= 20) { clearInterval(waitTimer); doUpload(file); }
-          }, 250);
-        }
+        doUpload(file);
       });
     }
 
@@ -1246,7 +1218,8 @@
           var bfd = new FormData();
           bfd.append('action',           'ljc_book');
           bfd.append('nonce',            NONCE);
-          bfd.append('lead_id',          currentLeadId || 0);
+          bfd.append('lead_id',             0);
+          bfd.append('reference_image_url', uploadedImageUrl || '');
           bfd.append('email',            email);
           bfd.append('newsletter_optin', ctaNewsltr && ctaNewsltr.checked ? '1' : '0');
           bfd.append('path',             path || '');
@@ -1278,7 +1251,8 @@
         var sfd = new FormData();
         sfd.append('action',           'ljc_send_profile');
         sfd.append('nonce',            NONCE);
-        sfd.append('lead_id',          currentLeadId || 0);
+        sfd.append('lead_id',             0);
+        sfd.append('reference_image_url', uploadedImageUrl || '');
         sfd.append('email',            email);
         sfd.append('newsletter_optin', '1');
         sfd.append('path',             path || '');

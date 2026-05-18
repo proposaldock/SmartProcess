@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Lilians Jewelry Consultant
  * Description: Interaktiv ringguide med poängbaserade rekommendationer, bildhantering och Amelia-integrering.
- * Version:     2.9.3
+ * Version:     2.9.4
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 define( 'LJC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LJC_URL', plugin_dir_url( __FILE__ ) );
-define( 'LJC_VER', '2.9.3' );
+define( 'LJC_VER', '2.9.4' );
 
 // ── Register custom image size ─────────────────────────────────────────────
 // 600×600 square crop — crisp on retina for quiz cards (~240 px display size)
@@ -869,33 +869,28 @@ function ljc_book() {
         wp_send_json_error( 'Ogiltig e-postadress' );
     }
 
-    $path    = sanitize_text_field( $_POST['path']            ?? '' );
-    $style1  = sanitize_text_field( $_POST['style_primary']   ?? '' );
-    $style2  = sanitize_text_field( $_POST['style_secondary'] ?? '' );
-    $metal   = sanitize_text_field( $_POST['metal']           ?? '' );
-    $shape   = sanitize_text_field( $_POST['shape']           ?? '' );
-    $mount   = sanitize_text_field( $_POST['mounting']        ?? '' );
-    $prong   = sanitize_text_field( $_POST['prong']           ?? '' );
-    $band    = sanitize_text_field( $_POST['band']            ?? '' );
-    $feel    = sanitize_text_field( $_POST['feel']            ?? '' );
-    $budget  = sanitize_text_field( $_POST['budget']          ?? '' );
+    $path    = sanitize_text_field( $_POST['path']                ?? '' );
+    $style1  = sanitize_text_field( $_POST['style_primary']       ?? '' );
+    $style2  = sanitize_text_field( $_POST['style_secondary']     ?? '' );
+    $metal   = sanitize_text_field( $_POST['metal']               ?? '' );
+    $shape   = sanitize_text_field( $_POST['shape']               ?? '' );
+    $mount   = sanitize_text_field( $_POST['mounting']            ?? '' );
+    $prong   = sanitize_text_field( $_POST['prong']               ?? '' );
+    $band    = sanitize_text_field( $_POST['band']                ?? '' );
+    $feel    = sanitize_text_field( $_POST['feel']                ?? '' );
+    $budget  = sanitize_text_field( $_POST['budget']              ?? '' );
+    $img_url = esc_url_raw(         $_POST['reference_image_url'] ?? '' );
 
-    // Update the existing anonymous lead row, or insert if missing
+    // Insert a new lead row (lead is never pre-created automatically)
     global $wpdb;
     $table = $wpdb->prefix . 'ljc_leads';
-    if ( $lead_id ) {
-        $wpdb->update( $table,
-            [ 'name' => $name, 'email' => $email, 'booked' => 1, 'newsletter_optin' => $newsletter ],
-            [ 'id' => $lead_id ]
-        );
-    } else {
-        $wpdb->insert( $table, [
-            'name' => $name, 'email' => $email, 'booked' => 1, 'newsletter_optin' => $newsletter,
-            'path' => $path, 'style_primary' => $style1, 'style_secondary' => $style2,
-            'metal' => $metal, 'shape' => $shape, 'mounting' => $mount,
-            'prong' => $prong, 'band' => $band, 'feel' => $feel, 'budget' => $budget,
-        ] );
-    }
+    $wpdb->insert( $table, [
+        'name' => $name, 'email' => $email, 'booked' => 1, 'newsletter_optin' => $newsletter,
+        'path' => $path, 'style_primary' => $style1, 'style_secondary' => $style2,
+        'metal' => $metal, 'shape' => $shape, 'mounting' => $mount,
+        'prong' => $prong, 'band' => $band, 'feel' => $feel, 'budget' => $budget,
+        'reference_image_url' => $img_url,
+    ] );
 
     // Build admin notification email
     $display_name = $name ?: $email;
@@ -951,32 +946,27 @@ function ljc_send_profile() {
     }
 
     $path    = sanitize_text_field( $_POST['path']            ?? '' );
-    $style1  = sanitize_text_field( $_POST['style_primary']   ?? '' );
-    $style2  = sanitize_text_field( $_POST['style_secondary'] ?? '' );
-    $metal   = sanitize_text_field( $_POST['metal']           ?? '' );
-    $shape   = sanitize_text_field( $_POST['shape']           ?? '' );
-    $mount   = sanitize_text_field( $_POST['mounting']        ?? '' );
-    $prong   = sanitize_text_field( $_POST['prong']           ?? '' );
-    $band    = sanitize_text_field( $_POST['band']            ?? '' );
-    $feel    = sanitize_text_field( $_POST['feel']            ?? '' );
-    $budget  = sanitize_text_field( $_POST['budget']          ?? '' );
+    $style1  = sanitize_text_field( $_POST['style_primary']       ?? '' );
+    $style2  = sanitize_text_field( $_POST['style_secondary']     ?? '' );
+    $metal   = sanitize_text_field( $_POST['metal']               ?? '' );
+    $shape   = sanitize_text_field( $_POST['shape']               ?? '' );
+    $mount   = sanitize_text_field( $_POST['mounting']            ?? '' );
+    $prong   = sanitize_text_field( $_POST['prong']               ?? '' );
+    $band    = sanitize_text_field( $_POST['band']                ?? '' );
+    $feel    = sanitize_text_field( $_POST['feel']                ?? '' );
+    $budget  = sanitize_text_field( $_POST['budget']              ?? '' );
+    $img_url = esc_url_raw(         $_POST['reference_image_url'] ?? '' );
 
-    // Save email + newsletter opt-in to the lead row
+    // Insert a new lead row (lead is never pre-created automatically)
     global $wpdb;
     $table = $wpdb->prefix . 'ljc_leads';
-    if ( $lead_id ) {
-        $wpdb->update( $table,
-            [ 'email' => $email, 'newsletter_optin' => $newsletter ],
-            [ 'id' => $lead_id ]
-        );
-    } else {
-        $wpdb->insert( $table, [
-            'email' => $email, 'newsletter_optin' => $newsletter,
-            'path' => $path, 'style_primary' => $style1, 'style_secondary' => $style2,
-            'metal' => $metal, 'shape' => $shape, 'mounting' => $mount,
-            'prong' => $prong, 'band' => $band, 'feel' => $feel, 'budget' => $budget,
-        ] );
-    }
+    $wpdb->insert( $table, [
+        'email' => $email, 'newsletter_optin' => $newsletter,
+        'path' => $path, 'style_primary' => $style1, 'style_secondary' => $style2,
+        'metal' => $metal, 'shape' => $shape, 'mounting' => $mount,
+        'prong' => $prong, 'band' => $band, 'feel' => $feel, 'budget' => $budget,
+        'reference_image_url' => $img_url,
+    ] );
 
     // Label maps (matches JS BUDGET_LABELS / METAL_LABELS etc.)
     $metal_l  = [ 'yellowGold'=>'Gult guld (18k)', 'roseGold'=>'Roséguld (18k)', 'whiteGold'=>'Vitguld (18k)', 'platinum'=>'Platina', 'mixed'=>'Blandade metaller' ];
