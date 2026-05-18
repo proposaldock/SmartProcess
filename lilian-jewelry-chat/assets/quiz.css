@@ -913,3 +913,102 @@
   .ljc-step-dots { gap: 4px; padding: 0 6px; }
   .ljc-step-dot  { width: 20px; height: 20px; font-size: 9px; }
 }
+
+/* ── CTA email form ───────────────────────────────────────────────────────── */
+.ljc-cta-form {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: left;
+}
+.ljc-cta-email {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid #D0D5DA;
+  border-radius: 12px;
+  padding: 13px 18px;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  color: #111518;
+  background: #fff;
+  outline: none;
+  display: block;
+  margin-bottom: 16px;
+  transition: border-color 0.15s;
+}
+.ljc-cta-email:focus { border-color: #111518; }
+.ljc-newsletter-label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  cursor: pointer;
+  margin-bottom: 24px;
+}
+.ljc-newsletter-label span {
+  font-size: 13px;
+  color: #777;
+  line-height: 1.5;
+}
+.ljc-newsletter-cb {
+  flex-shrink: 0;
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  accent-color: #0f4528;
+  cursor: pointer;
+}
+.ljc-cta-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ljc-book-btn {
+  width: 100%;
+  background: #111518;
+  color: #FBFBFC;
+  border: none;
+  border-radius: 40px;
+  padding: 17px 0;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(17,21,24,0.22);
+  transition: opacity 0.2s, box-shadow 0.2s;
+}
+.ljc-book-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  box-shadow: none;
+}
+.ljc-send-btn {
+  width: 100%;
+  background: transparent;
+  color: #111518;
+  border: 1.5px solid #111518;
+  border-radius: 40px;
+  padding: 15px 0;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: opacity 0.2s, background 0.2s, color 0.2s;
+}
+.ljc-send-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.ljc-send-btn--done {
+  background: #0f4528 !important;
+  color: #fff !important;
+  border-color: #0f4528 !important;
+  opacity: 1 !important;
+}
+.ljc-cta-status {
+  margin-top: 14px;
+  font-size: 13px;
+  font-family: 'Poppins', sans-serif;
+  min-height: 18px;
+  text-align: center;
+}

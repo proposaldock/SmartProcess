@@ -1082,8 +1082,19 @@
 
         '<div class="ljc-booking-section">' +
           '<h3 class="ljc-cta-heading">Redo att hitta din ring?</h3>' +
-          '<p class="ljc-cta-text">Boka en kostnadsfri konsultation med Lilian och ta med dig din ringprofil.</p>' +
-          '<a href="' + esc(AMELIA) + '" class="ljc-btn-primary ljc-cta-btn">Boka konsultation &#8594;</a>' +
+          '<p class="ljc-cta-text">Ange din e-post för att boka en kostnadsfri konsultation eller få din ringprofil i inkorgen.</p>' +
+          '<div class="ljc-cta-form">' +
+            '<input type="email" id="ljc-cta-email" class="ljc-cta-email" placeholder="din@email.se" autocomplete="email">' +
+            '<label class="ljc-newsletter-label" for="ljc-newsletter">' +
+              '<input type="checkbox" id="ljc-newsletter" class="ljc-newsletter-cb">' +
+              '<span>Jag vill gärna få inspiration, erbjudanden och nyheter från Lilians Jewelry via e-post.</span>' +
+            '</label>' +
+            '<div class="ljc-cta-buttons">' +
+              '<button type="button" id="ljc-book-btn" class="ljc-book-btn" disabled>Boka konsultation &#8594;</button>' +
+              '<button type="button" id="ljc-send-profile-btn" class="ljc-send-btn" disabled>Skicka min ringprofil &#8594;</button>' +
+            '</div>' +
+            '<div id="ljc-cta-status" class="ljc-cta-status"></div>' +
+          '</div>' +
         '</div>' +
 
       '</div>';
@@ -1124,12 +1135,8 @@
       'text-align': 'center', 'color': '#777', 'font-size': '15px',
       'margin': '0 auto 32px', 'max-width': '420px', 'line-height': '1.6'
     });
-    forceStyle(quizEl.querySelector('.ljc-cta-btn'), {
-      'display': 'inline-block', 'background': '#111518', 'color': '#FBFBFC',
-      'text-decoration': 'none', 'border': 'none', 'border-radius': '40px',
-      'padding': '17px 52px', 'font-size': '15px', 'font-family': 'Poppins, sans-serif',
-      'font-weight': '500', 'letter-spacing': '0.04em', 'cursor': 'pointer',
-      'box-shadow': '0 4px 18px rgba(17,21,24,0.22)'
+    forceStyle(quizEl.querySelector('.ljc-cta-form'), {
+      'max-width': '400px', 'margin': '0 auto', 'text-align': 'left'
     });
 
     forceStyle(quizEl.querySelector('.ljc-upload-section'), {
@@ -1207,6 +1214,104 @@
             else if (waitAttempts >= 20) { clearInterval(waitTimer); doUpload(file); }
           }, 250);
         }
+      });
+    }
+
+    // ── CTA email form ───────────────────────────────────────────────────────
+    var ctaEmail   = quizEl.querySelector('#ljc-cta-email');
+    var ctaNewsltr = quizEl.querySelector('#ljc-newsletter');
+    var ctaBookBtn = quizEl.querySelector('#ljc-book-btn');
+    var ctaSendBtn = quizEl.querySelector('#ljc-send-profile-btn');
+    var ctaStatus  = quizEl.querySelector('#ljc-cta-status');
+
+    var isValidEmail = function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((v || '').trim()); };
+
+    var syncBtns = function () {
+      var ok  = isValidEmail(ctaEmail ? ctaEmail.value : '');
+      var nws = !!(ctaNewsltr && ctaNewsltr.checked);
+      if (ctaBookBtn)  { ctaBookBtn.disabled  = !ok; }
+      if (ctaSendBtn)  { ctaSendBtn.disabled  = !(ok && nws); }
+    };
+    if (ctaEmail)   { ctaEmail.addEventListener('input',   syncBtns); }
+    if (ctaNewsltr) { ctaNewsltr.addEventListener('change', syncBtns); }
+    syncBtns();
+
+    if (ctaBookBtn) {
+      ctaBookBtn.addEventListener('click', function () {
+        var email = ctaEmail ? ctaEmail.value.trim() : '';
+        if (!isValidEmail(email)) { return; }
+        ctaBookBtn.disabled = true;
+        ctaBookBtn.textContent = 'Sparar...';
+        if (AJAX_URL && NONCE) {
+          var bfd = new FormData();
+          bfd.append('action',           'ljc_book');
+          bfd.append('nonce',            NONCE);
+          bfd.append('lead_id',          currentLeadId || 0);
+          bfd.append('email',            email);
+          bfd.append('newsletter_optin', ctaNewsltr && ctaNewsltr.checked ? '1' : '0');
+          bfd.append('path',             path || '');
+          bfd.append('style_primary',    result.style.primary);
+          bfd.append('style_secondary',  result.style.secondary || '');
+          bfd.append('metal',            result.metal);
+          bfd.append('shape',            result.shape);
+          bfd.append('mounting',         result.mounting);
+          bfd.append('prong',            result.prong);
+          bfd.append('band',             result.band);
+          bfd.append('feel',             result.feel);
+          bfd.append('budget',           result.budget);
+          fetch(AJAX_URL, { method: 'POST', body: bfd, keepalive: true }).catch(function () {});
+        }
+        setTimeout(function () { window.location.href = AMELIA; }, 350);
+      });
+    }
+
+    if (ctaSendBtn) {
+      ctaSendBtn.addEventListener('click', function () {
+        var email = ctaEmail ? ctaEmail.value.trim() : '';
+        if (!isValidEmail(email) || !(ctaNewsltr && ctaNewsltr.checked)) { return; }
+        ctaSendBtn.disabled = true;
+        ctaSendBtn.textContent = 'Skickar...';
+        if (!AJAX_URL || !NONCE) {
+          if (ctaStatus) { ctaStatus.textContent = 'Något gick fel. Försök igen.'; ctaStatus.style.color = '#c00'; }
+          return;
+        }
+        var sfd = new FormData();
+        sfd.append('action',           'ljc_send_profile');
+        sfd.append('nonce',            NONCE);
+        sfd.append('lead_id',          currentLeadId || 0);
+        sfd.append('email',            email);
+        sfd.append('newsletter_optin', '1');
+        sfd.append('path',             path || '');
+        sfd.append('style_primary',    result.style.primary);
+        sfd.append('style_secondary',  result.style.secondary || '');
+        sfd.append('metal',            result.metal);
+        sfd.append('shape',            result.shape);
+        sfd.append('mounting',         result.mounting);
+        sfd.append('prong',            result.prong);
+        sfd.append('band',             result.band);
+        sfd.append('feel',             result.feel);
+        sfd.append('budget',           result.budget);
+        fetch(AJAX_URL, { method: 'POST', body: sfd })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data && data.success) {
+              ctaSendBtn.textContent = 'Skickad! ✓';
+              ctaSendBtn.classList.add('ljc-send-btn--done');
+              if (ctaStatus) {
+                ctaStatus.textContent = 'Din ringprofil har skickats till ' + esc(email) + '.';
+                ctaStatus.style.color = '#0f4528';
+              }
+            } else {
+              ctaSendBtn.disabled = false;
+              ctaSendBtn.textContent = 'Skicka min ringprofil →';
+              if (ctaStatus) { ctaStatus.textContent = 'Något gick fel. Försök igen.'; ctaStatus.style.color = '#c00'; }
+            }
+          })
+          .catch(function () {
+            ctaSendBtn.disabled = false;
+            ctaSendBtn.textContent = 'Skicka min ringprofil →';
+            if (ctaStatus) { ctaStatus.textContent = 'Något gick fel. Försök igen.'; ctaStatus.style.color = '#c00'; }
+          });
       });
     }
 
