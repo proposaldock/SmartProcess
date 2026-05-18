@@ -453,6 +453,7 @@ textarea {
   .sp-footer-cols { grid-template-columns: 1fr 1fr;}
 }
 @media (max-width: 760px) {
+  .sp-hero-pattern { display: none; }
   .sp-hero h1 { font-size: 44px; }
   .sp-section h2 { font-size: 30px; }
   .sp-problem-grid, .sp-roadmap-grid, .sp-solution-grid, .sp-usecases-grid { grid-template-columns: 1fr;}
