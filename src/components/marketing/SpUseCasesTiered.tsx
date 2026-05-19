@@ -4,36 +4,36 @@ import { useState } from "react";
 
 const tiers = [
   {
-    label: "Små projekt",
-    summary: "Snabba vinster med hög ROI och kort implementationstid.",
+    label: "Snabba insatser",
+    summary: "Konkreta vinster med kort implementationstid och hög ROI.",
     timeline: "1–3 veckor",
     items: [
-      ["AI-assisterad mejlhantering", "Klassificering, prioritering och automatiska svar på inkommande mejl."],
-      ["Automatiserade sammanfattningar", "Mötesprotokoll, rapportsammanfattningar och nyhetsbrev genereras automatiskt."],
-      ["Enkel dokumentanalys", "Läser, tolkar och kategoriserar avtal, offerter och bilagor automatiskt."],
-      ["Automatiserad rapportering", "Rapporter och sammanställningar som genereras från era datakällor."],
+      ["Mejlhantering utan manuell sortering", "Inkommande mejl klassificeras, prioriteras och besvaras automatiskt — teamet ser bara det som faktiskt kräver deras uppmärksamhet."],
+      ["Automatiska sammanfattningar", "Möten, rapporter och uppdateringar sammanfattas direkt — utan att någon behöver skriva ihop det manuellt."],
+      ["Dokumentanalys på sekunder", "Avtal, offerter och bilagor läses och kategoriseras automatiskt — inga manuella genomgångar."],
+      ["Rapportering utan manuellt arbete", "Rapporter och sammanställningar genereras automatiskt från era befintliga datakällor."],
     ] as [string, string][],
   },
   {
-    label: "Mellanstora projekt",
-    summary: "Djupare automationer med systemkopplingar och anpassad logik.",
+    label: "Djupare automationer",
+    summary: "Systemkopplingar och anpassad logik som eliminerar friktion på riktigt.",
     timeline: "3–6 veckor",
     items: [
-      ["Kundsupportflöden", "Automatiserade svar, kategorisering och routing av inkommande ärenden."],
-      ["CRM- och säljautomation", "Automatiserar uppföljning, kategorisering och registrering i CRM-system."],
-      ["Offert- och kravanalys", "Identifierar krav, risker och viktiga punkter i RFP-underlag och offerter."],
-      ["Interna dashboards", "Sammanställer data från flera källor och ger teamet rätt beslutsunderlag."],
+      ["Kundsupport som hanterar sig själv", "Inkommande ärenden klassificeras, routas och besvaras automatiskt — med eskalering när det faktiskt behövs."],
+      ["CRM och säljpipeline utan manuell input", "Uppföljning, kategorisering och registrering sker automatiskt — säljteamet fokuserar på att sälja."],
+      ["Offert- och kravanalys", "Upphandlingsunderlag och offerter analyseras på minuter — krav, risker och viktiga punkter identifieras direkt."],
+      ["Beslutsstöd i realtid", "Data från flera källor sammanställs automatiskt så att teamet alltid har rätt underlag för rätt beslut."],
     ] as [string, string][],
   },
   {
-    label: "Större projekt",
-    summary: "Skräddarsydda AI-system och djupgående integrationer.",
+    label: "Skräddarsydda system",
+    summary: "Fullständiga operationella system byggda exakt för er verksamhet.",
     timeline: "6–12 veckor",
     items: [
-      ["Processspecifika AI-verktyg", "Anpassade lösningar byggda exakt efter era arbetsflöden och specifika behov."],
-      ["Systemintegrationer", "Kopplar ihop era befintliga system och eliminerar manuell dataöverföring."],
-      ["Interna AI-agenter", "Autonoma agenter som hanterar komplexa arbetsflöden baserat på era regler."],
-      ["End-to-end automatiseringsplattformar", "Fullständiga lösningar som täcker hela processer från input till leverans."],
+      ["Processspecifika operationssystem", "Anpassade system byggda precis efter era arbetsflöden — inte generiska verktyg ni måste anpassa er till."],
+      ["Systemintegrationer som eliminerar manuell dataöverföring", "Era befintliga system kopplas ihop och data flödar automatiskt dit den behövs."],
+      ["Autonoma interna agenter", "Agenter som hanterar komplexa arbetsflöden självständigt baserat på era regler och processer."],
+      ["End-to-end processautomation", "Hela processer automatiseras från input till leverans — utan manuella mellansteg."],
     ] as [string, string][],
   },
 ];
@@ -87,12 +87,12 @@ export function SpUseCasesTiered() {
         <div>
           <div className="sp-eyebrow-row">
             <span className="sp-eyebrow-dot" />
-            <span className="sp-eyebrow">Användningsområden</span>
+            <span className="sp-eyebrow">Vad vi bygger</span>
           </div>
-          <h2>Exempel på AI-lösningar vi kan bygga</h2>
+          <h2>Exempel på system och automationer vi levererar</h2>
           <p>
-            Lösningarna varierar i komplexitet och scope beroende på era
-            processer och var AI skapar mest värde för just er.
+            Varje lösning är anpassad — men här är typiska exempel på vad vi
+            bygger, sorterat efter komplexitet och scope.
           </p>
         </div>
         <a href="#kontakt" className="btn btn-primary">
