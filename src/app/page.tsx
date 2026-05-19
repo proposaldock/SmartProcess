@@ -162,36 +162,51 @@ function HeroWave() {
 const roadmapSteps = [
   {
     n: "01", phase: "Audit",
-    title: "Kartläggning & Roadmap",
-    copy: "Analyserar era processer och identifierar var AI skapar mest värde.",
-    chips: ["Processanalys", "Kundanskaffningsanalys", "Roadmap"],
+    title: "Kartläggning & Handlingsplan",
+    copy: "Vi kartlägger er verksamhet, identifierar var ni tappar tid och pengar och tar fram ett prioriterat åtgärdspaket med tydlig ROI.",
+    chips: ["Processanalys", "Prioritering", "Handlingsplan"],
   },
   {
     n: "02", phase: "Build",
     title: "Byggnation & Implementation",
-    copy: "Bygger anpassade AI-lösningar och integrerar dem i era arbetsflöden.",
-    chips: ["Anpassad utveckling", "Integration", "Test"],
+    copy: "Vi bygger systemen och implementerar dem direkt i era befintliga arbetsflöden — utan att ni behöver lära er ny teknik.",
+    chips: ["Anpassad utveckling", "Integration", "Driftsättning"],
   },
   {
-    n: "03", phase: "Optimize",
-    title: "Optimering & Partnerskap",
-    copy: "Förbättrar lösningarna kontinuerligt baserat på användning och feedback.",
-    chips: ["Monitoring", "Iteration", "Support"],
+    n: "03", phase: "Partner",
+    title: "Förvaltning & Partnerskap",
+    copy: "Vi stannar kvar som er digitala operationspartner och förbättrar systemen kontinuerligt baserat på er verksamhets faktiska behov.",
+    chips: ["Löpande förbättring", "Prioritering", "Support"],
   },
 ];
 
 const problemItems = [
-  { n: "01", title: "AI-verktyg testas utan tydlig plan", copy: "Företag experimenterar med verktyg men saknar en strategi för vad som ska uppnås och hur det mäts." },
-  { n: "02", title: "Interna processer förblir manuella", copy: "Trots AI-trend läggs timmarna fortfarande på uppgifter som borde kunna automatiseras — varje dag." },
-  { n: "03", title: "Lösningar används inte av teamet", copy: "Verktyg som köps in passar sällan verksamhetens faktiska arbetsflöden och hamnar på hyllan." },
-  { n: "04", title: "Svårt att veta vad som ska prioriteras", copy: "Med hundratals AI-verktyg på marknaden är det oklart var man ska börja och vad som faktiskt ger affärsvärde." },
-  { n: "05", title: "Teknik utan koppling till affärsvärde", copy: "Lösningar skapas utan tydlig koppling till vilka problem de löser, vad de sparar eller hur de ska mätas." },
+  { n: "01", title: "Manuella rutiner tar tid från rätt arbete", copy: "Timmarna läggs på uppgifter som inte kräver mänsklig insats — och det är en kostnad som sällan syns tydligt i budgeten." },
+  { n: "02", title: "Verktyg som aldrig används", copy: "Inköpta system passar sällan verksamhetens faktiska processer och arbetsflöden — och hamnar snabbt på hyllan." },
+  { n: "03", title: "Ingen tydlig plan för vad som ska prioriteras", copy: "Utan en strukturerad analys är det svårt att veta var automatisering faktiskt skapar värde — och var det inte gör det." },
+  { n: "04", title: "Lösningar utan koppling till affärsmål", copy: "Teknik implementeras utan tydlig ROI och det blir omöjligt att mäta om förändringen faktiskt gör skillnad." },
+  { n: "05", title: "Stödprocesser som skalas manuellt", copy: "När verksamheten växer ökar den manuella arbetsbördan proportionellt — istället för att systemen absorberar det." },
 ];
 
 const solutionCards = [
-  { icon: <IcoTarget size={28} />, title: "Strategisk tydlighet", accent: true, copy: "Vi börjar alltid med vad ni vill uppnå affärsmässigt. Resultatet är en prioriterad AI-roadmap med tydlig koppling till nytta — inte en lista med verktyg." },
-  { icon: <IcoWorkflow size={28} />, title: "Teknisk implementation", accent: false, copy: "Vi bygger anpassade AI-lösningar, interna verktyg och integrationer som passar era faktiska processer och befintliga system — från grunden." },
-  { icon: <IcoSparkles size={28} />, title: "Löpande förbättring", accent: false, copy: "AI är inte ett engångsprojekt. Vi följer upp, justerar och vidareutvecklar lösningarna baserat på hur de faktiskt används i teamet — och vad nästa steg borde vara." },
+  {
+    icon: <IcoTarget size={28} />,
+    title: "Strategisk tydlighet",
+    accent: true,
+    copy: "Vi börjar med var ni tappar tid och pengar. Resultatet är ett prioriterat åtgärdspaket med tydlig ROI — inte en lista med verktyg att testa.",
+  },
+  {
+    icon: <IcoWorkflow size={28} />,
+    title: "Anpassad implementation",
+    accent: false,
+    copy: "Vi bygger systemen direkt in i era befintliga arbetsflöden och processer — utan onödig komplexitet och utan att ni behöver lära er ny teknik.",
+  },
+  {
+    icon: <IcoSparkles size={28} />,
+    title: "Löpande partnerskap",
+    accent: false,
+    copy: "Vi stannar kvar. Systemen förbättras kontinuerligt baserat på hur de faktiskt används och vad er verksamhet behöver härnäst.",
+  },
 ];
 
 const exampleFlow = [
@@ -221,31 +236,27 @@ export default function HomePage() {
         <div className="sp-hero-inner">
           <div className="sp-eyebrow-row">
             <span className="sp-eyebrow-dot" />
-            <span className="sp-eyebrow">AI Strategy &amp; Development</span>
+            <span className="sp-eyebrow">Digital Operations · AI Development</span>
           </div>
-          <h1>AI-strategi och utveckling för växande företag</h1>
+          <h1>Frigör din verksamhet från det arbete som inte borde vara manuellt.</h1>
           <p className="sp-lead">
-            SmartProcess hjälper mindre företag gå från AI-förvirring till
-            konkreta AI-lösningar som sparar tid, effektiviserar arbetsflöden
-            och skapar mätbart värde.
-          </p>
-          <p className="sp-lead subtle">
-            Strategi, implementation och löpande optimering — från idé till
-            fungerande AI-lösning.
+            Vi identifierar var era resurser läcker och bygger systemen som
+            stoppar det — anpassat efter er verksamhet, implementerat i era
+            processer.
           </p>
           <div className="ctas">
             <a href="#kontakt" className="btn btn-primary btn-lg">
               <IcoCalendar size={16} /> Boka ett samtal
             </a>
             <a href="#process" className="btn btn-secondary btn-lg">
-              Se hur det fungerar <IcoArrowRight size={16} />
+              Hur vi arbetar <IcoArrowRight size={16} />
             </a>
           </div>
           <div className="tags">
-            <span className="tag">Tydlig AI-strategi</span>
-            <span className="tag">Anpassade lösningar</span>
-            <span className="tag">Löpande partner</span>
-            <span className="tag">10–50 anställda</span>
+            <span className="tag">Eliminerar manuellt arbete</span>
+            <span className="tag">Anpassade system</span>
+            <span className="tag">Långsiktig partner</span>
+            <span className="tag">10–200 anställda</span>
           </div>
         </div>
       </section>
@@ -257,9 +268,9 @@ export default function HomePage() {
             <div>
               <div className="sp-eyebrow-row">
                 <span className="sp-eyebrow-dot" />
-                <span className="sp-eyebrow">AI Transformation Roadmap</span>
+                <span className="sp-eyebrow">Så vi arbetar</span>
               </div>
-              <h2>En tydlig väg från nuläge till fungerande AI-lösningar</h2>
+              <h2>En strukturerad process — från analys till fungerande system</h2>
             </div>
           </div>
           <div className="sp-roadmap-stage">
@@ -305,14 +316,12 @@ export default function HomePage() {
               <span className="sp-eyebrow">Problemet</span>
             </div>
             <h2>
-              Många företag testar AI.
-              <br />
-              Få får ut verkligt värde.
+              Manuellt arbete är<br />er dolda kostnad.
             </h2>
             <p>
-              Utan en tydlig strategi och rätt implementation fastnar de flesta i
-              experiment, lösa verktyg och lösningar som inte skapar konkret
-              affärsvärde.
+              Varje dag förlorar ni tid och pengar på arbete som borde skötas
+              av system — inte av era medarbetare. Det syns sällan på en enda
+              rad i budgeten, men det adderar upp.
             </p>
           </div>
           <div className="sp-problem-grid">
@@ -325,14 +334,14 @@ export default function HomePage() {
             ))}
           </div>
           <div className="sp-savings">
-            <div className="lbl">Konkret besparing</div>
-            <div className="big">~400 timmar per anställd, per år</div>
+            <div className="lbl">Den dolda kostnaden</div>
+            <div className="big">400+ timmar per anställd och år</div>
             <p>
-              En anställd som lägger 2 timmar om dagen på manuella
-              rutinuppgifter arbetar bort 400 betalda timmar på uppgifter som
-              kan automatiseras. Med fem anställda — 2 000 timmar, motsvarande
-              500 000–1 000 000 kr. En AI-lösning betalar sig ofta på 3–6
-              månader.
+              En medarbetare som ägnar 2 timmar om dagen åt manuella rutiner
+              tappar 400 betalda arbetstimmar per år på arbete som kan
+              automatiseras. Med fem anställda: 2 000 timmar — upp till
+              1 000 000 kr som inte skapar värde. Rätt system betalar sig
+              ofta på 3–6 månader.
             </p>
           </div>
         </section>
@@ -343,13 +352,13 @@ export default function HomePage() {
         <section className="sp-solution sp-section">
           <div className="sp-eyebrow-row">
             <span className="sp-eyebrow-dot" />
-            <span className="sp-eyebrow">Lösningen</span>
+            <span className="sp-eyebrow">Vad vi gör</span>
           </div>
-          <h2>Från osäkerhet till fungerande AI-lösningar</h2>
+          <h2>Strategi, system och partnerskap — under ett tak.</h2>
           <p className="lead">
-            SmartProcess kombinerar strategi, utveckling och implementation för
-            att identifiera var AI skapar mest värde, bygga lösningarna och
-            hjälpa teamet använda dem i vardagen.
+            Vi är er digitala operationspartner — inte bara en leverantör. Vi
+            förstår er verksamhet, identifierar vad som bromsar er och bygger
+            systemen som löser det.
           </p>
           <div className="sp-solution-grid">
             {solutionCards.map((c) => (
@@ -378,7 +387,7 @@ export default function HomePage() {
             <span className="sp-eyebrow">Exempel</span>
           </div>
           <h2 style={{ margin: "0 0 12px", maxWidth: 760 }}>
-            Så här kan en AI-lösning se ut i praktiken
+            Så kan ett anpassat system se ut i praktiken
           </h2>
           <p
             className="sp-lead"
@@ -388,9 +397,9 @@ export default function HomePage() {
               marginBottom: 40,
             }}
           >
-            ProposalDock är ett verktyg vi byggt för RFP- och offertprocesser.
-            Det analyserar upphandlingsunderlag, identifierar krav, risker och
-            viktiga punkter samt hjälper teamet att bedöma täckningsgrad.
+            ProposalDock är ett internt verktyg vi byggt för RFP-processer. Det
+            analyserar upphandlingsunderlag, identifierar krav och risker — och
+            ger teamet beslutsunderlag på minuter istället för timmar.
           </p>
           <div className="sp-example-grid">
             <div className="sp-example-copy">
@@ -398,7 +407,7 @@ export default function HomePage() {
                 {[
                   "Från timmar av genomläsning till beslutsunderlag på minuter",
                   "Minskar risken att viktiga krav missas",
-                  "Gör teamets roll mer granskande än manuellt sammanställande",
+                  "Teamet fokuserar på bedömning — inte manuell sammanställning",
                 ].map((b) => (
                   <li key={b}>
                     <span className="check">
@@ -490,25 +499,25 @@ export default function HomePage() {
             <div className="copy">
               <div className="sp-eyebrow-row">
                 <span className="sp-eyebrow-dot" />
-                <span className="sp-eyebrow">Kontakt</span>
+                <span className="sp-eyebrow">Börja här</span>
               </div>
-              <h2>Redo att se hur AI kan hjälpa er verksamhet?</h2>
+              <h2>Redo att ta nästa steg?</h2>
               <p>
-                Beskriv ett arbetsmoment som tar tid eller känns onödigt
-                manuellt. En första bedömning visar om och hur det kan
-                effektiviseras med AI.
+                Beskriv en process som tar för mycket tid eller kostar för
+                mycket resurser. Vi gör en initial bedömning och berättar
+                konkret vad som kan förändras — och vad det är värt.
               </p>
               <div className="promise">
-                <div className="lbl">Första samtalet</div>
-                <h4>30 min genomgång av er situation</h4>
+                <div className="lbl">Första mötet</div>
+                <h4>30 minuters strategisk genomgång</h4>
                 <p>
-                  Bedömning av potential, genomförbarhet och rätt nästa steg —
-                  utan förpliktelser.
+                  Vi lyssnar, analyserar er situation och presenterar en
+                  initial bedömning — utan förpliktelser.
                 </p>
                 <div className="chips">
+                  <span className="chip">Nulägesanalys</span>
                   <span className="chip">Potential</span>
-                  <span className="chip">Genomförbarhet</span>
-                  <span className="chip">Rätt lösningstyp</span>
+                  <span className="chip">Rätt nästa steg</span>
                 </div>
               </div>
             </div>
@@ -534,23 +543,23 @@ export default function HomePage() {
                 SmartProcess<span className="tld">.se</span>
               </span>
             </a>
-            <p>AI-strategi och utveckling för växande företag i Sverige.</p>
+            <p>Digital operationspartner för växande företag i Sverige.</p>
             <a href="mailto:marcus@smartprocess.se" className="email">
               <IcoMail size={14} /> marcus@smartprocess.se
             </a>
           </div>
           <div className="col">
             <div className="col-title">Tjänster</div>
-            <a href="#tjanster">AI-kartläggning</a>
-            <a href="#tjanster">Strategi &amp; Roadmap</a>
+            <a href="#tjanster">Processanalys</a>
+            <a href="#tjanster">Strategi &amp; Handlingsplan</a>
             <a href="#tjanster">Implementation</a>
-            <a href="#tjanster">Löpande optimering</a>
+            <a href="#tjanster">Löpande partnerskap</a>
           </div>
           <div className="col">
             <div className="col-title">Lösningar</div>
-            <a href="#anvandningsomraden">Små projekt</a>
-            <a href="#anvandningsomraden">Mellanstora projekt</a>
-            <a href="#anvandningsomraden">Större projekt</a>
+            <a href="#anvandningsomraden">Snabba insatser</a>
+            <a href="#anvandningsomraden">Djupare automationer</a>
+            <a href="#anvandningsomraden">Skräddarsydda system</a>
             <a href="#exempel">ProposalDock</a>
           </div>
           <div className="col">
